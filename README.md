@@ -4,5 +4,5 @@
 
 ## with VSCode & Live Server extension
 
-open in VSCode
+open in VSCode  
 click status bar > "Go Live"
