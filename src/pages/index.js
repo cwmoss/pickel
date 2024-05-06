@@ -1,7 +1,6 @@
-export default class Index extends HTMLElement {
-  constructor() {
-    super();
-  }
+import PageElement from "../lib/page_element.js";
+
+export default class Index extends PageElement {
   connectedCallback() {
     this.innerHTML = `<h3>index</h3><a href="/about">about us</a>`;
   }

@@ -1,4 +1,5 @@
-export default class About extends HTMLElement {
+import PageElement from "../lib/page_element.js";
+export default class About extends PageElement {
   constructor() {
     super();
   }
