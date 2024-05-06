@@ -1,24 +1,60 @@
-import router from "./lib/page.mjs";
+import router from "./vendor/page.mjs";
+import routes from "./routes.js";
+
 // let router = window.page;
 router.configure({ window: window });
+
+let layout = `
+<header>
+<h1>demo</h1>
+    <pi-navigation>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+        </nav>
+    </pi-navigation>
+</header>
+<main>
+
+</main>
+<footer>
+    made with pickel
+</footer>
+`;
 
 class App extends HTMLElement {
   constructor() {
     super();
     this.define_routes();
-    this.innerHTML = "hi";
+    this.innerHTML = layout;
+    this.content = this.querySelector("main");
+    this.nav = this.querySelector("pi-navigation");
     router("/");
   }
   connectedCallback() {}
 
-  async load_page(name) {
+  async load_page(name, ctx) {
     let path = "./pages/" + name + ".js";
-    let page = await import(path);
-    this.innerHTML = `<${name}-page></${name}-page>`;
+    const { default: PageClass } = await import(path);
+    let page = new PageClass();
+    page.set_route(ctx);
+
+    console.log("loaded page", page);
+
+    this.nav.active(ctx.pathname);
+    this.content.replaceChildren(page);
+    // this.content.innerHTML = `<${name}-page></${name}-page>`;
   }
   define_routes() {
-    router("/", () => this.load_page("index"));
-    router("/about", () => this.load_page("about"));
+    for (const [path, props] of Object.entries(routes)) {
+      // console.log(`${key}: ${value}`);
+      router(path, (ctx, next) => {
+        ctx.route = props;
+        this.load_page(props.class, ctx);
+      });
+    }
   }
 }
 

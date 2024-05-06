@@ -1,10 +1,20 @@
 import PageElement from "../lib/page_element.js";
+
+let team = null;
+
 export default class About extends PageElement {
-  constructor() {
-    super();
+  get title() {
+    return "About Us";
   }
-  connectedCallback() {
-    this.innerHTML = `<h3>about</h3><a href="/">back</a>`;
+
+  async init() {
+    this.slider = this.querySelector("pi-slide");
+    if (!team) {
+      let res = await fetch("https://randomuser.me/api/?results=12");
+      let data = await res.json();
+      team = data.results;
+    }
+    this.slider.items(team);
   }
 }
 
