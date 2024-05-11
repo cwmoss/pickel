@@ -1,0 +1,55 @@
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="cache-control" content="max-age=0" />
+    <script defer src="event-count.js"></script>
+    <title>YBA - vorfreude...</title>
+    <style>
+      html {
+        box-sizing: border-box;
+      }
+      *,
+      *:before,
+      *:after {
+        box-sizing: inherit;
+      }
+      body {
+        margin: 0;
+
+        font-family: "Courier New", Courier, monospace;
+        border-top: 1em solid #1fca3e;
+        border-bottom: 1em solid #1fca3e;
+        min-height: 100dvh;
+      }
+      body * {
+        line-height: 1.4em;
+      }
+      main {
+        max-width: 500px;
+        margin: 2rem auto;
+        /*margin-bottom: 6em;*/
+        /*padding: 2em;*/
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <event-count
+        event="2024-06-14 21:00:00"
+        count="day,hour,minute,second"
+        count-font="4rem Courier"
+        format="de"
+        count-background="black"
+        count-color="gold"
+        event-padding="1rem"
+        count-padding="1rem"
+        text-text-transform="none"
+        text-padding="1rem"
+        style="border: 14px solid #f7a6ad"
+        >Die <strong>EURO 2024</strong> startet in</event-count
+      >
+    </main>
+  </body>
+</html>

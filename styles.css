@@ -292,3 +292,7 @@ nav li.active{
   height: 100%;
   object-fit: cover;
 }
+progress{
+  border: none;
+  height: 4px;
+}
