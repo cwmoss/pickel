@@ -1,48 +1,56 @@
+import Split from "../vendor/split.js";
+import Panel from "./panel.js";
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
 <style>
-.panels {
-  display:flex;
+.split {
+    display: flex;
+    flex-direction: row;
 }
 
-[hidden]{
-  display:none;
+.gutter {
+    background-color: #eee;
+    background-repeat: no-repeat;
+    background-position: 50%;
+}
+
+.gutter.gutter-horizontal {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
+    cursor: col-resize;
 }
 </style>
 
 
-<div class="panels">
-  <slot></slot>
-</div>
+<div class="panels split"></div>
 
 `;
 
-export default class Panel extends HTMLElement {
-  connectedCallback() {
-    const shadow = this.attachShadow({ mode: "open" });
-    shadow.appendChild(template.content.cloneNode(true));
-    this.collabsed = this.getAttribute("collabsed");
+export default class Panels extends HTMLElement {
+  constructor() {
+    super()
+      .attachShadow({ mode: "open" })
+      .appendChild(template.content.cloneNode(true));
+    this.panels = [];
   }
-
-  handle_collapse(toggle) {
-    if (toggle) {
-      this.collabsed = !this.collabsed;
-    }
-    let wrapper = this.shadowRoot.querySelector(".wrapper");
-    if (this.collabsed) {
-      wrapper.classList.remove("panel");
-      wrapper.classList.add("panel-collapsed");
-      this.shadowRoot.querySelector("[collabsed]").removeAttribute("hidden");
-      this.shadowRoot
-        .querySelector("[not-collabsed]")
-        .setAttribute("hidden", "");
-    } else {
-      wrapper.classList.add("panel");
-      wrapper.classList.remove("panel-collapsed");
-      this.shadowRoot
-        .querySelector("[not-collabsed]")
-        .removeAttribute("hidden");
-      this.shadowRoot.querySelector("[collabsed]").setAttribute("hidden", "");
-    }
+  connectedCallback() {
+    this.panels.push(this.make_panel("docs"), this.make_panel("editor"));
+    this.render();
+    window.setTimeout(() => {
+      this.panels.push(this.make_panel("preview"));
+      this.render();
+    }, 3000);
+  }
+  render() {
+    let container = this.shadowRoot.querySelector(".panels");
+    container.replaceChildren();
+    container.append(...this.panels);
+    Split(this.panels);
+  }
+  make_panel(title) {
+    let p = new Panel();
+    p.setAttribute("title", title);
+    let div = document.createElement("div");
+    div.appendChild(p);
+    return div;
   }
 }

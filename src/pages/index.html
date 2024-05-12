@@ -2,37 +2,25 @@
   <h2>welcome</h2>
   <a href="/about">go to about us</a>
 
-  <event-count
-    event="2024-06-14 21:00:00"
-    count="day,hour,minute,second"
-    count-font="4rem Courier"
-    format="de"
-    count-background="black"
-    count-color="gold"
-    event-padding="1rem"
-    count-padding="1rem"
-    text-text-transform="none"
-    text-padding="1rem"
-    style="border: 14px solid #f7a6ad"
-    >Die <strong>EURO 2024</strong> startet in</event-count
-  >
-
   <progress value="10" max="100"></progress>
   <button primary>button1</button>
-  <pi-panels>
-    <pi-panel title="Documents">
+
+  <pi-panels></pi-panels>
+
+  <xpi-panels>
+    <xpi-panel title="Documents">
       <div slot="actions">a1 a2</div>
       <ul>
         <li>eins</li>
         <li>zwo</li>
       </ul>
-    </pi-panel>
-    <pi-panel title="Liste">
+    </xpi-panel>
+    <xpi-panel title="Liste">
       <div slot="actions">b2</div>
       <ul>
         <li><button primary>button2</button></li>
         <li>4444</li>
       </ul>
-    </pi-panel>
-  </pi-panels>
+    </xpi-panel>
+  </xpi-panels>
 </template>

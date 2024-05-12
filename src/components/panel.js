@@ -89,19 +89,29 @@ template.innerHTML = /*html*/ `
 `;
 
 export default class Panel extends HTMLElement {
+  constructor() {
+    super()
+      .attachShadow({ mode: "open" })
+      .appendChild(template.content.cloneNode(true));
+    this.init = false;
+  }
+
   connectedCallback() {
-    const shadow = this.attachShadow({ mode: "open" });
-    shadow.appendChild(template.content.cloneNode(true));
+    // für jedes panel nur 1x initialisieren
+    if (this.init) return;
+    this.title = this.getAttribute("title");
     this.collabsed = this.getAttribute("collabsed");
-    shadow
+    console.log("+++ panel contected", this.title);
+    this.shadowRoot
       .querySelectorAll(".panel--title")
-      .forEach((el) => (el.innerHTML = this.getAttribute("title")));
-    shadow
+      .forEach((el) => (el.innerHTML = this.title));
+    this.shadowRoot
       .querySelectorAll("[collabsed],[not-collabsed]")
       .forEach((el) =>
         el.addEventListener("click", () => this.handle_collapse(true))
       );
     this.handle_collapse();
+    this.init = true;
   }
 
   handle_collapse(toggle) {
