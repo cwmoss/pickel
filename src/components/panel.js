@@ -1,6 +1,12 @@
+import Api from "../lib/api.js";
+import Preview from "./preview.js";
+
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
 <style>
+  .wrapper{
+    min-height:100vh;
+  }
 .panel {
   height: inherit;
   overflow: hidden;
@@ -83,7 +89,6 @@ template.innerHTML = /*html*/ `
 </div>
 
 <div not-collabsed class="child--content">
-  <slot></slot>
 </div>
 </div>
 `;
@@ -93,27 +98,55 @@ export default class Panel extends HTMLElement {
     super()
       .attachShadow({ mode: "open" })
       .appendChild(template.content.cloneNode(true));
+    this.index = null;
     this.init = false;
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     // für jedes panel nur 1x initialisieren
     if (this.init) return;
     this.title = this.getAttribute("title");
     this.collabsed = this.getAttribute("collabsed");
-    console.log("+++ panel contected", this.title);
+    console.log("+++ panel connected", this.title);
     this.shadowRoot
       .querySelectorAll(".panel--title")
       .forEach((el) => (el.innerHTML = this.title));
     this.shadowRoot
-      .querySelectorAll("[collabsed],[not-collabsed]")
+      .querySelectorAll(".panel--title")
       .forEach((el) =>
         el.addEventListener("click", () => this.handle_collapse(true))
       );
     this.handle_collapse();
+    await this.fetch_content();
     this.init = true;
   }
 
+  async fetch_content() {
+    let content = this.shadowRoot.querySelector(".child--content");
+    if (this.title == "docs") {
+      Api.get_types().forEach((item) => {
+        let el = new Preview();
+        el.set_data({ id: item, title: item }, this.index);
+        content.appendChild(el);
+      });
+    } else if (this.title == "author" || this.title == "doc") {
+      Api.get_all(this.title).forEach((item) => {
+        let el = new Preview();
+        el.set_data({ id: item.id, title: item.title }, this.index);
+        content.appendChild(el);
+      });
+    } else {
+      let doc = Api.get_doc(this.doc_id);
+      content.textContent = JSON.stringify(doc);
+    }
+  }
+  set_active(id) {
+    let els = this.shadowRoot.querySelectorAll(".child--content > [active]");
+    console.log("active elements", id, els);
+    els.forEach((el) => {
+      if (el.data.id != id) el.removeAttribute("active");
+    });
+  }
   handle_collapse(toggle) {
     if (toggle) {
       this.collabsed = !this.collabsed;
@@ -122,9 +155,25 @@ export default class Panel extends HTMLElement {
     if (this.collabsed) {
       wrapper.classList.remove("panel");
       wrapper.classList.add("panel-collapsed");
+      if (toggle)
+        this.dispatchEvent(
+          new CustomEvent("panel-collapsed", {
+            detail: { index: this.index },
+            bubbles: 1,
+            composed: 1,
+          })
+        );
     } else {
       wrapper.classList.add("panel");
       wrapper.classList.remove("panel-collapsed");
+      if (toggle)
+        this.dispatchEvent(
+          new CustomEvent("panel-expanded", {
+            detail: { index: this.index },
+            bubbles: 1,
+            composed: 1,
+          })
+        );
     }
   }
 }

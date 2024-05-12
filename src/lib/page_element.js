@@ -8,6 +8,7 @@ class PageElement extends HTMLElement {
     if (this.title) {
       window.document.title = this.title;
     }
+    this.style.display = "block";
   }
 
   async connectedCallback() {

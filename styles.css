@@ -296,3 +296,7 @@ progress{
   border: none;
   height: 4px;
 }
+
+index-page{
+  grid-column:span 2;
+}
