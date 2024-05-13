@@ -32,22 +32,27 @@
         /*margin-bottom: 6em;*/
         /*padding: 2em;*/
       }
+      ::part(event) {
+        border-bottom: 16px solid #ff0000;
+      }
     </style>
   </head>
   <body>
     <main>
       <event-count
         event="2024-06-14 21:00:00"
+        event-background="black"
+        event-color="#FFCC00"
         count="day,hour,minute,second"
         count-font="4rem Courier"
         format="de"
-        count-background="black"
-        count-color="gold"
+        count-background="#FFCC00"
+        count-color="black"
         event-padding="1rem"
-        count-padding="1rem"
+        count-padding="0.5rem 1rem"
         text-text-transform="none"
         text-padding="1rem"
-        style="border: 14px solid #f7a6ad"
+        xstyle="border: 14px solid #f7a6ad"
         >Die <strong>EURO 2024</strong> startet in</event-count
       >
     </main>
