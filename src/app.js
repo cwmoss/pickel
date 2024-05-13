@@ -4,31 +4,11 @@ import routes from "./routes.js";
 // let router = window.page;
 router.configure({ window: window });
 
-let layout = `
-<header>
-<h1>demo</h1>
-    <pi-navigation>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
-            </ul>
-        </nav>
-    </pi-navigation>
-</header>
-<main>
-
-</main>
-<footer>
-    made with pickel
-</footer>
-`;
-
 class App extends HTMLElement {
   constructor() {
     super();
     this.define_routes();
-    this.innerHTML = layout;
+    // this.innerHTML = layout;
     this.content = this.querySelector("main");
     this.nav = this.querySelector("pi-navigation");
     router("/");
