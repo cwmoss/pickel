@@ -1,5 +1,6 @@
 import Api from "../lib/api.js";
 import Preview from "./preview.js";
+import FormBuilder from "./form-builder.js";
 
 const template = document.createElement("template");
 template.innerHTML = /*html*/ `
@@ -137,7 +138,10 @@ export default class Panel extends HTMLElement {
       });
     } else {
       let doc = Api.get_doc(this.doc_id);
-      content.textContent = JSON.stringify(doc);
+      let formbuilder = new FormBuilder();
+      formbuilder.value = "hein@z";
+      content.appendChild(formbuilder);
+      // content.textContent = JSON.stringify(doc);
     }
   }
   set_active(id) {
