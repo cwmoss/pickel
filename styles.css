@@ -300,3 +300,21 @@ progress{
 index-page{
   grid-column:span 2;
 }
+
+.notice{
+  display: flex;
+  width: 300px;
+  font-size: .75rem;
+  line-height: 1rem;
+}
+.box--warning{
+  color: #6c4b15 !important;
+  background: #fdf3bd !important;
+  border: 1px solid #ffd800 !important;
+  box-shadow: 3px 3px 0 #ffd800;
+  padding: 4px 8px !important;
+}
+.notice a {
+  color: #222;
+  text-decoration: underline;
+}
