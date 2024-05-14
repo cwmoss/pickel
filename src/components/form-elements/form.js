@@ -37,13 +37,13 @@ export default class Form extends HTMLElement {
   constructor() {
     // Inititialize custom component
     super();
-    this.attachShadow({ mode: "open" });
+    //this.attachShadow({ mode: "open" });
     // this.internals = this.attachInternals();
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.appendChild(template.content.cloneNode(true));
     this.els = {
-      form: this.shadowRoot.querySelector("form"),
-      button: this.shadowRoot.querySelector("button"),
-      error: this.shadowRoot.querySelector(".invalid-feedback"),
+      form: this.querySelector("form"),
+      button: this.querySelector("button"),
+      error: this.querySelector(".invalid-feedback"),
     };
     console.log("form-els", this.els);
     this.els.form.addEventListener("submit", (e) => this.save(e));

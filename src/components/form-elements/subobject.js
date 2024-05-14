@@ -1,5 +1,5 @@
 import Input from "./input.js";
-import Subobject from "./subobject.js";
+
 const template = document.createElement("template");
 
 template.innerHTML = /*html*/ `
@@ -10,7 +10,7 @@ template.innerHTML = /*html*/ `
 </div>
 `;
 
-export default class Object extends HTMLElement {
+export default class Subobject extends HTMLElement {
   static formAssociated = true;
   static observedAttributes = ["value"];
 
@@ -21,18 +21,13 @@ export default class Object extends HTMLElement {
     this.internals = this.attachInternals();
     this.shadowRoot.appendChild(template.content.cloneNode(true));
     this.fields = [];
+
     let f = new Input();
     f.props = {
-      name: "address[street]",
-      id: "address_street",
-      label: "Straße",
+      name: "address[verwendung][hauptadresse]",
+      id: "address_verwendung_hauptadresse",
+      label: "Ist Hauptadresse?",
     };
-    this.fields.push(f);
-    f = new Input();
-    f.props = { name: "address[city]", id: "address_city", label: "Ort" };
-    this.fields.push(f);
-
-    f = new Subobject();
     this.fields.push(f);
 
     this.els = {
@@ -45,11 +40,11 @@ export default class Object extends HTMLElement {
 
   update_value(e) {
     let data = new FormData();
-    console.log("+++ object value first element", e, this.fields[0]);
+    console.log("+++ subobject value first element", e, this.fields[0]);
     data.append(this.fields[0]._name, this.fields[0].value);
-    data.append(this.fields[1]._name, this.fields[1].value);
+    //data.append(this.fields[1]._name, this.fields[1].value);
     this.internals.setFormValue(data);
-    console.log("object set value", data);
+    console.log("subobject set value", data);
   }
 
   connectedCallback() {
@@ -66,6 +61,9 @@ export default class Object extends HTMLElement {
     this.setAttribute("value", v);
   }
 
+  get value() {
+    console.log("someone tries to get this value");
+  }
   set props(p) {
     this._label = p.label;
     this._name = p.name;
@@ -76,9 +74,9 @@ export default class Object extends HTMLElement {
 
   render() {
     //this.els.root.appendChild(...this.fields);
-    console.log("render object", this.fields);
+    console.log("render subobject", this.fields);
     this.fields.map((f) => this.els.root.appendChild(f));
   }
 }
 
-customElements.define("form-object", Object);
+customElements.define("form-subobject", Subobject);
