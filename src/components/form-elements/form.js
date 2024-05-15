@@ -1,5 +1,7 @@
 import Input from "./input.js";
 import Object from "./object.js";
+import Container from "./container.js";
+
 const template = document.createElement("template");
 
 template.innerHTML = /*html*/ `
@@ -8,7 +10,7 @@ template.innerHTML = /*html*/ `
 }/../variables.css" type="text/css">
 <link rel="stylesheet" href="${
   import.meta.url
-}/../bootstrap.min.css" type="text/css">
+}/../bs-only-form.css" type="text/css">
 <style>
 
 :host{
@@ -75,6 +77,10 @@ export default class Form extends HTMLElement {
     this.appendChild(el);
     let obj = new Object();
     this.appendChild(obj);
+    let c = new Container();
+    //let c = document.createElement("form-container");
+
+    this.appendChild(c);
   }
 }
 

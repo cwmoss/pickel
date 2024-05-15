@@ -5,21 +5,21 @@ const template = document.createElement("template");
 template.innerHTML = /*html*/ `
 <link rel="stylesheet" href="${
   import.meta.url
-}/../bootstrap.min.css" type="text/css">
+}/../bs-only-form.css" type="text/css">
 <div class="fobject">
 </div>
 `;
 
 export default class Object extends HTMLElement {
-  static formAssociated = true;
-  static observedAttributes = ["value"];
+  //static formAssociated = true;
+  //static observedAttributes = ["value"];
 
   constructor() {
     // Inititialize custom component
     super();
-    this.attachShadow({ mode: "open" });
-    this.internals = this.attachInternals();
-    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    //this.attachShadow({ mode: "open" });
+    //this.internals = this.attachInternals();
+    this.appendChild(template.content.cloneNode(true));
     this.fields = [];
     let f = new Input();
     f.props = {
@@ -36,10 +36,10 @@ export default class Object extends HTMLElement {
     this.fields.push(f);
 
     this.els = {
-      root: this.shadowRoot.querySelector(".fobject"),
+      root: this.querySelector(".fobject"),
     };
     this.fields.forEach((el) => {
-      el.addEventListener("input", (e) => this.update_value(e));
+      // el.addEventListener("input", (e) => this.update_value(e));
     });
   }
 

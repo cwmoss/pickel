@@ -3,7 +3,15 @@ const template = document.createElement("template");
 template.innerHTML = /*html*/ `
 <link rel="stylesheet" href="${
   import.meta.url
-}/../bootstrap.min.css" type="text/css">
+}/../variables.css" type="text/css">
+<link rel="stylesheet" href="${
+  import.meta.url
+}/../bs-only-form.css" type="text/css">
+<style>
+.fgroup{
+  margin-bottom:1.5rem;
+}
+</style>
 <div class="fgroup">
     <label class="form-label"></label>
     <input type="text" class="form-control">
@@ -30,6 +38,7 @@ export default class Input extends HTMLElement {
       console.log("++ input ev.input", this._name, e.target.value);
       this.value = e.target.value;
     });
+    this.value = this.getAttribute("value") ?? "";
   }
 
   connectedCallback() {

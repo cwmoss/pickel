@@ -5,7 +5,7 @@ const template = document.createElement("template");
 template.innerHTML = /*html*/ `
 <link rel="stylesheet" href="${
   import.meta.url
-}/../bootstrap.min.css" type="text/css">
+}/../bs-only-form.css" type="text/css">
 <div class="fobject">
 </div>
 `;
