@@ -40,11 +40,18 @@ export default class Subobject extends HTMLElement {
 
   update_value(e) {
     let data = new FormData();
-    console.log("+++ subobject value first element", e, this.fields[0]);
+    console.log("+++ SUB object value first element", e, this.fields[0]);
     data.append(this.fields[0]._name, this.fields[0].value);
-    //data.append(this.fields[1]._name, this.fields[1].value);
-    this.internals.setFormValue(data);
-    console.log("subobject set value", data);
+    this.value = data;
+    console.log("SUB object set value", data);
+  }
+
+  get value() {
+    return this.value;
+  }
+  set value(v) {
+    this._value = v;
+    this.internals.setFormValue(this._value);
   }
 
   connectedCallback() {
@@ -57,13 +64,6 @@ export default class Subobject extends HTMLElement {
     this.render();
   }
 
-  set value(v) {
-    this.setAttribute("value", v);
-  }
-
-  get value() {
-    console.log("someone tries to get this value");
-  }
   set props(p) {
     this._label = p.label;
     this._name = p.name;

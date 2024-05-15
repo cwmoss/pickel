@@ -28,7 +28,7 @@ export default class Input extends HTMLElement {
     };
     this.els.field.addEventListener("input", (e) => {
       console.log("++ input ev.input", this._name, e.target.value);
-      this.internals.setFormValue(e.target.value);
+      this.value = e.target.value;
     });
   }
 
@@ -38,15 +38,17 @@ export default class Input extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     console.log("++ new value", newValue, this);
-    this.internals.setFormValue(newValue);
+    this.value = newValue;
     this.render();
   }
 
   set value(v) {
-    this.setAttribute("value", v);
+    this._value = v;
+    this.internals.setFormValue(this._value);
   }
 
   get value() {
+    return this._value;
     //return "noidea";
     console.log("++ internals get value", this.internals);
     return this.els.field.value;

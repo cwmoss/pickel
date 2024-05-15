@@ -48,8 +48,16 @@ export default class Object extends HTMLElement {
     console.log("+++ object value first element", e, this.fields[0]);
     data.append(this.fields[0]._name, this.fields[0].value);
     data.append(this.fields[1]._name, this.fields[1].value);
-    this.internals.setFormValue(data);
+    this.value = data;
     console.log("object set value", data);
+  }
+
+  get value() {
+    return this.value;
+  }
+  set value(v) {
+    this._value = v;
+    this.internals.setFormValue(this._value);
   }
 
   connectedCallback() {
@@ -60,10 +68,6 @@ export default class Object extends HTMLElement {
     console.log("++ new value", newValue, this);
     this.internals.setFormValue(newValue);
     this.render();
-  }
-
-  set value(v) {
-    this.setAttribute("value", v);
   }
 
   set props(p) {

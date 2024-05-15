@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Form test</title>
     <style>
-        form {
-            width: 500px;
-            gap: 1rem;
-            margin: 1rem auto;
-            display: flex;
-            flex-direction: column;
-        }
+      form {
+        width: 500px;
+        gap: 1rem;
+        margin: 1rem auto;
+        display: flex;
+        flex-direction: column;
+      }
     </style>
     <script type="module" src="src/components/index.js"></script>
     <script type="module" src="src/components/form-elements/form.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <form action="">
-        <input type="text" name="email">
-        <input type="text" name="address[street]">
-        <input type="text" name="address[city]">
-        <input type="hidden" name="agree" value="0">
-        <input type="checkbox" name="agree" value="1" id="">ok??
-        <button type="button">send</button>
+      <input type="text" name="email" />
+      <input type="text" name="address[street]" />
+      <input type="text" name="address[city]" />
+      <input type="hidden" name="agree" value="0" />
+      <input type="checkbox" name="agree" value="1" id="" />ok??
+      <button type="button">send</button>
     </form>
 
-    <h3>test form</h3>
-    <pi-form></pi-form>
-
-    <script>
-
-    </script>
-</body>
-
+    <div class="container">
+      <h3>test form</h3>
+      <form id="face" action="/endp" method="post">
+        <pi-form></pi-form>
+      </form>
+    </div>
+    <script></script>
+  </body>
 </html>

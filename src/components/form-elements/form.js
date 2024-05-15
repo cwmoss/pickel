@@ -22,12 +22,9 @@ form{
 
 </style>
 
-<div class="container">
-<form>
 <button class="btn btn-primary mb-5">Speichern</button>
 <div class="invalid-feedback"></div>
-</form>
-</div>
+
 `;
 
 export default class Form extends HTMLElement {
@@ -41,12 +38,13 @@ export default class Form extends HTMLElement {
     // this.internals = this.attachInternals();
     this.appendChild(template.content.cloneNode(true));
     this.els = {
-      form: this.querySelector("form"),
+      // form: this.querySelector("form"),
       button: this.querySelector("button"),
       error: this.querySelector(".invalid-feedback"),
     };
-    console.log("form-els", this.els);
-    this.els.form.addEventListener("submit", (e) => this.save(e));
+    this.form = this.parentElement;
+    console.log("+++ form-els", this.els, this.parentElement);
+    this.form.addEventListener("submit", (e) => this.save(e));
   }
 
   connectedCallback() {
@@ -58,8 +56,8 @@ export default class Form extends HTMLElement {
   }
 
   save(e) {
-    let data = new FormData(this.els.form);
-    console.log("save", data, this.els.form);
+    let data = new FormData(this.form);
+    console.log("save", data, this.form);
     e.preventDefault();
     return false;
   }
@@ -74,9 +72,9 @@ export default class Form extends HTMLElement {
     let el = new Input();
     el.props = { label: "E-Mail-Adresse", name: "email", id: "email" };
     el.setAttribute("value", "horst@example.com");
-    this.els.form.appendChild(el);
+    this.appendChild(el);
     let obj = new Object();
-    this.els.form.appendChild(obj);
+    this.appendChild(obj);
   }
 }
 
