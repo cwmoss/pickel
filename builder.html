@@ -1,45 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Form test</title>
     <link rel="stylesheet" href="styles.css" class="rel" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: content-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: content-box;
+      }
 
-        body {
-            font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-                Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-
-        }
-
-        form {
-            width: 500px;
-            gap: 1rem;
-            margin: 1rem auto;
-            display: flex;
-            flex-direction: column;
-        }
+      body {
+        font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+          sans-serif;
+      }
+      .container {
+        width: 500px;
+        margin: 1rem auto;
+      }
+      form {
+        gap: 1rem;
+        display: flex;
+        flex-direction: column;
+      }
     </style>
     <script type="module" src="src/components/index.js"></script>
     <script type="module" src="src/components/form-builder.js"></script>
-</head>
+  </head>
+  <!--
+    https://codepen.io/keithjgrant/pen/eyMMVL
+    https://jirengu.github.io/css-you-should-know/en/meet-the-new-dialog-element.html
+    https://web.dev/articles/building/a-dialog-component
+-->
 
-<body>
-
+  <body>
     <div class="container">
-        <h3>test builder</h3>
-        <form id="face" action="/endp" method="post">
-            <form-builder document="post" value="{&quot;title&quot;:&quot;erster beitrag&quot;}"></form-builder>
-        </form>
+      <h3>test builder</h3>
+      <form id="face" action="/endp" method="post">
+        <form-builder
+          document="post"
+          value='{"title":"erster beitrag"}'
+        ></form-builder>
+      </form>
     </div>
-    <script></script>
-</body>
-
+    <script>
+      // https://stackoverflow.com/questions/46273256/how-to-spread-an-object-into-a-classes-properties-in-javascript
+      //https://stackoverflow.com/questions/43436727/multiple-object-properties-assignment-in-javascript
+      class Test {
+        _val = "huhu";
+        set val(v) {
+          this._val = v + " !!!";
+        }
+        get val() {
+          return this._val;
+        }
+        set opts(o) {
+          Object.assign(this, o);
+        }
+      }
+      let t = new Test();
+      console.log("test", t.val, t);
+      t.opts = { inv: "99", val: "hey", noo: "hu" };
+      console.log("test", t.val, t);
+    </script>
+  </body>
 </html>
