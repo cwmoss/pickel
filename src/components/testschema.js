@@ -101,6 +101,15 @@ const s = `{
                     "opts": []
                 },
                 {
+                    "type": "switch",
+                    "title": "Status",
+                    "name": "status",
+                    "description": null,
+                    "hidden": false,
+                    "readOnly": false,
+                    "opts": []
+                },
+                {
                     "type": "string",
                     "title": "post_url",
                     "name": "post_url",

@@ -1,6 +1,7 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import { get_schema_type } from "./schema.js";
 import Input from "./input.js";
+import Switch from "./switch.js";
 
 export default class BContainer extends LitElement {
   static properties = {
@@ -28,13 +29,22 @@ export default class BContainer extends LitElement {
   build() {
     console.log("+++ build", this.value);
     this.els = this.schema.fields.map((field) => {
-      let f = new Input();
-      f.props = {
-        name: `${this.prefix}[${field.name}]`,
-        label: field.title,
-        id: field.name,
-      };
+      let f;
+      if (field.type == "switch") {
+        f = new Switch();
+        f.name = `${this.prefix}[${field.name}]`;
+        f.label = field.title;
+        f.id = field.id;
+      } else {
+        f = new Input();
+        f.props = {
+          name: `${this.prefix}[${field.name}]`,
+          label: field.title,
+          id: field.name,
+        };
+      }
       f.setAttribute("value", this.value[field.name] ?? "");
+      // f.setAttribute("name", f.name);
       return f;
     });
   }
