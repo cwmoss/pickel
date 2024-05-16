@@ -38,7 +38,7 @@ export default class BContainer extends LitElement {
         f.appendChild(new Image());
       } else {
         f = new Input();
-        f.props = {
+        f.opts = {
           name: `${this.prefix}[${field.name}]`,
           label: field.title,
           id: field.name,

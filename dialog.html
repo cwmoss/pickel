@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form test</title>
+    <link rel="stylesheet" href="styles.css" class="rel" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: content-box;
+        }
+
+        body {
+            font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+                sans-serif;
+        }
+
+        .container {
+            width: 500px;
+            margin: 1rem auto;
+        }
+
+        form {
+            gap: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ::backdrop {
+            background-image: linear-gradient(45deg,
+                    magenta,
+                    rebeccapurple,
+                    dodgerblue,
+                    green);
+            opacity: 0.75;
+        }
+    </style>
+    <script type="module" src="src/components/index.js"></script>
+    <script type="module" src="src/components/form-builder.js"></script>
+</head>
+<!--
+    https://codepen.io/keithjgrant/pen/eyMMVL
+    https://jirengu.github.io/css-you-should-know/en/meet-the-new-dialog-element.html
+    https://web.dev/articles/building/a-dialog-component
+-->
+
+<body>
+    <div class="container">
+
+
+        <button id="d1start">Show the dialog</button>
+
+
+    </div>
+    <dialog id="d1">
+        <button autofocus>Close</button>
+        <p>This modal dialog has a groovy backdrop!</p>
+        <button id="d2start">nochn overlay</button>
+    </dialog>
+    <dialog id="d2">
+        <button autofocus>Close2</button>
+        <p>.... mehr overlays</p>
+
+    </dialog>
+    <script>
+        const dialog = document.querySelector("dialog#d1");
+        const showButton = document.querySelector("#d1start");
+        const closeButton = document.querySelector("dialog#d1 button");
+
+        // "Show the dialog" button opens the dialog modally
+        showButton.addEventListener("click", () => {
+            dialog.showModal();
+        });
+
+        // "Close" button closes the dialog
+        closeButton.addEventListener("click", () => {
+            dialog.close();
+        });
+
+        const dialog2 = document.querySelector("dialog#d2");
+        const showButton2 = document.querySelector("#d2start");
+        const closeButton2 = document.querySelector("dialog#d2 button");
+
+        // "Show the dialog" button opens the dialog modally
+        showButton2.addEventListener("click", () => {
+            dialog2.showModal();
+        });
+
+        // "Close" button closes the dialog
+        closeButton2.addEventListener("click", () => {
+            dialog2.close();
+        });
+    </script>
+</body>

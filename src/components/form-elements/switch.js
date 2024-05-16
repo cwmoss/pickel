@@ -9,18 +9,23 @@ export default class Switch extends Face {
     return e.target.checked ? "on" : "off";
   }
 
+  get_default_value() {
+    return "off";
+  }
+
   render() {
     console.log("render switch", this);
     return html`<div class="fgroup">
       <div class="form-check form-switch">
         <input
           @click=${(e) => this.input_event(e)}
+          ?checked=${this.value == "on"}
           class="form-check-input"
           type="checkbox"
           role="switch"
-          id="flexSwitchCheckDefault"
+          id="check"
         />
-        <label class="form-check-label" for="flexSwitchCheckDefault"
+        <label class="form-check-label" for="check"
           >${this.label}:
           ${this.value == "off"
             ? this.off_label
