@@ -7,7 +7,17 @@ https://stackoverflow.com/questions/56351274/how-to-pass-option-tags-to-a-custom
 export default class Select extends Face {
   static properties = {
     ...Face.properties,
-    items: { type: Array },
+    items: {
+      type: Array,
+      converter: (value, type) => {
+        if (value.substring(0, 1) == "[") {
+          return JSON.parse(value);
+        } else {
+          return value.split(",");
+        }
+        // return ["x", "y"];
+      },
+    },
     slotitems: { type: Array },
   };
   /*
@@ -43,7 +53,7 @@ export default class Select extends Face {
   }
 
   get_input_value(e) {
-    // console.log(this.constructor.properties);
+    console.log("get select value", this.value, e.target.value);
     return e.target.value;
   }
 

@@ -1,75 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Form test</title>
+    <link rel="stylesheet" href="styles.css" class="rel" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: content-box;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Form test</title>
-  <link rel="stylesheet" href="styles.css" class="rel" />
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: content-box;
-    }
+      body {
+        font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+          sans-serif;
+      }
 
-    body {
-      font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
-        sans-serif;
-    }
+      .container {
+        width: 500px;
+        margin: 1rem auto;
+      }
 
-    .container {
-      width: 500px;
-      margin: 1rem auto;
-    }
-
-    form {
-      gap: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
-  </style>
-  <script type="module" src="src/components/index.js"></script>
-  <script type="module" src="src/components/form-builder.js"></script>
-</head>
-<!--
+      form {
+        gap: 1rem;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+    <script type="module" src="src/components/index.js"></script>
+    <script type="module" src="src/components/form-elements/select.js"></script>
+    <script type="module" src="src/components/form-builder.js"></script>
+  </head>
+  <!--
     https://codepen.io/keithjgrant/pen/eyMMVL
     https://jirengu.github.io/css-you-should-know/en/meet-the-new-dialog-element.html
     https://web.dev/articles/building/a-dialog-component
 -->
 
-<body>
-  <div class="container">
-    <h3>test builder</h3>
-    <form id="face" action="/endp" method="post">
-      <form-builder document="post" value='{"title":"erster beitrag"}'></form-builder>
-    </form>
-  </div>
-  <script>
-    // https://stackoverflow.com/questions/46273256/how-to-spread-an-object-into-a-classes-properties-in-javascript
-    //https://stackoverflow.com/questions/43436727/multiple-object-properties-assignment-in-javascript
-    class Test {
-      _val = "huhu";
-      set val(v) {
-        this._val = v + " !!!";
+  <body>
+    <div class="container">
+      <h3>test builder</h3>
+      <b-select
+        name="doc-select"
+        label="Auswahl Dokumenttyp"
+        value=""
+        items=",post,author"
+      ></b-select>
+      <form id="face" action="/endp" method="post">
+        <form-builder
+          document="post"
+          value='{"title":"erster beitrag"}'
+        ></form-builder>
+      </form>
+    </div>
+    <script defer>
+      // https://stackoverflow.com/questions/46273256/how-to-spread-an-object-into-a-classes-properties-in-javascript
+      //https://stackoverflow.com/questions/43436727/multiple-object-properties-assignment-in-javascript
+      class Test {
+        _val = "huhu";
+        set val(v) {
+          this._val = v + " !!!";
+        }
+        get val() {
+          return this._val;
+        }
+        set opts(o) {
+          Object.assign(this, o);
+        }
       }
-      get val() {
-        return this._val;
-      }
-      set opts(o) {
-        Object.assign(this, o);
-      }
-    }
-    let t = new Test();
-    console.log("test", t.val, t);
-    t.opts = {
-      inv: "99",
-      val: "hey",
-      noo: "hu"
-    };
-    console.log("test", t.val, t);
-  </script>
-</body>
-
+      let t = new Test();
+      console.log("test", t.val, t);
+      t.opts = {
+        inv: "99",
+        val: "hey",
+        noo: "hu",
+      };
+      console.log("test", t.val, t);
+      let auswahl = document.querySelector("b-select");
+      let builder = document.querySelector("form-builder");
+      console.log("+++ selecting!", auswahl.value);
+      auswahl.addEventListener("input", (e) => {
+        window.setTimeout(() => {
+          console.log("+++ selecting!", auswahl.value);
+          builder.setAttribute("document", auswahl.value);
+        }, 100);
+      });
+    </script>
+  </body>
 </html>

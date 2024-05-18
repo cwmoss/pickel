@@ -28,23 +28,34 @@ export default class FormBuilder extends LitElement {
 
   constructor() {
     super();
-    let type = this.getAttribute("document");
+    //let type = this.getAttribute("document");
     // this.value = {};
     console.log("+++ value", this.getAttribute("value"), this.value);
-    this.schema = get_schema_type(type);
+    //this.schema = get_schema_type(type);
 
     this.form = this.parentElement;
     this.form.addEventListener("submit", (e) => this.submit(e));
     //this.schema = test;
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    console.log("++connected", this.value);
+  load_schema() {
+    if (!this.document) return;
+    console.log("+++ load schema", this.document);
+    this.schema = get_schema_type(this.document);
     this.container = new Container();
     this.container.value = this.value;
     this.container.prefix = "random";
     this.container.type = this.document;
+  }
+  updated(changedProperties) {
+    if (changedProperties.has("document")) {
+      this.load_schema();
+    }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    console.log("++connected", this.value);
   }
 
   submit(e) {
