@@ -83,6 +83,42 @@ export default class AvatarCropper extends LitElement {
       :host([dropped]) [type="file"] {
         display: none;
       }
+      .actions {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      button {
+        outline: 0;
+        grid-gap: 8px;
+        align-items: center;
+        background: 0 0;
+        border: 1px solid #000;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-flex;
+        flex-shrink: 0;
+        font-size: 16px;
+        gap: 8px;
+        justify-content: center;
+        line-height: 1.5;
+        overflow: hidden;
+        padding: 12px 16px;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        transition: all 0.14s ease-out;
+        white-space: nowrap;
+      }
+      button:hover:enabled {
+        box-shadow: 4px 4px 0 #000;
+        transform: translate(-4px, -4px);
+      }
+      button:focus-visible {
+        outline-offset: 1px;
+      }
+      button.primary {
+        background-color: #ff90e8;
+      }
     `,
   ];
 
@@ -102,6 +138,35 @@ export default class AvatarCropper extends LitElement {
     }
   }
 
+  do_crop() {
+    let blob = this.cropper
+      .getCroppedCanvas({ width: 256, height: 256 })
+      .toBlob(
+        (blob) => {
+          this.dispatchEvent(
+            new CustomEvent("finished-crop", {
+              detail: { blob: blob },
+              bubbles: 1,
+              composed: 1,
+            })
+          );
+        },
+        "image/png",
+        1
+      );
+  }
+
+  cancel() {
+    this.image = "";
+    this.dropped = false;
+    this.dispatchEvent(
+      new CustomEvent("cancel-crop", {
+        detail: {},
+        bubbles: 1,
+        composed: 1,
+      })
+    );
+  }
   new_file() {
     this.dragging = false;
     this.dropped = true;
@@ -139,6 +204,18 @@ export default class AvatarCropper extends LitElement {
           type="file"
           accept="${this.accept}"
         />
+      </div>
+      <div class="actions">
+        <button
+          class="primary"
+          @click=${() => this.do_crop()}
+          ?disabled=${!this.image}
+        >
+          Fertig
+        </button>
+        <button @click=${() => this.cancel()} ?disabled=${!this.image}>
+          Abbrechen
+        </button>
       </div>
     </div>`;
   }
