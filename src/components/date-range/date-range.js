@@ -1,5 +1,9 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import HotelDatepicker from "./hotel-datepicker.esm.js";
+import pickerstyles from "./hotel-datepicker.css.js";
+/*
+https://lopezb.com/hoteldatepicker/
+*/
 
 let de = {
   selected: "Dein Aufenthalt:",
@@ -70,17 +74,32 @@ let de = {
   "aria-clear-button": "Clear the selected dates",
   "aria-submit-button": "Submit the form",
 };
-/*
-https://lopezb.com/hoteldatepicker/
-*/
+
+let styled = false;
+
+function add_style() {
+  console.log("styles...", pickerstyles);
+  if (styled) return;
+  styled = true;
+  var tag = document.createElement("style");
+  tag.appendChild(document.createTextNode(pickerstyles));
+  document.getElementsByTagName("head")[0].appendChild(tag);
+}
+
 export default class DateRange extends LitElement {
   static properties = {
     picker: {},
     input: {},
   };
 
+  constructor() {
+    super();
+    add_style();
+  }
+
   connectedCallback() {
     super.connectedCallback();
+    this.input = this.querySelector("input");
     //this.input = document.createElement("input");
   }
 
@@ -100,7 +119,7 @@ export default class DateRange extends LitElement {
     `;
   }
   render() {
-    return html` <div>${this.render_input()}</div> `;
+    return html` <div>${this.input}</div> `;
   }
 
   /*
