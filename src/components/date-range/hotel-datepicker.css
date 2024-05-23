@@ -235,11 +235,11 @@
 }
 
 .datepicker__month-button--prev:after {
-  background-image: url(../icons/left.svg);
+  content: "<" /* background-image: url(../icons/left.svg); */
 }
 
 .datepicker__month-button--next:after {
-  background-image: url(../icons/right.svg);
+  content: ">" /* background-image: url(../icons/right.svg); */
 }
 
 .datepicker__topbar {

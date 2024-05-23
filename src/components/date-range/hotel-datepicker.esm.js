@@ -1,5 +1,5 @@
 /*! hotel-datepicker 4.7.4 - Copyright 2024 Benito Lopez (http://lopezb.com) - https://github.com/benitolopez/hotel-datepicker - MIT */
-import * as fecha from "./fecha.min.js";
+import * as fecha from "./fecha.js";
 
 let idCounter = 0;
 class HotelDatepicker {
