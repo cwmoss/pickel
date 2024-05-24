@@ -1,5 +1,9 @@
 import { LitElement, css, html } from "./../vendor/lit-core.min.js";
-import { set_schema, get_schema_type } from "./form-elements/schema.js";
+import {
+  set_schema,
+  get_schema_type,
+  get_schema_first_document,
+} from "./form-elements/schema.js";
 import testschema from "./testschema.js";
 import Container from "./form-elements/b_container.js";
 set_schema(testschema);
@@ -26,6 +30,9 @@ export default class FormBuilder extends LitElement {
     container: { type: Object, attribute: false },
   };
 
+  _id = Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
+
+  /*
   constructor() {
     super();
     //let type = this.getAttribute("document");
@@ -37,25 +44,44 @@ export default class FormBuilder extends LitElement {
     this.form.addEventListener("submit", (e) => this.submit(e));
     //this.schema = test;
   }
+*/
+  connectedCallback() {
+    super.connectedCallback();
+    this.form = this.parentElement;
+    this.form.addEventListener("submit", (e) => this.submit(e));
+    let text = this.innerText.trim();
+    if (text) {
+      set_schema(JSON.parse(text), this._id);
+      this.innerText = "";
+      this.document = get_schema_first_document(this._id);
+    } else {
+      this._id = "default";
+    }
+    console.log(
+      "++connected",
+      this._id,
+      this.innerText,
+      this.document,
+      this.value
+    );
+    this.load_schema();
+  }
 
   load_schema() {
     if (!this.document) return;
-    console.log("+++ load schema", this.document);
-    this.schema = get_schema_type(this.document);
+    console.log("+++ load schema", this.document, this._id);
+    this.schema = get_schema_type(this.document, this._id);
     this.container = new Container();
+    console.log("+++ container created");
     this.container.value = this.value;
     this.container.prefix = "random";
+    this.container.schemaid = this._id;
     this.container.type = this.document;
   }
   updated(changedProperties) {
     if (changedProperties.has("document")) {
       this.load_schema();
     }
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    console.log("++connected", this.value);
   }
 
   submit(e) {

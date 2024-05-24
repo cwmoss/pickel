@@ -6,10 +6,13 @@ import Switch from "./switch.js";
 export default class BContainer extends LitElement {
   static properties = {
     schema: { attribute: false },
-    _type: { type: String },
+    type: { type: String },
+    schemaid: {},
     prefix: { type: String },
     value: { type: Object, attribute: false },
   };
+
+  _type = "";
 
   constructor() {
     super();
@@ -18,10 +21,14 @@ export default class BContainer extends LitElement {
     //this.schema = test;
   }
 
+  get type() {
+    return this._type;
+  }
+
   set type(t) {
     this._type = t;
-    this.schema = get_schema_type(t);
-    console.log("c-schema", this.schema, this.value);
+    this.schema = get_schema_type(t, this.schemaid);
+    console.log("c-schema", this.schemaid, t, this.value);
     this.build();
     // this.requestUpdate();
   }
