@@ -2,6 +2,7 @@ import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import { get_schema_type } from "./schema.js";
 import Input from "./input.js";
 import Switch from "./switch.js";
+import Dialog from "./dialog.js";
 
 export default class BContainer extends LitElement {
   static properties = {
@@ -56,11 +57,13 @@ export default class BContainer extends LitElement {
       return f;
     });
   }
+  render_els() {
+    return this.els;
+  }
   render() {
     console.log("render container", this.els);
     return html`container for: ${this._type}<br /><br />
-
-      ${this.els} `;
+      <template> ${this.render_els()} </template> `;
   }
   createRenderRoot() {
     return this;
