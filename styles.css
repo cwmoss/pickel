@@ -173,21 +173,21 @@ aside {
   margin-bottom: 20px;
 }
 
-button {
+button, ::part(button) {
 cursor: pointer;
 line-height: 40px;
 color: var(--text-color);
-border: 2px solid var(--text-color);
+border: 2px solid var(--text-color, black);
 text-align: center;
 font-size: var(--font-size, 16px);
 display: inline-block;
 background: none;
   background-color: rgba(0, 0, 0, 0);
 /* min-width: 200px;*/
-padding: 0.1rem 1rem;
+padding: 0 1rem;
 }
 
-button[primary] {
+button[primary], ::part(btn-primary) {
 font-weight: 700;
 border: 2px solid var(--color-accent);
 background-color: var(--color-accent);
@@ -318,4 +318,18 @@ index-page{
 .notice a {
   color: #222;
   text-decoration: underline;
+}
+
+b-container:not([level="0"]){
+  display: block;
+  padding-left: var(--container-padding, 1rem);
+}
+
+.sortable-ghost {
+  opacity: .5;
+  background: #C8EBFB;
+}
+.sortable-chosen{
+    color: #fff;
+    background-color: #c00;
 }

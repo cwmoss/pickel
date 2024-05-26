@@ -1,49 +1,16 @@
-/*
-Object.assign(document.createElement('a'), {
-    id: 'id',
-    class: 'whatever class',
-    href: 'https://www.google.com/',
-    innerHTML: 'This is a link'
-  });
-
-  https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
-*/
-
-let toldYouSo = (eMaker, head, ...fam) => {
-    head = eMaker(head);
-     fam.forEach(c=>{head.appendElement(eMaker(c));
-      return head;
-    })
-
-    (tagData=>object.assign(document.createElement(tagData.tag, tagData), 
-    {tag: "div", className: "check"}, 
-    {tag: "input", type: "checkbox", name: "buy", value: "260", 
-    checked: "", onclick: "javascript:basked.checkItem();"})
+export function add_style(styles) {
+  let tag = document.createElement("style");
+  tag.appendChild(document.createTextNode(styles));
+  document.getElementsByTagName("head")[0].appendChild(tag);
 }
 
-function createElementFromHTML(htmlString) {
-    var div = document.createElement('div');
-    div.innerHTML = htmlString.trim();
-  
-    // Change this to div.childNodes to support multiple top-level nodes.
-    return div.firstElementChild;
-  }
-  * @param {String} HTML representing a single element.
-  * @param {Boolean} flag representing whether or not to trim input whitespace, defaults to true.
-  * @return {Element | HTMLCollection | null}
-  */
- function fromHTML(html, trim = true) {
-   // Process the HTML string.
-   html = trim ? html.trim() : html;
-   if (!html) return null;
- 
-   // Then set up a new template element.
-   const template = document.createElement('template');
-   template.innerHTML = html;
-   const result = template.content.children;
- 
-   // Then return either an HTMLElement or HTMLCollection,
-   // based on whether the input HTML had one or more roots.
-   if (result.length === 1) return result[0];
-   return result;
- }
+export function once(fn, context) {
+  var result;
+  return function () {
+    if (fn) {
+      result = fn.apply(context || this, arguments);
+      fn = null;
+    }
+    return result;
+  };
+}

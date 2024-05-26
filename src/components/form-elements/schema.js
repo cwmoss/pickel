@@ -12,3 +12,15 @@ export function set_schema(s, schemaid = "default") {
 export function get_schema_first_document(schemaid = "default") {
   return schema[schemaid].types.find((el) => el.type == "document").name;
 }
+
+export function is_object(name, schemaid = "default") {
+  return schema[schemaid].object_types.includes(name);
+}
+
+export function is_image(name, schemaid = "default") {
+  return schema[schemaid].image_types.includes(name);
+}
+
+export function is_ref(name, schemaid = "default") {
+  return schema[schemaid].refs.includes(name);
+}

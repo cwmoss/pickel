@@ -76,6 +76,7 @@ export default class FormBuilder extends LitElement {
     this.container.value = this.value;
     this.container.prefix = "random";
     this.container.schemaid = this._id;
+    this.container.level = 0;
     this.container.type = this.document;
   }
   updated(changedProperties) {

@@ -103,7 +103,7 @@ function add_style(tagname) {
       height 0.4s ease;
   }
   `;
-  var tag = document.createElement("style");
+  let tag = document.createElement("style");
   tag.appendChild(document.createTextNode(styles));
   document.getElementsByTagName("head")[0].appendChild(tag);
 }

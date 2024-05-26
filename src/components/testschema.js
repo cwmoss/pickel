@@ -159,6 +159,7 @@ const s = `{
                         }
                     ]
                 },
+                {"name":"topcomment", "type":"comment","title":"Bester Kommentar", "opts":[]},
                 {
                     "type": "reference",
                     "title": "author",
@@ -194,7 +195,7 @@ const s = `{
                 },
                 {
                     "type": "array",
-                    "title": "comments",
+                    "title": "Kommentare",
                     "name": "comments",
                     "description": null,
                     "hidden": false,
