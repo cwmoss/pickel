@@ -191,7 +191,13 @@ export default class BContainer extends LitElement {
   render_actions() {
     if (this.type != "array") return "";
     return html`<div class="container--actions">
-      <button @click=${(e) => this.new_array_item(e)} part="button">add</button>
+      <button
+        type="button"
+        @click=${(e) => this.new_array_item(e)}
+        part="button"
+      >
+        add
+      </button>
     </div>`;
   }
   render_els() {
@@ -200,8 +206,11 @@ export default class BContainer extends LitElement {
         return html`<div class="el">
           <div class="handle">${handle_img}</div>
           ${el}
-        </div>`;
-      })}`;
+        </div> `;
+      })}
+      ${this.els.length == 0
+        ? html`<div class="container--empty-array">no entries</div>`
+        : ""} `;
     } else {
       return this.els;
     }
@@ -213,8 +222,10 @@ export default class BContainer extends LitElement {
         ? html`<b-dialog title="edit" trigger_title="Edit!">
             <div class="els">${this.render_els()}</div>
           </b-dialog> `
-        : html`${this.render_actions()}
-            <div class="els">${this.render_els()}</div>`} `;
+        : html`
+            <div class="els">${this.render_els()}</div>
+            ${this.render_actions()}
+          `} `;
   }
   createRenderRoot() {
     return this;
