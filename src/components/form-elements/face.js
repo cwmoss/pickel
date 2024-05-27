@@ -20,6 +20,9 @@ export default class Face extends LitElement {
     cssvars,
     bootstrapform,
     css`
+      :host {
+        display: block;
+      }
       .fgroup {
         margin-bottom: 0;
       }

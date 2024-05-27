@@ -328,7 +328,7 @@ b-container:not([level="0"]){
 */
 b-container{
   display: block;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   margin-bottom: 2rem;
 }
 .container--empty-array{
@@ -348,6 +348,9 @@ b-container b-container[array] .el > *{
 b-container b-container[array] .el > .handle{
   margin-left: 0;
 }
+b-container .els > *{
+  margin-bottom: 1rem;
+}
 .els .el{
   display: flex;
   margin-bottom: 1rem;
@@ -366,5 +369,5 @@ b-container b-container[array] .el > .handle{
 }
 .sortable-chosen{
     color: #fff;
-    background-color: #c00;
+    background-color: rgb(192, 173, 221);
 }

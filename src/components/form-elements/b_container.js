@@ -53,7 +53,7 @@ export default class BContainer extends LitElement {
       this.build_array();
     } else {
       this.schema = get_schema_type(t, this.schemaid);
-      console.log("c-schema", this.schemaid, t, this.value);
+      console.log("c-schema", this.schemaid, this.schema, t, this.value);
       this.build();
     }
     // this.requestUpdate();
@@ -92,6 +92,8 @@ export default class BContainer extends LitElement {
         f.value = value ?? {};
         f.level = (this.level ?? 0) + 1;
         f.label = field.title;
+        f.dialog_button = field.dialog_button;
+        f.dialog_title = field.dialog_title;
         f.type = subtype;
         break;
       case "array":
@@ -221,7 +223,10 @@ export default class BContainer extends LitElement {
     console.log("render container", this.els);
     return html`<h4 title=${this._type}>${this.label}</h4>
       ${this.dialog_button
-        ? html`<b-dialog title="edit" trigger_title="Edit!">
+        ? html`<b-dialog
+            title=${this.dialog_title ?? "edit"}
+            trigger_title=${this.dialog_button}
+          >
             <div class="els">${this.render_els()}</div>
           </b-dialog> `
         : html`
