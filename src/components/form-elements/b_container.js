@@ -132,6 +132,12 @@ export default class BContainer extends LitElement {
     let type = this.of[0].type;
     let index = this.els.length;
     let val = this.new_array_item_value(type);
+    if (!this.value) {
+      this.value = [val];
+    } else {
+      this.value.push(val);
+    }
+
     let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
     f.opts = {
       label: this.name,
@@ -141,12 +147,22 @@ export default class BContainer extends LitElement {
     this.els.push(f);
     this.requestUpdate();
   }
+  dropped(e) {
+    console.log(
+      "+++ dropped old=>new",
+      e.oldIndex,
+      e.newIndex,
+      this.querySelectorAll(".els > *")
+    );
+  }
+  rearrange(from, to) {}
   updated() {
     //return;
     if (this.type == "array") {
       let sortable = Sortable.create(this.querySelector(".els"), {
         delay: 100,
         handle: ".handle",
+        onEnd: (e) => this.dropped(e),
       });
     }
   }

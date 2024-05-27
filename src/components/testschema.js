@@ -160,7 +160,7 @@ const s = `{
                     ]
                 },
                 {"name":"topcomment", "type":"comment","title":"Bester Kommentar", 
-                "xxdialog_button":"Edit Comment",
+                "dialog_button":"Edit Comment",
                 "opts":[]},
                 {
                     "type": "reference",
