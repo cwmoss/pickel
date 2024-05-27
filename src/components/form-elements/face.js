@@ -21,7 +21,7 @@ export default class Face extends LitElement {
     bootstrapform,
     css`
       .fgroup {
-        margin-bottom: 1.5rem;
+        margin-bottom: 0;
       }
     `,
   ];

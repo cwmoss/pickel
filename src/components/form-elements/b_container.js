@@ -22,6 +22,7 @@ export default class BContainer extends LitElement {
     type: { type: String },
     of: { type: Array },
     level: { type: Number, reflect: true },
+    array: { type: Boolean, reflect: true },
     label: {},
     schemaid: {},
     dialog_button: {},
@@ -47,6 +48,7 @@ export default class BContainer extends LitElement {
   set type(t) {
     this._type = t;
     if (t == "array") {
+      this.array = true;
       console.log("c-array", this.schemaid, t, this.value);
       this.build_array();
     } else {
@@ -217,7 +219,7 @@ export default class BContainer extends LitElement {
   }
   render() {
     console.log("render container", this.els);
-    return html`<h4>${this.label} ${this._type}</h4>
+    return html`<h4 title=${this._type}>${this.label}</h4>
       ${this.dialog_button
         ? html`<b-dialog title="edit" trigger_title="Edit!">
             <div class="els">${this.render_els()}</div>

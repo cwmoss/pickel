@@ -176,7 +176,7 @@ const s = `{
                 },
                 {
                     "type": "array",
-                    "title": "related",
+                    "title": "auch interessant...",
                     "name": "related",
                     "description": null,
                     "hidden": false,
