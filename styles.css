@@ -324,7 +324,15 @@ b-container:not([level="0"]){
   display: block;
   padding-left: var(--container-padding, 1rem);
 }
-
+.els .el{
+  display: flex;
+  margin-bottom: 1rem;
+}
+.els .el .handle{
+  width:16px;
+  background-color: #eee;
+  cursor:move;
+}
 .sortable-ghost {
   opacity: .5;
   background: #C8EBFB;

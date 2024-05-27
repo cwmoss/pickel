@@ -4,6 +4,15 @@ import Input from "./input.js";
 import Switch from "./switch.js";
 import Dialog from "./dialog.js";
 import Sortable from "./../../vendor/sortable.complete.esm.js";
+let handle_img = html`<svg
+  xmlns="http://www.w3.org/2000/svg"
+  height="24"
+  viewBox="0 0 24 24"
+  width="16"
+>
+  <path d="M0 0h24v24H0z" fill="none" />
+  <path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z" />
+</svg>`;
 /*
 https://github.com/SortableJS/Sortable?tab=readme-ov-file
 */
@@ -70,6 +79,10 @@ export default class BContainer extends LitElement {
       case "switch":
         f = new Switch();
         break;
+      case "reference":
+        f = new Input();
+        f.value = "";
+        break;
       case "object":
         f = new BContainer();
         f.schemaid = this.schemaid;
@@ -95,18 +108,41 @@ export default class BContainer extends LitElement {
     }
     return f;
   }
+  new_array_item_value(type) {
+    switch (type) {
+      case "reference":
+        return "";
+      case "string":
+        return "";
+      default:
+        return {};
+    }
+  }
   new_array_item(e) {
     console.log("new click", e);
     e.preventDefault();
     e.stopImmediatePropagation();
-    this.value = (this.value || []).concat([{}]);
+    // this.value.push({}); //(this.value || []).concat([{}]);
     console.log("+++ new array", this.value);
-    this.build_array();
+    // this.build_array();
+    let type = this.of[0].type;
+    let index = this.els.length;
+    let val = this.new_array_item_value(type);
+    let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
+    f.opts = {
+      label: this.name,
+      // id: field.name,
+    };
+    //this
+    this.els.push(f);
+    this.requestUpdate();
   }
   updated() {
+    //return;
     if (this.type == "array") {
       let sortable = Sortable.create(this.querySelector(".els"), {
         delay: 100,
+        handle: ".handle",
       });
     }
   }
@@ -159,7 +195,16 @@ export default class BContainer extends LitElement {
     </div>`;
   }
   render_els() {
-    return this.els;
+    if (this.type == "array") {
+      return html`${this.els.map((el) => {
+        return html`<div class="el">
+          <div class="handle">${handle_img}</div>
+          ${el}
+        </div>`;
+      })}`;
+    } else {
+      return this.els;
+    }
   }
   render() {
     console.log("render container", this.els);
