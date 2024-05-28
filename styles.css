@@ -368,6 +368,5 @@ b-container .els > *{
   background: #C8EBFB;
 }
 .sortable-chosen{
-    color: #fff;
-    background-color: rgb(192, 173, 221);
+    outline: 6px solid var(--color-accent);
 }
