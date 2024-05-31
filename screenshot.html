@@ -1,0 +1,14 @@
+<dialog id="screenshot">
+    <div onclick="this.closest('dialog').close()">x</div><img>
+</dialog>
+<script src="https://unpkg.com/modern-screenshot"></script>
+<script>
+    let dialog = document.querySelector("dialog");
+    document.querySelector("#screenshot-trigger").addEventListener("click", (e) => {
+        console.log("clicked");
+        modernScreenshot.domToPng(document.querySelector('body')).then(src => {
+            dialog.querySelector("img").src = src
+            dialog.showModal()
+        })
+    })
+</script>
