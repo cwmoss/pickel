@@ -1,6 +1,9 @@
 export default {
   "/": {
-    class: "index",
+    class: "dashboard",
+  },
+  "/desk": {
+    class: "desk",
   },
   "/about": {
     class: "about",

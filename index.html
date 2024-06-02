@@ -1,37 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>slowhand</title>
+    <!-- script src="src/lib/page.js"></script -->
+    <link rel="stylesheet" href="css/styles.css" class="rel" />
+    <script defer src="src/vendor/json-viewer.bundle.js"></script>
+    <script type="module" src="src/components/index.js"></script>
+    <script type="module" src="src/components/dl.js"></script>
+    <script type="module" src="src/components/card.js"></script>
+    <script type="module" src="src/components/server-info.js"></script>
+    <script type="module" src="src/components/dataset-info.js"></script>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>demo</title>
-  <!-- script src="src/lib/page.js"></script -->
-  <link rel="stylesheet" href="styles.css" class="rel" />
-  <script defer src="src/vendor/event-count.js"></script>
-  <script type="module" src="src/components/index.js"></script>
-  <script type="module" src="src/app.js"></script>
-</head>
+    <script type="module" src="src/app.js"></script>
+    <style>
+      body json-viewer {
+        --background-color: yellow !important;
+        --color: black;
+        --font-family: monaco, Consolas, "Lucida Console", monospace;
+        --font-size: 1rem;
+        --indent-size: 1.5em;
+        --indentguide-size: 1px;
+        --indentguide-style: solid;
+        --indentguide-color: #333;
+        --indentguide-color-active: #666;
+        --indentguide: var(--indentguide-size) var(--indentguide-style)
+          var(--indentguide-color);
+        --indentguide-active: var(--indentguide-size) var(--indentguide-style)
+          var(--indentguide-color-active);
+        --string-color: #a3eea0;
+        --number-color: #d19a66;
+        --boolean-color: #4ba7ef;
+        --null-color: #df9cf3;
+        --property-color: #6fb3d2;
+        --preview-color: rgba(222, 175, 143, 0.9);
+        --highlight-color: #6fb3d2;
+      }
+    </style>
+  </head>
 
-<body>
-  <pi-app id="body">
-    <header>
-      <h1>demo</h1>
-      <pi-navigation>
-        <nav>
-          <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-          </ul>
-        </nav>
-      </pi-navigation>
-    </header>
-    <main>
-
-    </main>
-    <footer>
-      made with pickel
-    </footer>
-  </pi-app>
-</body>
-
+  <body>
+    <pi-app id="body">
+      <header>
+        <h1>slowhand</h1>
+        <pi-navigation>
+          <nav>
+            <ul>
+              <li><a href="/">Dashboard</a></li>
+              <li><a href="/desk">Desk</a></li>
+              <li><a href="/about">About</a></li>
+            </ul>
+          </nav>
+        </pi-navigation>
+      </header>
+      <main></main>
+      <footer>made with pickel</footer>
+    </pi-app>
+  </body>
 </html>

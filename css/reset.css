@@ -1,0 +1,17 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: content-box;
+}
+body {
+  font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+input,
+button,
+select {
+  font: inherit;
+}
