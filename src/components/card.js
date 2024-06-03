@@ -16,9 +16,20 @@ export default class Card extends LitElement {
     css`
       :host {
         display: block;
+        border-left: 2px solid black;
+      }
+      article > div {
+        padding: 1rem;
       }
       h1 {
-        font-size: 1rem;
+        font-size: 0.75rem;
+        padding: 0.5rem;
+        line-height: 0.75rem;
+        font-weight: bold;
+        display: inline-block;
+        background: black;
+        color: white;
+        margin: 0;
       }
       dl {
         display: grid;

@@ -3,7 +3,7 @@ import { LitElement, css, html } from "../vendor/lit-core.min.js";
 
 // console.log("bootstrap import", cssvars);
 
-export default class Dl extends LitElement {
+export default class Table extends LitElement {
   static properties = {
     keys: { type: Array },
     data: { type: Array },
@@ -16,36 +16,41 @@ export default class Dl extends LitElement {
         display: block;
         --border-color: #ccc;
       }
-      dl {
-        display: grid;
-        grid-template-columns: max-content auto;
+      table {
+        border-collapse: collapse;
       }
-      dl > * {
-        padding: 0.5rem 1rem 0.5rem 0;
+      thead tr {
+        background-color: #009879;
+        color: #ffffff;
+        text-align: left;
       }
-      dt {
-        grid-column-start: 1;
-        font-weight: bold;
-        border-bottom: 1px solid var(--border-color);
+      th,
+      td {
+        padding: 12px 15px;
+      }
+      tbody tr {
+        border-bottom: 1px solid #dddddd;
       }
 
-      dd {
-        grid-column-start: 2;
-        margin: 0;
-        border-bottom: 1px solid var(--border-color);
+      tbody tr:nth-child(2n) {
+        background-color: #f3f3f3;
+      }
+
+      tbody tr:last-of-type {
+        border-bottom: 2px solid #009879;
       }
     `,
   ];
 
   render() {
     if (!this.data) return "";
-    return html`<dl>
+    return html`<table>
       ${this.data.map((el) => {
         return html`<dt>${el[this.keys[0]]}</dt>
           <dd>${el[this.keys[1]]}</dd>`;
       })}
-    </dl>`;
+    </table>`;
   }
 }
 
-window.customElements.define("pi-dl", Dl);
+window.customElements.define("pi-table", Table);

@@ -26,3 +26,23 @@ export const hashID = (size) => {
 
   return bytes.reduce((acc, byte) => `${acc}${charset[byte & MASK]}`, "");
 };
+
+// https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
+/**
+ * Retrieve nested item from object/array
+ * @param {Object|Array} obj
+ * @param {String} path dot separated
+ * @param {*} def default value ( if result undefined )
+ * @returns {*}
+ */
+export const resolve_path = (obj, path, def) => {
+  var i, len;
+
+  for (i = 0, path = path.split("."), len = path.length; i < len; i++) {
+    if (!obj || typeof obj !== "object") return def;
+    obj = obj[path[i]];
+  }
+
+  if (obj === undefined) return def;
+  return obj;
+};
