@@ -1,0 +1,30 @@
+import { LitElement, css, html } from "./../vendor/lit-core.min.js";
+
+import dataset from "./../lib/datasets.js";
+
+export default class DatasetSwitch extends LitElement {
+  static properties = {
+    current: {},
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.current = dataset.current;
+  }
+
+  switch(e) {
+    console.log("++ switch to", e.originalTarget.value, e);
+    dataset.current = e.originalTarget.value;
+  }
+
+  render() {
+    return html`<b-select
+      no-label
+      @input=${this.switch}
+      .value=${this.current}
+      .items=${dataset.datasets}
+    ></b-select>`;
+  }
+}
+
+window.customElements.define("dataset-switch", DatasetSwitch);

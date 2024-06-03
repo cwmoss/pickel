@@ -11,3 +11,8 @@ dashboard-page .grid {
 .two {
   grid-column: span 2;
 }
+
+dashboard-page .grid > *{
+  background-color: white;
+  /* padding: 0.5rem; */
+}

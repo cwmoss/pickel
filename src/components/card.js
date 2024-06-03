@@ -1,4 +1,7 @@
 import { LitElement, css, html } from "./../vendor/lit-core.min.js";
+
+import api from "./../lib/slow-hand.js";
+
 //import cssvars from "./variables.css.js";
 
 // console.log("bootstrap import", cssvars);
@@ -7,6 +10,7 @@ export default class Card extends LitElement {
   static properties = {
     title: {},
     url: {},
+    api: {},
     data: { type: Object },
     placeholder: {},
   };
@@ -17,6 +21,9 @@ export default class Card extends LitElement {
       :host {
         display: block;
         border-left: 2px solid black;
+      }
+      json-viewer {
+        --background-color: white;
       }
       article > div {
         padding: 1rem;
@@ -58,15 +65,24 @@ export default class Card extends LitElement {
   }
 
   async fetch_data() {
-    console.log("fetching", this.url);
-    let res = await fetch(this.url, { method: "GET", credentials: "include" });
-    let data = await res.json();
+    let res, data;
+    if (this.api) {
+      console.log("fetching API", this.api);
+      data = await api[this.api]();
+    } else if (this.query) {
+      data = await api.query(this.query);
+    } else {
+      console.log("fetching", this.url);
+      res = await fetch(this.url, { method: "GET", credentials: "include" });
+      data = await res.json();
+    }
+
     this.data = data;
   }
 
   render_body() {
     return html`<json-viewer
-      style="--background-color: white;"
+      style="--xxbackground-color: white;"
       .data=${this.data}
     ></json-viewer>`;
     // return html`<code>${JSON.stringify(this.data)}</code>`;

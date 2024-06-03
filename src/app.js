@@ -23,7 +23,7 @@ class App extends HTMLElement {
 
     console.log("loaded page", page);
 
-    this.nav.active(ctx.pathname);
+    this.nav?.active?.(ctx.pathname);
     this.content.replaceChildren(page);
     // this.content.innerHTML = `<${name}-page></${name}-page>`;
   }

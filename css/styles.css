@@ -9,15 +9,18 @@
 @import url("dashboard.css");
 
 main {
-  max-width: 1148px;
-  margin: 0 auto;
-  padding: 60px 30px;
+  
+  background-color: #eee;
+  padding: 30px 30px;
   /* display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
   gap: 60px 160px; */
 }
-
+main > *{
+  max-width: 1148px;
+  margin: 0 auto;
+}
 @media screen and (max-width: 1200px) {
   main {
     /* grid-template-columns: minmax(0, 1fr); */
@@ -46,6 +49,21 @@ aside {
   margin-bottom: 20px;
 }
 
+#body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+#body > header {
+  min-height: 50px;
+}
+
+#body > footer {
+  min-height: 50px;
+}
+
 #body > header,
 #body > footer {
   max-width: 1148px;
@@ -55,6 +73,7 @@ aside {
 #body > header {
   display: flex;
   gap: 1rem;
+  margin-bottom: 1rem;
 }
 h1 img {
   margin-bottom: -14px;

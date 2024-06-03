@@ -11,6 +11,8 @@ export default class Face extends LitElement {
     value: {},
     name: { reflect: true },
     label: {},
+    noLabel: { type: Boolean, attribute: "no-label" },
+    inline: { type: Boolean },
     id: {},
     placeholder: {},
     // opts: { attribute: false },
@@ -59,6 +61,12 @@ export default class Face extends LitElement {
   }
   set opts(o) {
     Object.assign(this, o);
+  }
+
+  render_label() {
+    return !this.noLabel
+      ? html`<label for="input" class="form-label">${this.label}</label>`
+      : "";
   }
 }
 

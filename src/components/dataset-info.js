@@ -3,7 +3,8 @@ import { css, html } from "./../vendor/lit-core.min.js";
 import Card from "./card.js";
 
 export default class DatasetInfo extends Card {
-  url = "http://localhost:10245/data/info/movies";
+  // url = "http://localhost:10245/data/info/movies";
+  api = "info";
   _title = "Dataset Info";
 
   get title() {

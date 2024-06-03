@@ -5,6 +5,12 @@ export default {
   "/desk": {
     class: "desk",
   },
+  "/admin": {
+    class: "admin",
+  },
+  "/media": {
+    class: "media",
+  },
   "/about": {
     class: "about",
   },

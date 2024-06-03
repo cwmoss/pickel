@@ -9,6 +9,7 @@
   --color-background: #ffffff;
   --color-accent: #fddd34;
   --panel-font-size: var(--font-size, 16px);
+  --background-color: white;
 }
 /*
   @media (prefers-color-scheme: dark) {

@@ -64,11 +64,11 @@ export default class Select extends Face {
   render() {
     console.log("render switch", this);
     return html`<div class="fgroup">
-      <label for="input" class="form-label">${this.label}</label>
+      ${this.render_label()}
       <select
         @change=${(e) => this.input_event(e)}
         class="form-select"
-        id="select"
+        id="input"
       >
         ${this.items
           ? this.items.map(
