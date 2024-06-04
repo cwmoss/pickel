@@ -9,11 +9,12 @@ class App extends HTMLElement {
     super();
     this.define_routes();
     // this.innerHTML = layout;
+  }
+  connectedCallback() {
     this.content = this.querySelector("main");
     this.nav = this.querySelector("pi-navigation");
-    router("/");
+    router();
   }
-  connectedCallback() {}
 
   async load_page(name, ctx) {
     let path = "./pages/" + name + ".js";
@@ -22,9 +23,9 @@ class App extends HTMLElement {
     page.set_route(ctx);
 
     console.log("loaded page", page);
-
-    this.nav?.active?.(ctx.pathname);
     this.content.replaceChildren(page);
+    this.nav?.active?.(ctx.pathname);
+
     // this.content.innerHTML = `<${name}-page></${name}-page>`;
   }
   define_routes() {

@@ -11,6 +11,7 @@ export default class MediaWidget extends LitElement {
     assets: [],
     total: { type: Number },
     page: { type: Number },
+    loading: { type: Boolean },
   };
 
   static styles = [
@@ -23,6 +24,9 @@ export default class MediaWidget extends LitElement {
         display: flex;
         flex-wrap: wrap;
         gap: 1rem;
+      }
+      .body[loading] {
+        opacity: 40%;
       }
       .item,
       img {
@@ -75,7 +79,9 @@ export default class MediaWidget extends LitElement {
   }
 
   async fetch_data(page) {
-    if (!this.limit) this.limit = 10;
+    this.loading = true;
+    this.assets = [];
+    if (!this.limit) this.limit = 12;
     if (page) this.page = page;
     if (!this.page) this.page = 1;
     let res, assets;
@@ -89,6 +95,7 @@ export default class MediaWidget extends LitElement {
     console.log("result", res.pageinfo.total, res.result.length);
     this.total = res.pageinfo.total;
     this.assets = res.result;
+    this.loading = false;
   }
 
   move_page(e) {
@@ -124,7 +131,7 @@ export default class MediaWidget extends LitElement {
             .total=${this.total}
           ></pi-pager>
         </header>
-        <div class="body">
+        <div class="body" ?loading=${this.loading}>
           ${this?.assets?.map((img) => {
             return html`<div class="item">
               <img src="${api.images()}/${img.path}?size=150x150&mode=fit" />
