@@ -1,5 +1,5 @@
-import { LitElement, css, html } from "./../vendor/lit-core.min.js";
-
+import { LitElement, css, html } from "./../vendor/lit-all.min.js";
+// import Pager from "./pager.js";
 import api from "./../lib/slow-hand.js";
 
 //import cssvars from "./variables.css.js";
@@ -74,15 +74,26 @@ export default class MediaWidget extends LitElement {
     this.fetch_data();
   }
 
-  async fetch_data() {
+  async fetch_data(page) {
+    if (!this.limit) this.limit = 10;
+    if (page) this.page = page;
+    if (!this.page) this.page = 1;
     let res, assets;
     let type = "image";
     let q = `q(_type=="${type == "image" ? "sh.image" : "sh.file"}")`;
-    res = await api.query(q, { count: true, limit: 36 });
+    res = await api.query(q, {
+      count: true,
+      limit: this.limit,
+      page: this.page,
+    });
     console.log("result", res.pageinfo.total, res.result.length);
     this.total = res.pageinfo.total;
-    this.page = 1;
     this.assets = res.result;
+  }
+
+  move_page(e) {
+    console.log("+++move", e.detail);
+    this.fetch_data(e.detail);
   }
 
   render_body() {
@@ -93,10 +104,26 @@ export default class MediaWidget extends LitElement {
     // return html`<code>${JSON.stringify(this.data)}</code>`;
   }
 
+  /*
+  <pi-pager
+            limit="12"
+            .page=${this.page}
+            .total=${this.total}
+          ></pi-pager>
+          */
   render() {
+    console.log("rendering", this.page);
     return html`
       <section>
-        <header>suche --- pager</header>
+        <header>
+          suche
+          <pi-pager
+            @move-page=${this.move_page}
+            limit="12"
+            .page=${this.page}
+            .total=${this.total}
+          ></pi-pager>
+        </header>
         <div class="body">
           ${this?.assets?.map((img) => {
             return html`<div class="item">

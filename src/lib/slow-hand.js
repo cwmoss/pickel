@@ -31,7 +31,12 @@ class SlowHand {
         if (options.offset) {
           query += `limit(${options.limit} ${options.offset})`;
         } else {
-          query += `limit(${options.limit})`;
+          if (options.page) {
+            let offset = (options.page - 1) * options.limit;
+            query += `limit(${options.limit} ${offset})`;
+          } else {
+            query += `limit(${options.limit})`;
+          }
         }
       }
       if (options.preview) {
