@@ -10,10 +10,13 @@ class App extends HTMLElement {
     this.define_routes();
     // this.innerHTML = layout;
   }
+
   connectedCallback() {
-    this.content = this.querySelector("main");
-    this.nav = this.querySelector("pi-navigation");
-    router();
+    window.setTimeout(() => {
+      this.content = this.querySelector("main");
+      this.nav = this.querySelector("pi-navigation");
+      router();
+    });
   }
 
   async load_page(name, ctx) {
