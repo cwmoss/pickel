@@ -21,31 +21,33 @@ export default class Pager extends LitElement {
         display: flex;
         gap: 0rem;
       }
-      a {
+      button {
+        border: none;
         display: block;
         padding: 0.7rem;
         text-decoration: none;
         background: white;
         color: black;
       }
-      a:hover {
+      button:hover {
         background: #f2f2f2;
       }
-      a[active] {
+      button[active] {
         background: black;
         color: white;
       }
-      a[active]:hover {
+      button[active]:hover {
         background: #555;
       }
     `,
   ];
   _clickHandler(e) {
-    console.log("++ click", e.target.textContent);
+    console.log("++ click", e);
+    if (!e.target.matches("button")) return;
     // this.clicked = e.target.text;
     this.dispatchEvent(
       new CustomEvent("move-page", {
-        detail: e.target.textContent,
+        detail: e.target.getAttribute("p"),
         bubbles: true,
         composed: false,
       })
@@ -53,18 +55,23 @@ export default class Pager extends LitElement {
   }
   render() {
     console.log("rendering PAGER", this.page);
+    let page = parseInt(this.page);
+    if (!page) page = 1;
     if (!this.total) return "";
     let pages = Math.ceil(this.total / this.limit);
+    let prev = page > 1 ? page - 1 : 1;
+    let next = page >= pages ? pages : page + 1;
     return html`<nav @click=${this._clickHandler}>
-      <a href="javascript:;">prev</a>
+      <button type="button" p="${prev}">prev</button>
+      <button type="button" p="${next}">next</button>
+
       ${map(
         range(pages),
         (i) =>
-          html`<a href="javascript:;" ?active=${i + 1 == this.page}
-            >${i + 1}</a
-          >`
+          html`<button type="button" p="${i + 1}" ?active=${i + 1 == this.page}>
+            ${i + 1}
+          </button>`
       )}
-      <a href="javascript:;">next</a>
     </nav>`;
   }
 }

@@ -4,7 +4,7 @@ class PageElement extends HTMLElement {
   constructor() {
     super();
     this.loading = this.load_template();
-    console.log("^^title?", this.title, this.constructor);
+    // console.log("^^title?", this.title, this.constructor);
     if (this.title) {
       window.document.title = this.title;
     }

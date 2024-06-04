@@ -1,7 +1,7 @@
 import { LitElement, css, html } from "./../vendor/lit-all.min.js";
 // import Pager from "./pager.js";
 import api from "./../lib/slow-hand.js";
-
+import urlStore from "../lib/url-store.js";
 //import cssvars from "./variables.css.js";
 
 // console.log("bootstrap import", cssvars);
@@ -12,6 +12,8 @@ export default class MediaWidget extends LitElement {
     total: { type: Number },
     page: { type: Number },
     loading: { type: Boolean },
+    edit: { type: Boolean },
+    item: { type: Object },
   };
 
   static styles = [
@@ -32,6 +34,7 @@ export default class MediaWidget extends LitElement {
       img {
         width: 150px;
       }
+
       /* Settings start */
       .justified-grid-gallery {
         --space: 4px;
@@ -70,6 +73,17 @@ export default class MediaWidget extends LitElement {
         flex-grow: 1000000000;
         background: var(--last-row-background);
       }
+
+      dialog {
+        top: 0;
+        left: 0;
+        width: 90vw;
+        height: 90vh;
+      }
+      ::backdrop {
+        background: black;
+        opacity: 60%;
+      }
     `,
   ];
 
@@ -81,7 +95,8 @@ export default class MediaWidget extends LitElement {
   async fetch_data(page) {
     this.loading = true;
     this.assets = [];
-    if (!this.limit) this.limit = 12;
+    if (!this.limit) this.limit = 48;
+    if (!page) page = urlStore.get_parameter("p");
     if (page) this.page = page;
     if (!this.page) this.page = 1;
     let res, assets;
@@ -100,9 +115,18 @@ export default class MediaWidget extends LitElement {
 
   move_page(e) {
     console.log("+++move", e.detail);
+    urlStore.set_parameter("p", e.detail);
     this.fetch_data(e.detail);
   }
 
+  start_edit(e) {
+    console.log("++ dblclick", e);
+    if (!e.target.matches("img")) return;
+    let id = e.target.getAttribute("id");
+    this.item = this.assets.find((img) => img._id == id);
+    this.edit = true;
+    this.shadowRoot.querySelector("dialog").showModal();
+  }
   render_body() {
     return html`<json-viewer
       style="--xxbackground-color: white;"
@@ -111,6 +135,11 @@ export default class MediaWidget extends LitElement {
     // return html`<code>${JSON.stringify(this.data)}</code>`;
   }
 
+  render_editor() {
+    return html`<dialog>
+      ${this.item ? html`<json-viewer .data=${this.item}></json-viewer>` : ""}
+    </dialog>`;
+  }
   /*
   <pi-pager
             limit="12"
@@ -126,18 +155,22 @@ export default class MediaWidget extends LitElement {
           suche
           <pi-pager
             @move-page=${this.move_page}
-            limit="12"
+            .limit=${this.limit}
             .page=${this.page}
             .total=${this.total}
           ></pi-pager>
         </header>
-        <div class="body" ?loading=${this.loading}>
+        <div class="body" ?loading=${this.loading} @dblclick=${this.start_edit}>
           ${this?.assets?.map((img) => {
             return html`<div class="item">
-              <img src="${api.images()}/${img.path}?size=150x150&mode=fit" />
+              <img
+                id="${img._id}"
+                src="${api.images()}/${img.path}?size=150x150&mode=fit"
+              />
             </div>`;
           })}
         </div>
+        ${this.render_editor()}
         <footer></footer>
       </section>
     `;
