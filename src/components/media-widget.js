@@ -137,7 +137,12 @@ export default class MediaWidget extends LitElement {
 
   render_editor() {
     return html`<dialog>
-      ${this.item ? html`<json-viewer .data=${this.item}></json-viewer>` : ""}
+      ${this.item
+        ? html`<json-viewer .data=${this.item}></json-viewer>
+            <focus-picker
+              img="${api.images()}/${this.item.path}"
+            ></focus-picker>`
+        : ""}
     </dialog>`;
   }
   /*

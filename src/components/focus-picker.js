@@ -1,11 +1,14 @@
-import {
-  LitElement,
-  css,
-  html,
-  svg,
-  map,
-  range,
-} from "../vendor/lit-all.min.js";
+/*
+credits: 
+    Kevin Kipp
+    https://github.com/third774/image-focus
+    https://image-focus.stackblitz.io/
+    
+    Henry Desroches
+    https://henry.codes/writing/pure-css-focal-points
+*/
+
+import { LitElement, css, html, svg } from "../vendor/lit-all.min.js";
 
 const retina = svg`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
 <g fill="none" fill-rule="evenodd">
@@ -21,16 +24,31 @@ export default class FocusPicker extends LitElement {
     y: { type: Number },
     px: {},
     py: {},
+    img_w: { type: Number },
+    img_h: { type: Number },
     isDragging: { type: Boolean },
+    open: { type: Boolean },
   };
 
   static styles = [
     // cssvars,
     css`
       :host {
-        display: block;
-        --position-x: 70%;
-        --position-y: 100%;
+        /* display: block; */
+        --crop-focus-x: 0.5;
+        --crop-focus-y: 0.5;
+      }
+      dialog {
+        /* margin: 0;
+        padding: 0; */
+        /* box-sizing: border-box; */
+        width: 100%;
+        height: 100%;
+        border: 5px solid white;
+      }
+      ::backdrop {
+        color: white;
+        /* opacity: 100%; */
       }
       .grid {
         display: grid;
@@ -46,14 +64,44 @@ export default class FocusPicker extends LitElement {
 
         /* needed for safari */
         height: 100%;
+        width: 100%;
       }
+      .c {
+        container-type: size;
+      }
+
+      .c img {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        /* --crop-focus-x: 0.6;
+        --crop-focus-y: 0.5; */
+        --container-width: 100cqw;
+        --container-height: 100cqh;
+        --image-width: calc(var(--container-width) - 100%);
+        --image-height: calc(var(--container-height) - 100%);
+        object-position: clamp(
+            100%,
+            0.5 * var(--container-width) - var(--crop-focus-x) *
+              var(--image-width),
+            0%
+          )
+          clamp(
+            100%,
+            0.5 * var(--container-height) - var(--crop-focus-y) *
+              var(--image-height),
+            0%
+          );
+        transition: object-position 0.25s ease-in-out;
+      }
+      /*
       .grid img {
         object-fit: cover;
-        object-position: left var(--position-x, 50%) top var(--position-y, 50%);
+        object-position: var(--position-x, 50%) var(--position-y, 50%);
         height: 100%;
         width: 100%;
       }
-
+*/
       .picker {
         position: absolute;
         top: 30px;
@@ -78,6 +126,11 @@ export default class FocusPicker extends LitElement {
         cursor: move;
         transform: translate(-50%, -50%);
       }
+      output {
+        display: block;
+        line-height: 1.6;
+        margin: 0.5rem 0;
+      }
     `,
   ];
 
@@ -85,8 +138,31 @@ export default class FocusPicker extends LitElement {
     super();
     this.x = 0;
     this.y = 0;
+    this.open = false;
   }
 
+  start_dialog() {
+    this.shadowRoot.querySelector("dialog").showModal();
+    this.open = true;
+  }
+
+  save() {
+    this.shadowRoot.querySelector("dialog").close();
+    this.open = true;
+    this.dispatchEvent(
+      new CustomEvent("set-focuspoint", {
+        detail: { x: this.x, y: this.y },
+        bubbles: true,
+        composed: false,
+      })
+    );
+  }
+
+  source_loaded() {
+    this.img_w = this.image.naturalWidth;
+    this.img_h = this.image.naturalHeight;
+    this.set_focus();
+  }
   get container() {
     return this.renderRoot?.querySelector(".container") ?? null;
   }
@@ -97,21 +173,35 @@ export default class FocusPicker extends LitElement {
     return this.renderRoot?.querySelector(".retina") ?? null;
   }
   set_focus(x, y) {
-    this.x = x;
-    this.y = y;
+    // initial ohne parameter
+    if (typeof x !== "undefined") {
+      this.x = x;
+      this.y = y;
+    }
     this.px = (this.x / 2 + 0.5).toFixed(2) * 100;
     this.py = (1 - (this.y / 2 + 0.5)).toFixed(2) * 100;
     // console.log("++ set focus", px, py, x, y);
-    this.style.setProperty("--position-x", "" + this.px + "%");
-    this.style.setProperty("--position-y", "" + this.py + "%");
-    console.log("3.bild", this.renderRoot.querySelector(".grid :nth-child(3)"));
+    //this.style.setProperty("--position-x", "" + this.px + "%");
+    //this.style.setProperty("--position-y", "" + this.py + "%");
+    this.style.setProperty(
+      "--crop-focus-x",
+      "" + (this.x / 2 + 0.5).toFixed(2)
+    );
+    this.style.setProperty(
+      "--crop-focus-y",
+      "" + (1 - (this.y / 2 + 0.5)).toFixed(2)
+    );
+
+    // console.log("3.bild", this.renderRoot.querySelector(".grid :nth-child(3)"));
     // this.img.setAttribute("data-focus-x", focus.x.toString());
     // this.img.setAttribute("data-focus-y", focus.y.toString());
     this.updateRetinaPositionFromFocus();
+
+    // this.update_previews();
     // this.options.onChange(focus);
   }
   calculateOffsetFromFocus() {
-    console.log("calculate offset", this.image);
+    // console.log("calculate offset", this.image);
     const { width, height } = this.image.getBoundingClientRect();
     const offsetX = width * (this.x / 2 + 0.5);
     const offsetY = height * (this.y / -2 + 0.5);
@@ -124,7 +214,7 @@ export default class FocusPicker extends LitElement {
   }
 
   updateRetinaPosition(offsetx, offsety) {
-    console.log("+++ update RETINA", this.retina, offsetx, offsety);
+    //console.log("+++ update RETINA", this.retina, offsetx, offsety);
     this.retina.style.top = `${offsety}px`;
     this.retina.style.left = `${offsetx}px`;
   }
@@ -138,14 +228,14 @@ export default class FocusPicker extends LitElement {
     const offsetY = clientY - top;
     const x = (offsetX / width - 0.5) * 2;
     const y = (offsetY / height - 0.5) * -2;
-
+    /*
     console.log("++ coordinaten", clientX, clientY, x, y, {
       width,
       height,
       left,
       top,
     });
-
+*/
     // TODO: Figure out an elegant way to use the setFocus API without
     // having to recalculate the offset from focus
     this.set_focus(x, y);
@@ -189,29 +279,43 @@ export default class FocusPicker extends LitElement {
         @touchstart=${this.startDragging}
         @touchmove=${this.handleMove}
       >
-        <img id="picker-img" src="${this.img}" alt="" />
+        <img
+          id="picker-img"
+          src="${this.img}"
+          alt=""
+          @load=${this.source_loaded}
+        />
         <div class="retina">${retina}</div>
       </div>
       <output
-        >x: ${this.x}<br />y: ${this.y}<br />
-        x%: ${this.px}<br />y%: ${this.py}
+        >imagesize ${this.img_w} x ${this.img_h} px<br />
+        focuspoint x: ${this.x.toFixed(2)} y: ${this.y.toFixed(2)}<br />
       </output>
+      <slot @click=${this.save} name="close"
+        ><button type="button">Save</button></slot
+      >
     </div>`;
   }
-  render() {
-    console.log("rendering FOCUSPICKER");
+  render_content() {
     return html`<div class="grid">
-        <img src="${this.img}" alt="" />
-        <img src="${this.img}" alt="" />
-        <img src="${this.img}" alt="" />
-        <img src="${this.img}" alt="" />
-        <img src="${this.img}" alt="" />
-        <img src="${this.img}" alt="" />
-        <img src="${this.img}" alt="" />
-        <img src="${this.img}" alt="" />
-        <img src="${this.img}" alt="" />
+        <div class="c"><img src="${this.img}" alt="" /></div>
+        <div class="c"><img src="${this.img}" alt="" /></div>
+        <div class="c"><img src="${this.img}" alt="" /></div>
+        <div class="c"><img src="${this.img}" alt="" /></div>
+        <div class="c"><img src="${this.img}" alt="" /></div>
+        <div class="c"><img src="${this.img}" alt="" /></div>
+        <div class="c"><img src="${this.img}" alt="" /></div>
+        <div class="c"><img src="${this.img}" alt="" /></div>
+        <div class="c"><img src="${this.img}" alt="" /></div>
       </div>
-      ${this.render_picker()} `;
+      ${this.render_picker()}`;
+  }
+  render() {
+    console.log("rendering FOCUSPICKER", this.x, this.y);
+    return html`<slot name="open" @click=${this.start_dialog}
+        ><button type="button">Pick Focus</button></slot
+      >
+      <dialog>${this.open ? this.render_content() : ""}</dialog>`;
   }
 }
 
