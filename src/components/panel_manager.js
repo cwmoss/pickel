@@ -1,5 +1,6 @@
 import Split from "../vendor/split.js";
-import Panel from "./panel.js";
+// import Panel from "./panel.js";
+import Panel from "../structure/panel.js";
 import Preview from "./preview.js";
 
 import Api from "../lib/api.js";

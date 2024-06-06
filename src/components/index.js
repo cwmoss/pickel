@@ -1,6 +1,6 @@
 import Navigation from "./navigation.js";
 import Slide from "./slide.js";
-import Panel from "./panel.js";
+import Panel from "../structure/panel.js";
 import PanelManager from "./panel_manager.js";
 import ImageUpload from "./image-upload.js";
 import DateRange from "./date-range.js";
