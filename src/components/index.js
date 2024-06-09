@@ -14,7 +14,7 @@ window.customElements.define("pi-panel", Panel);
 window.customElements.define("pi-preview", Preview);
 window.customElements.define("pi-panel-manager", PanelManager);
 
-window.customElements.define("image-upload", ImageUpload);
+// window.customElements.define("image-upload", ImageUpload);
 window.customElements.define("date-range", DateRange);
 window.customElements.define("ad-preview", AdPreview);
 window.customElements.define("svg-placeholder", SvgPlaceholder);
