@@ -65,11 +65,7 @@ export default class Select extends Face {
     console.log("render switch", this);
     return html`<div class="fgroup">
       ${this.render_label()}
-      <select
-        @change=${(e) => this.input_event(e)}
-        class="form-select"
-        id="input"
-      >
+      <select @change=${this.input_event} class="form-select" id="input">
         ${this.items
           ? this.items.map(
               (item) =>

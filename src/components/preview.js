@@ -17,6 +17,10 @@ template.innerHTML = /*html*/ `
     p{
         
     }
+    [id="var(--selected-id)"] {
+      color: red;
+      background-color:var(--color-accent);
+    }
 </style>
 <div>
 <h2></h2>

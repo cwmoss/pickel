@@ -13,8 +13,8 @@ export default class DatasetSwitch extends LitElement {
   }
 
   switch(e) {
-    console.log("++ switch to", e.originalTarget.value, e);
-    dataset.current = e.originalTarget.value;
+    console.log("+++ switch to", e.target.value, e);
+    dataset.current = e.target.value; //e.originalTarget.value;
   }
 
   render() {
