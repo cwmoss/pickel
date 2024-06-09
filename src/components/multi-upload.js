@@ -114,6 +114,10 @@ const style = css`
   [hidden] {
     display: none;
   }
+
+  multi-upload-item {
+    margin: 3px 0;
+  }
 `;
 
 export default class MultiUpload extends LitElement {

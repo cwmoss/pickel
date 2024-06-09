@@ -11,18 +11,13 @@ const icon = svg`
 const style = css`
   :host {
     display: block;
-
+    font-size: 16px;
     height: 50px;
   }
   :host * {
     box-sizing: border-box;
   }
-  :host([existing]) .drop,
-  :host([uploading]) .drop {
-    display: none;
-  }
   :host(:not([existing])) {
-    font-size: 20px;
   }
   :host(:not([existing])) .details,
   :host(:not([existing])) .remove {
@@ -59,24 +54,22 @@ const style = css`
     width: 100%;
     height: 100%;
     overflow: hidden;
+    display: flex;
+    gap: 1rem;
   }
-
   .preview {
     background-color: rgba(199, 199, 199, 0.25);
-    width: 250px;
-    height: 250px;
+    width: 50px;
+    height: 50px;
   }
   .details {
-    place-self: end start;
-    display: flex;
     bottom: 0;
-    width: 80%;
-    padding: 1rem;
-    background-color: #ffffffde;
+    width: 100%;
     color: black;
     border-radius: 3px;
   }
   .descr {
+    place-self: start start;
     overflow: hidden;
   }
   .preview img {
@@ -88,8 +81,6 @@ const style = css`
     cursor: pointer;
   }
   .message {
-    place-self: end start;
-    width: 100%;
     padding: 1rem;
     background-color: #ef8f8f;
     color: white;
@@ -97,7 +88,7 @@ const style = css`
   }
   progress {
     border: none;
-    height: 3px;
+    height: 12px;
     width: 100%;
   }
   .message:empty {
@@ -126,8 +117,8 @@ export default class MultiUploadItem extends LitElement {
 
   render_descr() {
     if (!this.thumb) return "";
-    return html`${this.fname}<br />${this.thumb?.naturalWidth} x
-      ${this.thumb?.naturalHeight} px`;
+    return html`${this.fname} ${this.thumb?.naturalWidth} x
+    ${this.thumb?.naturalHeight} px`;
   }
 
   render_preview() {
@@ -136,15 +127,20 @@ export default class MultiUploadItem extends LitElement {
   }
 
   render() {
-    return html`<section class="stack">
-      <input @change=${this.handleChange} hidden id="fileUpload" type="file" />
-      <progress max="100" value="0"></progress>
+    return html`<section>
       <div class="preview">${this.render_preview()}</div>
       <div class="details">
+        <progress max="100" value="0"></progress>
         <div class="descr">${this.render_descr()}</div>
+        <div class="message">${this.error}</div>
       </div>
-      <button @click=${this.handleRemove} type="button" class="remove"></button>
-      <div class="message">${this.error}</div>
+      <div class="actions">
+        <button
+          @click=${this.handleRemove}
+          type="button"
+          class="remove"
+        ></button>
+      </div>
     </section>`;
   }
 
