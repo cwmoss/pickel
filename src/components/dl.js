@@ -5,7 +5,16 @@ import { LitElement, css, html } from "../vendor/lit-core.min.js";
 
 export default class Dl extends LitElement {
   static properties = {
-    keys: { type: Array },
+    keys: {
+      type: Array,
+      converter: (value, type) => {
+        if (value.substring(0, 1) == "[") {
+          return JSON.parse(value);
+        } else {
+          return value.split(",");
+        }
+      },
+    },
     data: { type: Array },
   };
 
@@ -37,8 +46,20 @@ export default class Dl extends LitElement {
     `,
   ];
 
+  render_object() {
+    return html`<dl>
+      ${this.keys.map((k) => {
+        return html`<dt>${k}</dt>
+          <dd>${this.data[k]}</dd>`;
+      })}
+    </dl>`;
+  }
   render() {
     if (!this.data) return "";
+    console.log("is array?", Array.isArray(this.data));
+    if (!Array.isArray(this.data)) {
+      return this.render_object();
+    }
     return html`<dl>
       ${this.data.map((el) => {
         return html`<dt>${el[this.keys[0]]}</dt>

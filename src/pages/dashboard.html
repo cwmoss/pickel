@@ -1,10 +1,29 @@
 <template id="default" class="wide">
   <div class="grid">
-    <pi-card title="Schema" api="schema" xxxurl="http://localhost:10245/data/info/movies"></pi-card>
-    <server-info></server-info>
-    <dataset-info>
-      <p slot="data"></p>
-    </dataset-info>
-    <div class="full">card4</div>
+
+    <pi-card title="Schema">
+      <pi-data-fetch api="schema"></pi-data-fetch>
+    </pi-card>
+
+    <pi-card title="Server Info">
+      <pi-data-fetch url="http://localhost:10245/data/info/movies">
+        <pi-dl input-key="server" keys="k,v"></pi-dl>
+      </pi-data-fetch>
+    </pi-card>
+
+    <pi-data-fetch api="info">
+      <pi-card title="Dataset Info">
+        <!-- pi-dl input-key="dataset" keys="name,hsize"></pi-dl -->
+        <span slot="header">
+          Dataset <pi-value input-key="dataset.name"></pi-value>
+        </span>
+        <pi-dl input-key="document_types" keys="_type,total"></pi-dl>
+        <span slot="footer">Size: <pi-value input-key="dataset.hsize"></pi-value></span>
+      </pi-card>
+    </pi-data-fetch>
+
+    <pi-card title="Wunder">
+      <h3>ein wunder ist passiert</h3>
+    </pi-card>
   </div>
 </template>

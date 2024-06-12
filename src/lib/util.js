@@ -36,6 +36,7 @@ export const hashID = (size) => {
  * @returns {*}
  */
 export const resolve_path = (obj, path, def) => {
+  if (!path) return obj;
   var i, len;
 
   for (i = 0, path = path.split("."), len = path.length; i < len; i++) {
