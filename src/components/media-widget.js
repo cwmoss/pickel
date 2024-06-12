@@ -22,6 +22,11 @@ export default class MediaWidget extends LitElement {
       :host {
         display: block;
       }
+      header {
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 1rem;
+      }
       .body {
         display: flex;
         flex-wrap: wrap;
@@ -155,9 +160,10 @@ export default class MediaWidget extends LitElement {
   render() {
     console.log("rendering", this.page);
     return html`
+      <window-drop></window-drop>
       <section>
         <header>
-          suche
+          <div>suche</div>
           <pi-pager
             @move-page=${this.move_page}
             .limit=${this.limit}

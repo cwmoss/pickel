@@ -42,6 +42,11 @@ main > .wide {
 @media screen and (max-width: 1148px) {
 }
 
+body.dragging{
+  border:5px dashed black;
+  opacity: 0.4;
+}
+
 aside {
   display: flex;
   flex-wrap: wrap;
