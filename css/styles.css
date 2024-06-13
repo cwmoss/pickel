@@ -9,7 +9,6 @@
 @import url("dashboard.css");
 
 main {
-  
   background-color: #eee;
   padding: 30px 30px;
   /* display: grid;
@@ -17,7 +16,7 @@ main {
   grid-template-rows: auto;
   gap: 60px 160px; */
 }
-main > *{
+main > * {
   max-width: 1148px;
   margin: 0 auto;
 }
@@ -42,11 +41,25 @@ main > .wide {
 @media screen and (max-width: 1148px) {
 }
 
-body.dragging{
-  border:5px dashed black;
+body.dragging {
+  outline: 5px dashed black;
+  outline-offset: -5px;
+}
+body.dragging pi-app {
   opacity: 0.4;
 }
-
+body.dragging::before {
+  opacity: 1;
+  content: "drop images";
+  position: absolute;
+  display: block;
+  width: 300px;
+  margin: 2rem auto;
+  top: 0;
+  z-index: 100;
+  left: 30px;
+  font-size: 9rem;
+}
 aside {
   display: flex;
   flex-wrap: wrap;
