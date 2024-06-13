@@ -14,8 +14,8 @@
   <link rel="stylesheet" href="css/styles.css" class="rel" />
   <script defer src="src/vendor/json-viewer.bundle.js"></script>
   <script type="module" src="src/components/toast.js"></script>
-  <script type="module" src="src/components/multi-upload.js"></script>
-  <script type="module" src="src/components/window-drop.js"></script>
+  <script type="module" src="src/components/upload/multi-upload.js"></script>
+  <script type="module" src="src/components/upload/window-drop.js"></script>
   <script type="module" src="src/components/index.js"></script>
   <script type="module" src="src/components/pager.js"></script>
   <script type="module" src="src/components/dataset-switch.js"></script>
@@ -35,9 +35,28 @@
       --background-color: white;
     }
   </style>
+  <!--
+  body.dragging::before {
+  opacity: 1;
+  content: "drop images";
+  position: absolute;
+  display: block;
+  width: 100%;
+  margin: 2rem 50%;
+  top: 0;
+  z-index: 100;
+  left: 30px;
+  font-size: 9rem;
+  text-align: center;
+  translate: -50% 0;
+  outline: 5px solid black;
+  height: 100vh;
+  outline-offset: -5px;
+  padding-top: 6rem;
+  -->
 </head>
 
-<body>
+<body class="dragging">
   <pi-app id="body">
     <header>
       <h1>slowhand</h1>

@@ -1,4 +1,4 @@
-import { LitElement, css, html, svg } from "./../vendor/lit-all.min.js";
+import { LitElement, css, html, svg } from "../../vendor/lit-all.min.js";
 
 const icon = svg`
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">

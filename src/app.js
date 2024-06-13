@@ -12,9 +12,11 @@ class App extends HTMLElement {
   }
 
   connectedCallback() {
+    console.log("+++ app connected");
     window.setTimeout(() => {
       this.content = this.querySelector("main");
       this.nav = this.querySelector("pi-navigation");
+      console.log("+++ nav => ", this.nav);
       router();
     });
   }
@@ -25,7 +27,7 @@ class App extends HTMLElement {
     let page = new PageClass();
     page.set_route(ctx);
 
-    console.log("loaded page", page);
+    console.log("loaded page", page, this.nav);
     this.content.replaceChildren(page);
     this.nav.active(ctx.pathname);
 

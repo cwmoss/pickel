@@ -41,6 +41,7 @@ main > .wide {
 @media screen and (max-width: 1148px) {
 }
 
+/*
 body.dragging {
   outline: 5px dashed black;
   outline-offset: -5px;
@@ -60,6 +61,7 @@ body.dragging::before {
   left: 30px;
   font-size: 9rem;
 }
+  */
 aside {
   display: flex;
   flex-wrap: wrap;
