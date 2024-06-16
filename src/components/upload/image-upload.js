@@ -1,5 +1,4 @@
-import { LitElement, css, html, svg } from "./../vendor/lit-all.min.js";
-import MultiUploadItem from "./multi-upload-item.js";
+import { LitElement, css, html, svg } from "../../vendor/lit-all.min.js";
 
 const icon = svg`
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
@@ -12,6 +11,8 @@ const icon = svg`
 const style = css`
   :host {
     display: block;
+    width: 250px;
+    height: 250px;
   }
   :host * {
     box-sizing: border-box;
@@ -65,14 +66,21 @@ const style = css`
     box-sizing: border-box;
     margin: 1em auto;
     margin-bottom: 1em;
-    padding: 2rem;
+    padding: 0.5em;
     border: 0.3em dashed rgba(66, 66, 66, 0.15);
     border-radius: 0;
+    width: calc(100% - 1rem);
+    height: calc(100% - 1rem);
     cursor: pointer;
     display: grid;
     place-content: center;
   }
 
+  .preview {
+    background-color: rgba(199, 199, 199, 0.25);
+    width: 250px;
+    height: 250px;
+  }
   .details {
     place-self: end start;
     display: flex;
@@ -114,15 +122,10 @@ const style = css`
   [hidden] {
     display: none;
   }
-
-  multi-upload-item {
-    margin: 3px 0;
-  }
 `;
 
-export default class MultiUpload extends LitElement {
+export default class ImageUpload extends LitElement {
   static properties = {
-    files: { type: Array },
     thumb: {},
     fname: {},
     upload_label: { attribute: "upload-label" },
@@ -146,37 +149,18 @@ export default class MultiUpload extends LitElement {
     return this.thumb;
   }
 
-  handleChange(e) {
-    this.files = [];
-    for (const file of e.target.files) {
-      let el = new MultiUploadItem();
-      el.process(file);
-      this.files.push(el);
-    }
-    //this.requestUpdate();
-
-    // this.select("section").style.display = "block";
-    // this.select("span").innerText = file.name;
-    // this.dispatch("change", file);
-    // this.process(file);
-  }
-  // html`<multi-upload-item .file=${f}></multi-upload-item>`
   render() {
-    return html`<section class="choose">
-        <input
-          @change=${this.handleChange}
-          hidden
-          id="fileUpload"
-          type="file"
-          multiple
-        />
-        <progress max="100" value="0"></progress>
-        <label for="fileUpload" class="drop"
-          >${this.upload_label || "Select Files"}</label
-        >
-        <div class="message">${this.error}</div>
-      </section>
-      <section class="uploads">${this.files?.map((f) => f)}</section> `;
+    return html`<section class="stack">
+      <input @change=${this.handleChange} hidden id="fileUpload" type="file" />
+      <progress max="100" value="0"></progress>
+      <div class="preview">${this.render_preview()}</div>
+      <div class="details">
+        <div class="descr">${this.render_descr()}</div>
+      </div>
+      <button @click=${this.handleRemove} type="button" class="remove"></button>
+      <label for="fileUpload" class="drop">${icon}</label>
+      <div class="message">${this.error}</div>
+    </section>`;
   }
 
   process(file) {
@@ -271,6 +255,14 @@ export default class MultiUpload extends LitElement {
     this.uploading = false;
   }
 
+  handleChange(e) {
+    const file = e.target.files[0];
+    // this.select("section").style.display = "block";
+    // this.select("span").innerText = file.name;
+    // this.dispatch("change", file);
+    this.process(file);
+  }
+
   async handleRemove() {
     this.remove_error();
     let res = await fetch(this.remove_url, {
@@ -309,4 +301,4 @@ export default class MultiUpload extends LitElement {
   }
 }
 
-window.customElements.define("multi-upload", MultiUpload);
+window.customElements.define("image-upload", ImageUpload);

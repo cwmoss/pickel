@@ -150,6 +150,10 @@ export default class MediaWidget extends LitElement {
         : ""}
     </dialog>`;
   }
+
+  files_dropped(e) {
+    console.log("new files...", e.detail);
+  }
   /*
   <pi-pager
             limit="12"
@@ -160,7 +164,7 @@ export default class MediaWidget extends LitElement {
   render() {
     console.log("rendering", this.page);
     return html`
-      <window-drop></window-drop>
+      <window-drop @files-dropped=${this.files_dropped}></window-drop>
       <section>
         <header>
           <div>suche</div>
