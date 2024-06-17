@@ -1,4 +1,5 @@
 import datasets from "./datasets.js";
+import schema from "./schema.js";
 
 class SlowHand {
   constructor() {
@@ -85,8 +86,18 @@ class SlowHand {
     return this.get(`/data/info/${datasets.current}`);
   }
 
-  schema() {
-    return this.get(`/data/schema/${datasets.current}`);
+  async current_schema() {
+    if (schema.name == datasets.current) {
+      return schema;
+    }
+    let s = await this.schema();
+    schema.load(s, datasets.current);
+    return schema;
+  }
+
+  async schema() {
+    let schema = await this.get(`/data/schema/${datasets.current}`);
+    return schema;
   }
 
   images() {
@@ -156,7 +167,7 @@ class SlowHand {
   async document(documentId) {
     return this.get(`/data/doc/${datasets.current}/${documentId}`)
       .then(({ documents }) => (documents ? documents[0] : null))
-      .then((doc) => this.documentStore.setDocument(doc));
+      .then((doc) => doc); //this.documentStore.setDocument(doc)
   }
 
   async documents(documentType, options) {
@@ -164,8 +175,9 @@ class SlowHand {
   }
 
   async documentQuery(query, options) {
-    return this.query(`*(${query})`, options).then((resp) =>
-      resp.result.map((doc) => this.documentStore.document(doc))
+    return this.query(`*(${query})`, options).then(
+      (resp) => resp.result
+      // resp.result.map((doc) => this.documentStore.document(doc))
     );
   }
 

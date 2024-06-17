@@ -1,9 +1,19 @@
 import { LitElement, css, html, classMap } from "./../vendor/lit-all.min.js";
-import Api from "../lib/slow-hand.js";
+import api from "../lib/slow-hand.js";
 import Preview from "../components/preview.js";
 import FormBuilder from "../components/form-builder.js";
 
 const style = css`
+  :host {
+    /* --selected-id: "person"; */
+  }
+  /*
+  bullshit
+  pi-preview[id="var(--selected-id)"] {
+    color: red;
+    background-color: var(--color-accent);
+  }
+    */
   .wrapper {
     min-height: 100vh;
   }
@@ -92,20 +102,23 @@ export default class Panel extends LitElement {
 
   async fetch_content() {
     let content = [];
-    if (this.title == "docs") {
-      Api.get_types().forEach((item) => {
+    let schema = await api.current_schema();
+    console.log("+panel=>schema", this.index, schema);
+    if (this.index == 0) {
+      schema.documents.forEach((item) => {
         let el = new Preview();
-        el.set_data({ id: item, title: item }, this.index);
+        el.set_data({ id: item.name, title: item.title }, this.index);
         content.push(el);
       });
-    } else if (this.title == "author" || this.title == "doc") {
-      Api.get_all(this.title).forEach((item) => {
+    } else if (this.index == 1) {
+      let docs = await api.documents(this.title);
+      docs.forEach((item) => {
         let el = new Preview();
-        el.set_data({ id: item.id, title: item.title }, this.index);
+        el.set_data(item, this.index);
         content.push(el);
       });
     } else {
-      let doc = Api.get_doc(this.doc_id);
+      let doc = api.document(this.doc_id);
       let formbuilder = new FormBuilder();
       formbuilder.value = "hein@z";
       content.push(formbuilder);

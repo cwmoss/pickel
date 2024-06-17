@@ -1,4 +1,7 @@
 export default {
+  "/index.html": {
+    redirect: "/",
+  },
   "/": {
     class: "dashboard",
   },

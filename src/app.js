@@ -36,6 +36,10 @@ class App extends HTMLElement {
   define_routes() {
     for (const [path, props] of Object.entries(routes)) {
       // console.log(`${key}: ${value}`);
+      if (props.redirect) {
+        router(path, props.redirect);
+        continue;
+      }
       router(path, (ctx, next) => {
         ctx.route = props;
         this.load_page(props.class, ctx);

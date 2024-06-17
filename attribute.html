@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        :root {
+            --selector-attribute: "data-example-1";
+        }
+
+        [var^=var(--selector-attribute)] {
+            color: red;
+        }
+
+        [var^="data-example-2"] {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>test</h1>
+    <div var="data-example-1">This is a div with the attribute value "data-example-1".</div>
+    <div var="data-example-2">This is a div with the attribute value "data-example-2".</div>
+    <div var="other-attribute">This div has a different attribute value.</div>
+</body>
+
+</html>

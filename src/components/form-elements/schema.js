@@ -1,3 +1,10 @@
+/*
+
+schema for formbuilder
+
+it can be a ad-hoc schema or a slowhand schema
+
+*/
 let schema = {};
 
 export function get_schema_type(name, schemaid = "default") {
