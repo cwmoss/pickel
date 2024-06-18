@@ -12,7 +12,7 @@ dashboard-page .grid {
   grid-column: span 2;
 }
 
-dashboard-page .grid > *{
+dashboard-page .grid > * {
   background-color: white;
   /* padding: 0.5rem; */
 }

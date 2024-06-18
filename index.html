@@ -1,41 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>
-      <text y=%22.9em%22 font-size=%2290%22>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22>
+      <text fill=%22red%22 y=%22.9em%22 font-size=%2290%22>
         ◉
       </text>
-    </svg>" />
-  <title>slowhand</title>
-  <!-- script src="src/lib/page.js"></script -->
-  <link rel="stylesheet" href="css/styles.css" class="rel" />
-  <script defer src="src/vendor/json-viewer.bundle.js"></script>
-  <script type="module" src="src/components/toast.js"></script>
-  <script type="module" src="src/components/upload/multi-upload.js"></script>
-  <script type="module" src="src/components/upload/window-drop.js"></script>
-  <script type="module" src="src/components/index.js"></script>
-  <script type="module" src="src/components/pager.js"></script>
-  <script type="module" src="src/components/dataset-switch.js"></script>
-  <script type="module" src="src/components/form-elements/select.js"></script>
-  <script type="module" src="src/components/data-fetch.js"></script>
-  <script type="module" src="src/components/dl.js"></script>
-  <script type="module" src="src/components/value.js"></script>
-  <script type="module" src="src/components/card.js"></script>
-  <script type="module" src="src/components/server-info.js"></script>
-  <script type="module" src="src/components/dataset-info.js"></script>
-  <script type="module" src="src/components/focus-picker.js"></script>
-  <script type="module" src="src/components/media-widget.js"></script>
+    </svg>"
+    />
+    <title>slowhand</title>
+    <!-- script src="src/lib/page.js"></script -->
+    <link rel="stylesheet" href="css/styles.css" class="rel" />
+    <script defer src="src/vendor/json-viewer.bundle.js"></script>
+    <script type="module" src="src/components/toast.js"></script>
+    <script type="module" src="src/components/upload/multi-upload.js"></script>
+    <script type="module" src="src/components/upload/window-drop.js"></script>
+    <script type="module" src="src/components/index.js"></script>
+    <script type="module" src="src/components/pager.js"></script>
+    <script type="module" src="src/components/dataset-switch.js"></script>
+    <script type="module" src="src/components/form-elements/select.js"></script>
+    <script type="module" src="src/components/data-fetch.js"></script>
+    <script type="module" src="src/components/dl.js"></script>
+    <script type="module" src="src/components/value.js"></script>
+    <script type="module" src="src/components/card.js"></script>
+    <script type="module" src="src/components/server-info.js"></script>
+    <script type="module" src="src/components/dataset-info.js"></script>
+    <script type="module" src="src/components/focus-picker.js"></script>
+    <script type="module" src="src/components/media-widget.js"></script>
 
-  <script type="module" src="src/app.js"></script>
-  <style>
-    #body json-viewer {
-      --background-color: white;
-    }
-  </style>
-  <!--
+    <script type="module" src="src/app.js"></script>
+    <style>
+      #body json-viewer {
+        --background-color: white;
+      }
+      head svg,
+      head svg text,
+      head link {
+        color: yellow;
+        fill: blue;
+      }
+    </style>
+    <!--
   body.dragging::before {
   opacity: 1;
   content: "drop images";
@@ -53,39 +61,35 @@
   height: 100vh;
   outline-offset: -5px;
   padding-top: 6rem;
-  -->
-</head>
+  --></head>
 
-<body class="dragging">
-  <pi-app id="body">
-    <header>
-      <h1>slowhand</h1>
-      <pi-navigation>
-        <nav>
-          <ul>
-            <li><a href="/">Dashboard</a></li>
-            <li><a href="/desk">Desk</a></li>
-            <li><a href="/media">Media</a></li>
-            <li><a href="/admin">Admin</a></li>
-            <li><a href="/about">About</a></li>
-            <li class="ds-switch"><dataset-switch></dataset-switch></li>
-          </ul>
-        </nav>
-      </pi-navigation>
-      <button type="button">toast</button>
-    </header>
-    <main></main>
-    <footer>made with pickel</footer>
-  </pi-app>
-  <script type="module">
-    import {
-      toast_alert
-    } from "./src/components/toast.js";
+  <body class="dragging">
+    <pi-app id="body">
+      <header>
+        <h1>slowhand</h1>
+        <pi-navigation>
+          <nav>
+            <ul>
+              <li><a href="/">Dashboard</a></li>
+              <li><a href="/desk">Desk</a></li>
+              <li><a href="/media">Media</a></li>
+              <li><a href="/admin">Admin</a></li>
+              <li><a href="/about">About</a></li>
+              <li class="ds-switch"><dataset-switch></dataset-switch></li>
+            </ul>
+          </nav>
+        </pi-navigation>
+        <button type="button">toast</button>
+      </header>
+      <main></main>
+      <footer>made with pickel</footer>
+    </pi-app>
+    <script type="module">
+      import { toast_alert } from "./src/components/toast.js";
 
-    document
-      .querySelector("button")
-      .addEventListener("click", () => toast_alert("heho bumm"));
-  </script>
-</body>
-
+      document
+        .querySelector("button")
+        .addEventListener("click", () => toast_alert("heho bumm"));
+    </script>
+  </body>
 </html>

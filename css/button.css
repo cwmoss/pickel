@@ -1,3 +1,5 @@
+/*
+
 button,
 ::part(button) {
   cursor: pointer;
@@ -9,7 +11,6 @@ button,
   display: inline-block;
   background: none;
   background-color: rgba(0, 0, 0, 0);
-  /* min-width: 200px;*/
   padding: 0 1rem;
 }
 
@@ -18,4 +19,25 @@ button[primary],
   font-weight: 700;
   border: 2px solid var(--color-accent);
   background-color: var(--color-accent);
+}
+
+https://numerous-sulfur.glitch.me/
+*/
+
+button,
+::part(button) {
+  border-radius: 5px;
+  border: 2px solid black;
+  box-sizing: border-box;
+  background-color: white;
+  text-decoration: none;
+  text-align: center;
+  padding: 0.375em 0.5em 0.1875em;
+  font-weight: 600;
+  line-height: 1;
+}
+
+button[primary],
+::part(btn-primary) {
+  background: var(--color-accent);
 }
