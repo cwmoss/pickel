@@ -1,4 +1,4 @@
-import Split from "../vendor/split.js";
+import Split from "../vendor/split-grid.js";
 import Panel from "./panel.js";
 
 //import Preview from "./preview.js";
@@ -13,9 +13,14 @@ https://github.com/nathancahill/split/tree/master/packages/splitjs
 template.innerHTML = /*html*/ `
 <style>
 .split {
-    display: flex;
-    flex-direction: row;
-    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 200px;
+    grid-template-rows:1fr;
+    max-height:calc(100vh - 170px);
+    transition: grid-template-columns 0.2s;
+}
+.split > *{
+max-height:calc(100vh - 170px);
 }
 .split *{
   box-sizing: border-box;
@@ -24,7 +29,8 @@ template.innerHTML = /*html*/ `
     background-color: #eee;
     background-repeat: no-repeat;
     background-position: 50%;
-    flex-shrink: 0;
+    cursor: col-resize;
+
 }
 
 .gutter.gutter-horizontal {
@@ -45,6 +51,7 @@ export default class PanelManager extends HTMLElement {
       .appendChild(template.content.cloneNode(true));
     this.panels = [];
     this.splitter = null;
+    this.container = this.shadowRoot.querySelector(".panels");
   }
   connectedCallback() {
     this.addEventListener("panel-collapsed", (e) => this.collapse(e));
@@ -67,34 +74,99 @@ export default class PanelManager extends HTMLElement {
     this.render();
   }
   collapse(e) {
-    let sizes = this.splitter.getSizes();
-    console.log("panel collapsed", e, sizes);
-    this.splitter.collapse(e.detail.index);
-    //sizes[e.detail.index] = "10"; // "200px";
-    //this.splitter.setSizes(sizes);
+    this.adjust_panel_width(e.detail.index, "30px");
   }
   expand(e) {
-    console.log("panel expand", e);
-    let sizes = this.splitter.getSizes();
-    console.log("panel expand", sizes);
-    sizes[e.detail.index] = 50; // "200px";
-    this.splitter.setSizes(sizes);
+    this.adjust_panel_width(e.detail.index);
+  }
+
+  adjust_panel_width(panelindex, size) {
+    let sizes = this.container.style["grid-template-columns"].split(" ");
+    let idx = panelindex * 2;
+    if (!size) size = this.default_panel_width(panelindex);
+    sizes[idx] = size;
+    this.container.style["grid-template-columns"] = sizes.join(" ");
+  }
+  default_panel_width(idx) {
+    if (idx == 0) return "200px";
+    if (idx == this.panels.length - 1)
+      return "" + this.container.clientWidth / 2 + "px";
+    return "300px";
   }
   render() {
-    let container = this.shadowRoot.querySelector(".panels");
-    container.replaceChildren();
-    container.append(...this.panels);
-    if (this.splitter) {
-      this.splitter.destroy(true, true);
-    }
-    this.splitter = Split(this.panels, {
-      minSize: 30,
+    let container = this.container;
+    let add = [];
+    let cols = [];
+    let last = this.panels.length - 1;
+    this.panels.forEach((p, idx) => {
+      add.push(p);
+      cols.push(this.default_panel_width(idx));
+      if (idx < last) {
+        add.push(this.make_gutter());
+        cols.push("10px");
+      }
     });
+    // this.style.setProperty("--split-cols", cols.join(" "));
+    container.style["grid-template-columns"] = cols.join(" ");
+    // TODO: don't throw away the good panels
+    container.replaceChildren();
+    container.append(...add);
+    // TODO: don't throw away the good panels
+    if (this.splitter) {
+    }
+    this.splitter = Split({
+      minSize: 30,
+      columnGutters: Array.from(Array(last), (_, i) => {
+        let track = i * 2 + 1;
+        let el = container.querySelector(":nth-child(" + (track + 1) + ")");
+        return { track: track, element: el };
+      }),
+      onDrag: (direction, track, style) => {
+        let prev = this.panels[(track - 1) / 2];
+        let next = this.panels[(track - 1) / 2 + 1];
+        console.log(
+          "+++ dragging",
+          direction,
+          track,
+          prev.collabsed,
+          prev.clientWidth,
+          style
+        );
+
+        if (!prev.collabsed && prev.clientWidth <= 60) {
+          prev.handle_collapse({});
+          //this.collapse(prev.index);
+        }
+        if (prev.collabsed && prev.clientWidth > 60) {
+          prev.handle_collapse({});
+          //this.expand(prev.index);
+        }
+        if (!next.collabsed && next.clientWidth <= 60) {
+          next.handle_collapse({});
+          //this.collapse(prev.index);
+        }
+        if (next.collabsed && next.clientWidth > 60) {
+          next.handle_collapse({});
+          //this.expand(prev.index);
+        }
+      },
+    });
+    console.log(
+      "splitter+++",
+      this.splitter,
+      container.style["grid-template-columns"]
+    );
   }
+
   add_panel(title) {
     let panel = this.make_panel(title);
 
     this.panels.push(panel);
+  }
+  make_gutter() {
+    let div = document.createElement("div");
+    div.classList.add("gutter");
+    return div;
   }
   make_panel(title, index) {
     let p = new Panel();

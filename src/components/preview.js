@@ -1,20 +1,35 @@
 import { LitElement, css, html } from "./../vendor/lit-core.min.js";
 
 let style = css`
+  * {
+    box-sizing: border-box;
+  }
   :host {
     display: block;
+    padding: 0.5rem 0.5rem;
     border-bottom: 1px solid rgba(134, 144, 160, 0.4);
   }
   :host([active]) {
     /* border:1px solid red; */
-
     background-color: var(--color-accent);
+  }
+  .flx {
+    display: flex;
+  }
+  .media {
+    width: 50px;
+    height: 50px;
+  }
+  .media:empty {
+    width: 0;
   }
   h2 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.2rem;
+    font-weight: normal;
   }
-  p {
+  .detail {
+    font-size: 0.8rem;
   }
 `;
 
@@ -46,9 +61,12 @@ export default class Preview extends LitElement {
     );
   }
   render() {
-    return html`<div @click=${this.open}>
+    return html`<div class="flx" @click=${this.open}>
+      <div class="media"></div>
       <h2>${this.title}</h2>
-      <p></p>
+      <div class="detail">
+        <p></p>
+      </div>
     </div>`;
   }
 }

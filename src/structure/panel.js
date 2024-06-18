@@ -7,6 +7,32 @@ const style = css`
   :host {
     /* --selected-id: "person"; */
   }
+  form-builder {
+    padding: 1rem;
+    display: block;
+  }
+  button,
+  *::part(button) {
+    border-radius: 5px;
+    border: 2px solid black;
+    box-sizing: border-box;
+    background-color: white;
+    text-decoration: none;
+    text-align: center;
+
+    /* font-family: Helvetica;
+  padding: 0.375em 0.5em 0.1875em;
+  */
+    padding: 0.375em 0.5em 0.4em;
+
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  button[primary],
+  *::part(btn-primary) {
+    background: var(--color-accent);
+  }
   /*
   bullshit
   pi-preview[id="var(--selected-id)"] {
@@ -15,10 +41,10 @@ const style = css`
   }
     */
   .wrapper {
-    min-height: 100vh;
+    /* min-height: 100vh;*/
   }
   .panel {
-    height: inherit;
+    height: 100%;
     overflow: hidden;
     position: relative;
   }
@@ -118,9 +144,10 @@ export default class Panel extends LitElement {
         content.push(el);
       });
     } else {
-      let doc = api.document(this.doc_id);
+      let doc = await api.document(this.doc_id);
       let formbuilder = new FormBuilder();
-      formbuilder.value = "hein@z";
+      formbuilder.value = doc;
+      formbuilder.document = doc._type;
       content.push(formbuilder);
       // content.textContent = JSON.stringify(doc);
     }

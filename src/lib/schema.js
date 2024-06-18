@@ -17,7 +17,7 @@ class schema {
   }
 
   get_type(name) {
-    console.log("get schema", name, schemaid);
+    console.log("get schema", name);
     return this.schema.types.find((el) => el.name == name);
   }
   get_schema_first_document() {

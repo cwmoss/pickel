@@ -77,12 +77,12 @@ nav a {
 }
 nav li {
   padding: 0.5rem 1rem;
-  height: 1.2rem;
+  height: 2.2rem;
 }
 nav li.active {
   background-color: var(--color-accent);
 }
 
-nav .ds-switch{
+nav .ds-switch {
   margin-top: -8px;
 }

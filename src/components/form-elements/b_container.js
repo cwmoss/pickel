@@ -1,5 +1,6 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
-import { get_schema_type, is_object } from "./schema.js";
+// import { get_schema_type, is_object } from "./schema.js";
+import schema from "../../lib/schema.js";
 import Input from "./input.js";
 import Switch from "./switch.js";
 import Dialog from "./dialog.js";
@@ -52,7 +53,7 @@ export default class BContainer extends LitElement {
       console.log("c-array", this.schemaid, t, this.value);
       this.build_array();
     } else {
-      this.schema = get_schema_type(t, this.schemaid);
+      this.schema = schema.get_type(t);
       console.log("c-schema", this.schemaid, this.schema, t, this.value);
       this.build();
     }
@@ -73,7 +74,7 @@ export default class BContainer extends LitElement {
     let f;
     let type = field.type;
     let subtype = "";
-    if (is_object(type)) {
+    if (schema.is_object(type)) {
       type = "object";
       subtype = field.type;
     }

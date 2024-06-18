@@ -20,7 +20,7 @@ article.toast.ok {
 }
 
 :popover-open {
-  position: absolute;
+  position: fixed;
   inset: unset;
   right: 1rem;
   top: var(--toast-bottom-position, -16px);

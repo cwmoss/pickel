@@ -1,14 +1,30 @@
 import { LitElement, css, html } from "./../vendor/lit-core.min.js";
-
-import schema from "../lib/schema.js";
-
+import {
+  set_schema,
+  get_schema_type,
+  get_schema_first_document,
+} from "./form-elements/schema.js";
+import testschema from "./testschema.js";
 import Container from "./form-elements/b_container.js";
+set_schema(testschema);
+
+let test = {
+  author: {
+    type: document,
+  },
+  email: {},
+  address: {
+    type: "object",
+    fields: {
+      street: {},
+      city: {},
+    },
+  },
+};
 
 export default class FormBuilder extends LitElement {
   static properties = {
-    /* das schema für den document _type */
     schema: { attribute: false },
-    /* document _type */
     document: {},
     value: { type: Object },
     container: { type: Object, attribute: false },
@@ -33,13 +49,28 @@ export default class FormBuilder extends LitElement {
     super.connectedCallback();
     this.form = this.parentElement;
     this.form.addEventListener("submit", (e) => this.submit(e));
+    let text = this.innerText.trim();
+    if (text) {
+      set_schema(JSON.parse(text), this._id);
+      this.innerText = "";
+      this.document = get_schema_first_document(this._id);
+    } else {
+      this._id = "default";
+    }
+    console.log(
+      "++connected",
+      this._id,
+      this.innerText,
+      this.document,
+      this.value
+    );
     this.load_schema();
   }
 
   load_schema() {
     if (!this.document) return;
     console.log("+++ load schema", this.document, this._id);
-    this.schema = schema.get_type(this.document);
+    this.schema = get_schema_type(this.document, this._id);
     this.container = new Container();
     console.log("+++ container created");
     this.container.value = this.value;
@@ -64,7 +95,7 @@ export default class FormBuilder extends LitElement {
   render() {
     console.log("render formbuilder", this.value, this.container);
     return html`builder for: ${this.document} (${this.schema}})<br />
-      <button primary class="btn" part="button">Save</button><br />
+      <button primary class="btn">Save</button><br />
       ${this.container}`;
   }
   update_serialize(data, keys, value) {
