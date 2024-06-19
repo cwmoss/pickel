@@ -18,3 +18,8 @@ section .icon-expand {
   margin-left: 10px;
   background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.5714 18.5714H1.42859V1.42859H10V0H0.714293C0.319468 0 0 0.319468 0 0.714293V19.2857C0 19.6805 0.319468 20 0.714293 20H19.2857C19.6805 20 20 19.6805 20 19.2857V10H18.5714V18.5714Z' fill='currentColor'/%3E%3Cpath d='M12.8573 0V1.42859H17.5615L9.49512 9.49497L10.5052 10.505L18.5715 2.43863V7.14285H20.0001V0L12.8573 0Z' fill='currentColor'/%3E%3C/svg%3E%0A");
 }
+
+pi-preview:hover {
+  cursor: pointer;
+  background-color: #eee;
+}

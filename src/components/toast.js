@@ -6,12 +6,21 @@ let tpl = `
 let style = `
 article.toast{
     border:0;
-    border-radius:3px;
+    /*border-radius:3px;
+    box-shadow: 3px 3px 6px #999;*/
     padding:1rem;
-    box-shadow: 3px 3px 6px #999;
+    --card-shadow-outline-color: rgba(114,120,146,0.3);
+  --card-shadow-umbra-color: rgba(114,120,146,0.1);
+  --card-shadow-penumbra-color: rgba(114,120,146,0.07);
+  --card-shadow-ambient-color: rgba(114,120,146,0.06);
+    border-radius: 0.375rem;
+  box-shadow: 0 0 0 0.03125rem var(--card-shadow-outline-color),
+  0 0.4375rem 0.5rem -0.25rem var(--card-shadow-umbra-color),
+  0 0.75rem 1.0625rem 0.125rem var(--card-shadow-penumbra-color),
+  0 0.3125rem 1.375rem 0.25rem var(--card-shadow-ambient-color);
 }
 article.toast.fail {
-  background: #f8d7da;
+  background-color: oklch(0.7176 0.221 22.18);
   color:black;
 }
 

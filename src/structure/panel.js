@@ -134,6 +134,8 @@ export default class Panel extends LitElement {
       schema.documents.forEach((item) => {
         let el = new Preview();
         el.set_data({ id: item.name, title: item.title }, this.index);
+        el.simple = true;
+        el.icon = "folder";
         content.push(el);
       });
     } else if (this.index == 1) {
@@ -141,6 +143,7 @@ export default class Panel extends LitElement {
       docs.forEach((item) => {
         let el = new Preview();
         el.set_data(item, this.index);
+        el.icon = "file-earmark";
         content.push(el);
       });
     } else {

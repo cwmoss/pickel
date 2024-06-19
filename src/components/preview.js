@@ -3,6 +3,8 @@ import { LitElement, css, html } from "./../vendor/lit-core.min.js";
 let style = css`
   * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
   :host {
     display: block;
@@ -13,23 +15,37 @@ let style = css`
     /* border:1px solid red; */
     background-color: var(--color-accent);
   }
+  :host(:not([active]):hover) {
+    cursor: pointer;
+    background-color: #eee;
+  }
   .flx {
     display: flex;
   }
+  sl-icon {
+    display: block;
+    margin: 0 auto;
+  }
   .media {
+    align-content: center;
     width: 50px;
     height: 50px;
+  }
+  :host([simple]) .media {
+    height: auto;
+    width: 24px;
   }
   .media:empty {
     width: 0;
   }
   h2 {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: normal;
+    font-size: 1rem;
+    font-weight: 600;
+    color: black;
   }
   .detail {
-    font-size: 0.8rem;
+    font-size: 1rem;
+    color: #666;
   }
 `;
 
@@ -38,6 +54,8 @@ export default class Preview extends LitElement {
     panel: { type: Number },
     id: { reflect: true },
     active: { type: Boolean, reflect: true },
+    simple: { type: Boolean, reflect: true },
+    icon: {},
     title: {},
     data: { type: Object },
   };
@@ -61,11 +79,18 @@ export default class Preview extends LitElement {
     );
   }
   render() {
+    let detail = this.id;
+    let media = "";
+    if (this.icon) media = html`<sl-icon name="${this.icon}"></sl-icon>`;
     return html`<div class="flx" @click=${this.open}>
-      <div class="media"></div>
-      <h2>${this.title}</h2>
-      <div class="detail">
-        <p></p>
+      <div class="media">${media}</div>
+      <div>
+        <h2>${this.title}</h2>
+        ${this.simple
+          ? ""
+          : html` <div class="detail">
+              <p>${detail}</p>
+            </div>`}
       </div>
     </div>`;
   }

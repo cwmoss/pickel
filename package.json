@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@shoelace-style/shoelace": "^2.15.1",
     "fecha": "^4.2.3",
     "sortablejs": "^1.15.2",
     "split-grid": "^1.0.11"
