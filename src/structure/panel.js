@@ -151,7 +151,9 @@ export default class Panel extends LitElement {
       let formbuilder = new FormBuilder();
       formbuilder.value = doc;
       formbuilder.document = doc._type;
-      content.push(formbuilder);
+      let form = document.createElement("form");
+      form.appendChild(formbuilder);
+      content.push(form);
       // content.textContent = JSON.stringify(doc);
     }
     this.content = content;

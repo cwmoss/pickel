@@ -63,7 +63,7 @@ export default class FormBuilder extends LitElement {
   // ${this.container}
   render() {
     console.log("render formbuilder", this.value, this.container);
-    return html`builder for: ${this.document} (${this.schema}})<br />
+    return html`builder for: ${this.document} (${this.schema})<br />
       <button primary class="btn" part="button">Save</button><br />
       ${this.container}`;
   }
