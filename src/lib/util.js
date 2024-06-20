@@ -57,3 +57,39 @@ export const resolve_path = (obj, path, def) => {
   if (obj === undefined) return def;
   return obj;
 };
+
+/*
+https://stackoverflow.com/questions/41431322/how-to-convert-formdata-html5-object-to-json
+*/
+export const to_json2 = (fdata) => {
+  return Array.from(fdata.entries()).reduce((data, [field, value]) => {
+    let [_, prefix, keys] = field.match(/^([^\[]+)((?:\[[^\]]*\])*)/);
+
+    if (keys) {
+      keys = Array.from(keys.matchAll(/\[([^\]]*)\]/g), (m) => m[1]);
+      value = this.update_serialize(data[prefix], keys, value);
+    }
+    data[prefix] = value;
+    return data;
+  }, {});
+};
+export const to_json = (fdata) => {
+  const f = Array.from(fdata);
+  const obj = f.reduce((o, [k, v]) => {
+    let a = v,
+      b,
+      i,
+      m = k.split("["),
+      n = m[0],
+      l = m.length;
+    if (l > 1) {
+      a = b = o[n] || [];
+      for (i = 1; i < l; i++) {
+        m[i] = (m[i].split("]")[0] || b.length) * 1;
+        b = b[m[i]] = i + 1 == l ? v : b[m[i]] || [];
+      }
+    }
+    return { ...o, [n]: a };
+  }, {});
+  return obj;
+};

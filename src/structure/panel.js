@@ -1,7 +1,7 @@
 import { LitElement, css, html, classMap } from "./../vendor/lit-all.min.js";
 import api from "../lib/slow-hand.js";
 import Preview from "../components/preview.js";
-import FormBuilder from "../components/form-builder.js";
+import Editor from "../components/editor.js";
 
 const style = css`
   :host {
@@ -88,6 +88,15 @@ const style = css`
   .actions {
     display: flex;
     flex-wrap: nowrap;
+    /*
+    todo: use panel-head instead
+  */
+    position: sticky;
+    height: 3rem;
+    top: 0;
+    background: white;
+    z-index: 10;
+    padding-bottom: 1rem;
   }
   .panel-collapsed [not-collabsed] {
     display: none;
@@ -97,6 +106,10 @@ const style = css`
   }
   [hidden] {
     display: none;
+  }
+  sh-editor {
+    display: block;
+    margin: 0 1rem;
   }
 `;
 
@@ -148,13 +161,9 @@ export default class Panel extends LitElement {
         content.push(el);
       });
     } else {
-      let doc = await api.document(this.doc_id);
-      let formbuilder = new FormBuilder();
-      formbuilder.value = doc;
-      formbuilder.document = doc._type;
-      let form = document.createElement("form");
-      form.appendChild(formbuilder);
-      content.push(form);
+      let formbuilder = new Editor();
+      formbuilder.id = this.doc_id;
+      content.push(formbuilder);
       // content.textContent = JSON.stringify(doc);
     }
     this.content = content;
