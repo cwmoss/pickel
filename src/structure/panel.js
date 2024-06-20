@@ -49,8 +49,9 @@ const style = css`
     position: relative;
   }
   .child--content {
+    padding-bottom: 2rem;
     margin: 0px;
-    height: calc(100% - 50px);
+    height: calc(100% - 100px);
     overflow-y: auto;
   }
   .panel--head {

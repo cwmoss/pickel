@@ -107,6 +107,9 @@ aside {
   gap: 1rem;
   margin-bottom: 1rem;
 }
+pi-app[page="desk"] footer {
+  display: none;
+}
 h1 img {
   margin-bottom: -14px;
   margin-right: 10px;

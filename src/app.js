@@ -27,6 +27,7 @@ class App extends HTMLElement {
     let page = new PageClass();
     page.set_route(ctx);
 
+    this.setAttribute("page", name);
     console.log("loaded page", page, this.nav);
     this.content.replaceChildren(page);
     this.nav.active(ctx.pathname);

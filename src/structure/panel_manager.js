@@ -26,14 +26,15 @@ max-height:calc(100vh - 170px);
   box-sizing: border-box;
 }
 .gutter {
-    background-color: #eee;
+    background-color: #fafafa;
     background-repeat: no-repeat;
     background-position: 50%;
     cursor: col-resize;
-
+    border-left:1px solid #ccc
 }
 
-.gutter.gutter-horizontal {
+
+.gutter{
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==');
     cursor: col-resize;
 }
