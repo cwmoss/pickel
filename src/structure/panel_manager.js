@@ -1,5 +1,6 @@
 import Split from "../vendor/split-grid.js";
 import Panel from "./panel.js";
+import { slugify_simple } from "../lib/util.js";
 
 //import Preview from "./preview.js";
 
@@ -173,6 +174,7 @@ export default class PanelManager extends HTMLElement {
     let p = new Panel();
     p.setAttribute("title", title);
     p.index = index ?? this.panels.length;
+    p.id = slugify_simple(title);
     return p;
 
     let div = document.createElement("div");

@@ -15,6 +15,16 @@ export function once(fn, context) {
   };
 }
 
+export const slugify_simple = (str) => {
+  str = str.trim(); // trim leading/trailing spaces
+  str = str.toLowerCase(); // convert to lowercase
+  str = str
+    .replace(/[^a-z0-9 -_.]/g, "") // remove invalid chars
+    .replace(/\s+/g, "-") // collapse whitespace and replace by "-"
+    .replace(/-+/g, "-"); // collapse dashes
+  return str;
+};
+
 export const hashID = (size) => {
   const MASK = 0x3d;
   const LETTERS = "abcdefghijklmnopqrstuvwxyz";
