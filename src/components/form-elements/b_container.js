@@ -44,26 +44,10 @@ export default class BContainer extends LitElement {
     //this.schema = test;
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback();
     console.log("++ connected");
-  }
-  get type() {
-    return this._type;
-  }
-
-  set type(t) {
-    this._type = t;
-    if (t == "array") {
-      this.array = true;
-      console.log("c-array", this.schemaid, t, this.value);
-      this.build_array();
-    } else {
-      this.schema = schema.get_type(t);
-      console.log("c-schema", this.schemaid, this.schema, t, this.value);
-      this.build();
-    }
-    // this.requestUpdate();
+    await this.init();
   }
 
   get value() {
@@ -85,6 +69,33 @@ export default class BContainer extends LitElement {
     });
     return value;
   }
+
+  async init() {
+    if (this.type == "array") {
+      this.array = true;
+      console.log("c-array", this.schemaid, t, this.value);
+      await this.build_array();
+    } else {
+      this.schema = schema.get_type(this.type);
+      console.log(
+        "c-schema",
+        this.schemaid,
+        this.schema,
+        this.type,
+        this.value
+      );
+      await this.build();
+    }
+
+    if (this.type == "array") {
+      let sortable = Sortable.create(this.querySelector(".els"), {
+        delay: 100,
+        handle: ".handle",
+        onEnd: (e) => this.dropped(e),
+      });
+    }
+  }
+
   async new_input(field, name, value) {
     let f;
     let type = field.type;
