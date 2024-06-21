@@ -15,6 +15,7 @@ export default class Face extends LitElement {
     inline: { type: Boolean },
     id: {},
     placeholder: {},
+    originalType: {},
     // opts: { attribute: false },
   };
 
@@ -27,6 +28,28 @@ export default class Face extends LitElement {
       }
       .fgroup {
         margin-bottom: 0;
+      }
+      button,
+      *::part(button) {
+        border-radius: 5px;
+        border: 2px solid black;
+        box-sizing: border-box;
+        background-color: white;
+        text-decoration: none;
+        text-align: center;
+
+        /* font-family: Helvetica;
+  padding: 0.375em 0.5em 0.1875em;
+  */
+        padding: 0.375em 0.5em 0.4em;
+
+        font-weight: 600;
+        line-height: 1;
+      }
+
+      button[primary],
+      *::part(btn-primary) {
+        background: var(--color-accent);
       }
     `,
   ];

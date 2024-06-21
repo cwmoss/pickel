@@ -170,6 +170,16 @@ class SlowHand {
       .then((doc) => doc); //this.documentStore.setDocument(doc)
   }
 
+  async checkSlug(slug, type, docid) {
+    let query = `_type=="${type}"&&slug.current=="${slug}"`;
+    if (docid) {
+      query += `&&_id!="${docid}"`;
+    }
+    let docs = await this.documentQuery(query);
+    if (docs.length) return false;
+    return true;
+  }
+
   async documents(documentType, options) {
     return this.documentQuery(`_type=="${documentType}"`, options);
   }

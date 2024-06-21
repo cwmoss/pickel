@@ -56,6 +56,8 @@ let style = css`
   }
 `;
 
+// TODO: remove panel // panel_index
+
 export default class Preview extends LitElement {
   static properties = {
     panel: { type: Number },

@@ -6,7 +6,7 @@ export default class Input extends Face {
   render_input() {
     return html`<input
       @input=${(e) => this.input_event(e)}
-      value=${this.value}
+      .value=${this.value}
       id="input"
       type="text"
       class="form-control"
@@ -23,6 +23,7 @@ export default class Input extends Face {
         ${this.suffix
           ? html` <span class="input-group-text">${this.suffix}</span> `
           : ""}
+        <slot name="suffix-button"></slot>
       </div>
       <slot name="footer"></slot>
       <div class="invalid-feedback"></div>

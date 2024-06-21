@@ -13,6 +13,9 @@ export default class Switch extends Face {
     return "off";
   }
 
+  get_updated_data() {
+    return this.value == "off" || !this.value ? false : true;
+  }
   render() {
     console.log("render switch", this);
     return html`<div class="fgroup">
@@ -26,7 +29,7 @@ export default class Switch extends Face {
           id="check"
         />
         <label class="form-check-label" for="check"
-          >${this.label}:
+          >${this.label}
           ${this.value == "off"
             ? this.off_label
             : this.value == "on"

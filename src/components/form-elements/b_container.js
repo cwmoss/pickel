@@ -1,7 +1,7 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 // import { get_schema_type, is_object } from "./schema.js";
 import schema from "../../lib/schema.js";
-import { load_component } from "./component-loader.js";
+import { get_component, resolve_components } from "./component-loader.js";
 
 //import Input from "./input.js";
 //import Switch from "./switch.js";
@@ -36,6 +36,7 @@ export default class BContainer extends LitElement {
 
   _type = "";
   _value = {};
+  els = [];
 
   constructor() {
     super();
@@ -71,12 +72,22 @@ export default class BContainer extends LitElement {
   }
 
   async init() {
+    if (this.type != "array") this.schema = schema.get_type(this.type);
+    let types =
+      this.type == "array" ? [{ type: this.of[0].type }] : this.schema.fields;
+    types = types.map((f) => {
+      if (schema.is_object(f.type)) {
+        return "object";
+      }
+      return f.type;
+    });
+    await resolve_components([...new Set(types)]);
+
     if (this.type == "array") {
       this.array = true;
-      console.log("c-array", this.schemaid, t, this.value);
+      console.log("c-array", this.schemaid, this.value);
       this.build_array();
     } else {
-      this.schema = schema.get_type(this.type);
       console.log(
         "c-schema",
         this.schemaid,
@@ -86,17 +97,20 @@ export default class BContainer extends LitElement {
       );
       this.build();
     }
+    this.requestUpdate();
 
     if (this.type == "array") {
-      let sortable = Sortable.create(this.querySelector(".els"), {
-        delay: 100,
-        handle: ".handle",
-        onEnd: (e) => this.dropped(e),
+      setTimeout(() => {
+        let sortable = Sortable.create(this.querySelector(".els"), {
+          delay: 100,
+          handle: ".handle",
+          onEnd: (e) => this.dropped(e),
+        });
       });
     }
   }
 
-  async new_input(field, name, value) {
+  new_input(field, name, value) {
     let f;
     let type = field.type;
     let subtype = "";
@@ -127,7 +141,8 @@ export default class BContainer extends LitElement {
         f.type = field.type;
         break;
       default:
-        f = await load_component(type);
+        f = get_component(type);
+        f.originalType = type;
         f.value = value;
     }
     f._name = field.name;
@@ -143,7 +158,7 @@ export default class BContainer extends LitElement {
         return {};
     }
   }
-  async new_array_item(e) {
+  new_array_item(e) {
     console.log("new click", e);
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -159,11 +174,7 @@ export default class BContainer extends LitElement {
       this.value.push(val);
     }
 
-    let f = await this.new_input(
-      { type: type },
-      `${this.prefix}[${index}]`,
-      val
-    );
+    let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
     f.opts = {
       label: this.name,
       // id: field.name,
@@ -182,7 +193,7 @@ export default class BContainer extends LitElement {
   }
   rearrange(from, to) {}
 
-  async build_array() {
+  build_array() {
     let type = this.of[0].type;
     console.log(
       "+++ array build value",
@@ -192,12 +203,8 @@ export default class BContainer extends LitElement {
       this.value
     );
 
-    this.els = (this.value || []).map(async (val, index) => {
-      let f = await this.new_input(
-        { type: type },
-        `${this.prefix}[${index}]`,
-        val
-      );
+    this.els = (this.value || []).map((val, index) => {
+      let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
       f.opts = {
         label: this.name,
         // id: field.name,
@@ -205,12 +212,12 @@ export default class BContainer extends LitElement {
       return f;
     });
   }
-  async build() {
+  build() {
     console.log("+++ build", this.value);
-    this.els = this.schema.fields.map(async (field) => {
+    this.els = this.schema.fields.map((field) => {
       let name = `${this.prefix}[${field.name}]`;
       let value = this.value[field.name] ?? "";
-      let f = await this.new_input(field, name, value);
+      let f = this.new_input(field, name, value);
       f.opts = {
         name: name,
         label: field.title,

@@ -111,6 +111,9 @@ const style = css`
     display: block;
     margin: 0 1rem;
   }
+  .els > * {
+    margin-bottom: 1rem;
+  }
 `;
 
 export default class Panel extends LitElement {
