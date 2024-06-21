@@ -42,6 +42,10 @@ export default class BContainer extends LitElement {
     //this.schema = test;
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    console.log("++ connected");
+  }
   get type() {
     return this._type;
   }
