@@ -42,6 +42,11 @@ export default class Face extends LitElement {
     //onsole.log("FACE value",this )
     return "";
   }
+
+  get_updated_data() {
+    return this.value;
+  }
+
   /*
   set value(v) {
     console.log("++FACE set value", v);

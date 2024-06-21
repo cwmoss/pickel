@@ -22,6 +22,9 @@ let style = css`
   .flx {
     display: flex;
   }
+  .flx > * {
+    min-width: 0;
+  }
   sl-icon {
     display: block;
     margin: 0 auto;
@@ -42,8 +45,12 @@ let style = css`
     font-size: 1rem;
     font-weight: 600;
     color: black;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .detail {
+    text-overflow: ellipsis;
     font-size: 1rem;
     color: #666;
   }
@@ -85,7 +92,7 @@ export default class Preview extends LitElement {
     return html`<div class="flx" @click=${this.open}>
       <div class="media">${media}</div>
       <div>
-        <h2>${this.title}</h2>
+        <h2 title="${this.title}">${this.title}</h2>
         ${this.simple
           ? ""
           : html` <div class="detail">

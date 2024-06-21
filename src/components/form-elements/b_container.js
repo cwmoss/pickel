@@ -1,8 +1,10 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 // import { get_schema_type, is_object } from "./schema.js";
 import schema from "../../lib/schema.js";
-import Input from "./input.js";
-import Switch from "./switch.js";
+import { load_component } from "./component-loader.js";
+
+//import Input from "./input.js";
+//import Switch from "./switch.js";
 import Dialog from "./dialog.js";
 import Sortable from "./../../vendor/sortable.complete.esm.js";
 let handle_img = html`<svg
@@ -74,7 +76,16 @@ export default class BContainer extends LitElement {
     }
     this._value = v;
   }
-  new_input(field, name, value) {
+  get_updated_data() {
+    let value = this._value || {};
+    this.els.forEach((el) => {
+      const val = el.get_updated_data();
+      let name = el._name;
+      value[name] = val;
+    });
+    return value;
+  }
+  async new_input(field, name, value) {
     let f;
     let type = field.type;
     let subtype = "";
@@ -83,13 +94,6 @@ export default class BContainer extends LitElement {
       subtype = field.type;
     }
     switch (type) {
-      case "switch":
-        f = new Switch();
-        break;
-      case "reference":
-        f = new Input();
-        f.value = "";
-        break;
       case "object":
         f = new BContainer();
         f.schemaid = this.schemaid;
@@ -112,9 +116,10 @@ export default class BContainer extends LitElement {
         f.type = field.type;
         break;
       default:
-        f = new Input();
+        f = await load_component(type);
         f.value = value;
     }
+    f._name = field.name;
     return f;
   }
   new_array_item_value(type) {
@@ -127,7 +132,7 @@ export default class BContainer extends LitElement {
         return {};
     }
   }
-  new_array_item(e) {
+  async new_array_item(e) {
     console.log("new click", e);
     e.preventDefault();
     e.stopImmediatePropagation();
@@ -143,7 +148,11 @@ export default class BContainer extends LitElement {
       this.value.push(val);
     }
 
-    let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
+    let f = await this.new_input(
+      { type: type },
+      `${this.prefix}[${index}]`,
+      val
+    );
     f.opts = {
       label: this.name,
       // id: field.name,
@@ -161,8 +170,25 @@ export default class BContainer extends LitElement {
     );
   }
   rearrange(from, to) {}
-  updated() {
-    //return;
+
+  async updated(changedProperties) {
+    if (changedProperties.has("type")) {
+      if (this.type == "array") {
+        this.array = true;
+        console.log("c-array", this.schemaid, t, this.value);
+        await this.build_array();
+      } else {
+        this.schema = schema.get_type(this.type);
+        console.log(
+          "c-schema",
+          this.schemaid,
+          this.schema,
+          this.type,
+          this.value
+        );
+        await this.build();
+      }
+    }
     if (this.type == "array") {
       let sortable = Sortable.create(this.querySelector(".els"), {
         delay: 100,
@@ -171,7 +197,8 @@ export default class BContainer extends LitElement {
       });
     }
   }
-  build_array() {
+
+  async build_array() {
     let type = this.of[0].type;
     console.log(
       "+++ array build value",
@@ -181,8 +208,12 @@ export default class BContainer extends LitElement {
       this.value
     );
 
-    this.els = (this.value || []).map((val, index) => {
-      let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
+    this.els = (this.value || []).map(async (val, index) => {
+      let f = await this.new_input(
+        { type: type },
+        `${this.prefix}[${index}]`,
+        val
+      );
       f.opts = {
         label: this.name,
         // id: field.name,
@@ -190,12 +221,12 @@ export default class BContainer extends LitElement {
       return f;
     });
   }
-  build() {
+  async build() {
     console.log("+++ build", this.value);
-    this.els = this.schema.fields.map((field) => {
+    this.els = this.schema.fields.map(async (field) => {
       let name = `${this.prefix}[${field.name}]`;
       let value = this.value[field.name] ?? "";
-      let f = this.new_input(field, name, value);
+      let f = await this.new_input(field, name, value);
       f.opts = {
         name: name,
         label: field.title,
@@ -242,7 +273,7 @@ export default class BContainer extends LitElement {
   }
   render() {
     console.log("render container", this.els);
-    return html`<h4 title=${this._type}>${this.label}</h4>
+    return html`<h4 title=${this.type}>${this.label}</h4>
       ${this.dialog_button
         ? html`<b-dialog
             title=${this.dialog_title ?? "edit"}
