@@ -74,7 +74,7 @@ export default class BContainer extends LitElement {
     if (this.type == "array") {
       this.array = true;
       console.log("c-array", this.schemaid, t, this.value);
-      await this.build_array();
+      this.build_array();
     } else {
       this.schema = schema.get_type(this.type);
       console.log(
@@ -84,7 +84,7 @@ export default class BContainer extends LitElement {
         this.type,
         this.value
       );
-      await this.build();
+      this.build();
     }
 
     if (this.type == "array") {
@@ -181,33 +181,6 @@ export default class BContainer extends LitElement {
     );
   }
   rearrange(from, to) {}
-
-  async updated(changedProperties) {
-    if (changedProperties.has("type")) {
-      if (this.type == "array") {
-        this.array = true;
-        console.log("c-array", this.schemaid, t, this.value);
-        await this.build_array();
-      } else {
-        this.schema = schema.get_type(this.type);
-        console.log(
-          "c-schema",
-          this.schemaid,
-          this.schema,
-          this.type,
-          this.value
-        );
-        await this.build();
-      }
-    }
-    if (this.type == "array") {
-      let sortable = Sortable.create(this.querySelector(".els"), {
-        delay: 100,
-        handle: ".handle",
-        onEnd: (e) => this.dropped(e),
-      });
-    }
-  }
 
   async build_array() {
     let type = this.of[0].type;
