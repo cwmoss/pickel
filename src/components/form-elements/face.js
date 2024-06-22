@@ -43,6 +43,7 @@ export default class Face extends LitElement {
   */
         padding: 0.375em 0.5em 0.4em;
 
+        height: fit-content;
         font-weight: 600;
         line-height: 1;
       }

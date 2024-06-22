@@ -7,7 +7,7 @@ export default class Output extends Face {
   render() {
     return html`<div>
       <output
-        >${this._name} // ${this.originalType}:
+        ><strong>${this._name}</strong> // ${this.originalType}:
         ${JSON.stringify(this.value)}</output
       >
     </div>`;
