@@ -52,6 +52,10 @@ export default class Face extends LitElement {
       *::part(btn-primary) {
         background: var(--color-accent);
       }
+
+      label {
+        font-weight: 600;
+      }
     `,
   ];
 

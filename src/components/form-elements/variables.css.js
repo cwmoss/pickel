@@ -107,7 +107,7 @@ export default css`
     --bs-highlight-bg: #fff3cd;
     --bs-border-width: 2px;
     --bs-border-style: solid;
-    --bs-border-color: #bbb;
+    --bs-border-color: #a8a8bf;
     --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
     --bs-border-radius: 0.3rem; /*0.375rem;*/
     --bs-border-radius-sm: 0.25rem;

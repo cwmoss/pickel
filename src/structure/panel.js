@@ -121,6 +121,7 @@ export default class Panel extends LitElement {
     title: {},
     collabsed: { type: Boolean },
     init: { type: Boolean },
+    doc_id: {},
     content: { type: Array },
   };
 
@@ -137,10 +138,10 @@ export default class Panel extends LitElement {
     super.connectedCallback();
     // für jedes panel nur 1x initialisieren
     if (this.init) return;
+    this.init = true;
     console.log("+++ panel connected", this.title);
     this.handle_collapse();
     await this.fetch_content();
-    this.init = true;
   }
 
   async fetch_content() {
@@ -150,7 +151,7 @@ export default class Panel extends LitElement {
     if (this.index == 0) {
       schema.documents.forEach((item) => {
         let el = new Preview();
-        el.set_data({ id: item.name, title: item.title }, this.index);
+        el.set_data({ id: item.name, title: item.title });
         el.simple = true;
         el.icon = "folder";
         content.push(el);
@@ -159,7 +160,7 @@ export default class Panel extends LitElement {
       let docs = await api.documents(this.title);
       docs.forEach((item) => {
         let el = new Preview();
-        el.set_data(item, this.index);
+        el.set_data(item);
         el.icon = "file-earmark";
         content.push(el);
       });
@@ -171,12 +172,21 @@ export default class Panel extends LitElement {
     }
     this.content = content;
   }
+  // TODO: refactor
+  // kann schon beim ersten rendern gemacht werden
+  set_active_init(id) {
+    this.shadowRoot.getElementById(id)?.setAttribute("active", "");
+    console.log("active INIT", id, this.doc_id);
+  }
   set_active(id) {
     let els = this.shadowRoot.querySelectorAll(".child--content > [active]");
     console.log("active elements", id, els);
     els.forEach((el) => {
       if (el.data.id != id) el.removeAttribute("active");
     });
+  }
+  open_preview(e) {
+    e.detail.panel = this.index;
   }
   handle_collapse(e) {
     if (e) {
@@ -209,35 +219,51 @@ export default class Panel extends LitElement {
   render_content() {
     return html` ${this.content?.map((item) => item)} `;
   }
+  /*
+  let active = "person";
+  <style>
+        [id="${active}"] {
+          background-color: blue;
+        }
+      </style>
+      */
   render() {
     console.log("render panel", this);
-    return html`<div
-      class="wrapper ${classMap({
-        panel: !this.collabsed,
-        "panel-collapsed": this.collabsed,
-      })}"
-    >
+    return html`
       <div
-        collabsed
-        @click=${this.handle_collapse}
-        class="panel--head-collapsed ellipsis"
+        class="wrapper ${classMap({
+          panel: !this.collabsed,
+          "panel-collapsed": this.collabsed,
+        })}"
       >
-        <span class="panel--title">${this.title}</span>
-      </div>
-      <div not-collabsed class="panel--head" @click=${this.handle_collapse}>
-        <button
-          hidden
-          icon="o_arrow_back"
-          flat
-          @click=${this.onPanelClose}
-        ></button>
-        <span class="panel--title ellipsis">${this.title}</span>
-        <div class="actions">
-          <slot name="actions"></slot>
+        <div
+          collabsed
+          @click=${this.handle_collapse}
+          class="panel--head-collapsed ellipsis"
+        >
+          <span class="panel--title">${this.title}</span>
+        </div>
+        <div not-collabsed class="panel--head" @click=${this.handle_collapse}>
+          <button
+            hidden
+            icon="o_arrow_back"
+            flat
+            @click=${this.onPanelClose}
+          ></button>
+          <span class="panel--title ellipsis">${this.title}</span>
+          <div class="actions">
+            <slot name="actions"></slot>
+          </div>
+        </div>
+
+        <div
+          not-collabsed
+          @open-preview=${this.open_preview}
+          class="child--content"
+        >
+          ${this.render_content()}
         </div>
       </div>
-
-      <div not-collabsed class="child--content">${this.render_content()}</div>
-    </div> `;
+    `;
   }
 }

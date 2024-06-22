@@ -2,7 +2,18 @@ import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import Face from "./face.js";
 
 export default class Input extends Face {
-  static properties = { ...Face.properties, prefix: {}, suffix: {} };
+  static properties = {
+    ...Face.properties,
+    prefix: {},
+    suffix: {},
+    hasButtonSuffix: {},
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.hasButtonSuffix = !!this.querySelector('[slot="suffix-button"]');
+  }
+
   render_input() {
     return html`<input
       @input=${(e) => this.input_event(e)}
@@ -23,7 +34,7 @@ export default class Input extends Face {
         ${this.suffix
           ? html` <span class="input-group-text">${this.suffix}</span> `
           : ""}
-        <slot name="suffix-button"></slot>
+        ${this.hasButtonSuffix ? html`<slot name="suffix-button"></slot>` : ""}
       </div>
       <slot name="footer"></slot>
       <div class="invalid-feedback"></div>

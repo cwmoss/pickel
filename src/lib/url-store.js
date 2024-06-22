@@ -9,6 +9,16 @@ class UrlStore {
     let params = new URLSearchParams(window.location.search);
     return params.get(name);
   }
+
+  set_array(name, value) {
+    this.set_parameter(name, value.join("~"));
+  }
+
+  get_array(name) {
+    let p = this.get_parameter(name);
+    if (!p) return [];
+    return p.split("~");
+  }
 }
 
 export default new UrlStore();

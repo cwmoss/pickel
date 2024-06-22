@@ -1,7 +1,7 @@
 import Split from "../vendor/split-grid.js";
 import Panel from "./panel.js";
 import { slugify_simple } from "../lib/util.js";
-
+import urlStore from "../lib/url-store.js";
 //import Preview from "./preview.js";
 
 import api from "../lib/slow-hand.js";
@@ -56,23 +56,50 @@ export default class PanelManager extends HTMLElement {
     this.container = this.shadowRoot.querySelector(".panels");
   }
   connectedCallback() {
+    console.log("$$$ panelmanager connected");
     this.addEventListener("panel-collapsed", (e) => this.collapse(e));
     this.addEventListener("panel-expanded", (e) => this.expand(e));
     this.addEventListener("open-preview", (e) => this.open_new(e.detail));
-    this.add_panel("docs");
-    // this.add_panel("editor");
-    this.render();
-    window.setTimeout(() => {
-      // this.add_panel("preview");
-      // this.render();
-    }, 3000);
+    this.initialize();
   }
+
+  initialize() {
+    this.add_rootpanel();
+    let saved = urlStore.get_array("z");
+    console.log("$$$ path read", saved);
+    saved.forEach((id, idx) => {
+      let panel = this.make_panel(id, idx + 1);
+      panel.doc_id = id;
+      this.panels.push(panel);
+    });
+    this.render();
+
+    // set_active funktioniert erst nach dem rendern des panels
+    // todo: finde nen besseren weg
+    setTimeout(
+      () =>
+        saved.forEach((id, idx) => {
+          this.panels[idx].set_active_init(id);
+        }),
+      100
+    );
+  }
+
+  add_rootpanel() {
+    this.add_panel("docs");
+  }
+
   open_new(preview) {
-    console.log("request new panel", preview, preview.panel);
+    console.log("$$$ request new panel", preview, preview.panel);
     this.panels[preview.panel].set_active(preview.id);
     let panel = this.make_panel(preview.id, preview.panel + 1);
     panel.doc_id = preview.id;
     this.panels.splice(preview.panel + 1, Infinity, panel);
+    let active = this.panels.map((p) => p.doc_id);
+    console.log("$$$ path", active);
+    // das root panel brauchen wir nicht
+    active.shift();
+    urlStore.set_array("z", active);
     this.render();
   }
   collapse(e) {
@@ -111,8 +138,29 @@ export default class PanelManager extends HTMLElement {
     // this.style.setProperty("--split-cols", cols.join(" "));
     container.style["grid-template-columns"] = cols.join(" ");
     // TODO: don't throw away the good panels
-    container.replaceChildren();
-    container.append(...add);
+    for (let c of container.children) {
+      console.log("$$$ render panels", c == this.panels[0]);
+      // Do stuff with child c
+    }
+    // überschüssige panels löschen
+    container
+      .querySelectorAll("*:nth-child(n+" + (add.length + 1) + ")")
+      .forEach((e) => e.remove());
+
+    let available = Array.from(container.children);
+    add.forEach((newp, idx) => {
+      if (!available[idx]) {
+        console.log("## append", newp);
+        container.append(newp);
+      } else {
+        if (available[idx] != newp) {
+          console.log("## replace", newp);
+          available[idx].replaceWith(newp);
+        }
+      }
+    });
+    //container.replaceChildren();
+    //container.append(...add);
     // TODO: don't throw away the good panels
     if (this.splitter) {
     }
