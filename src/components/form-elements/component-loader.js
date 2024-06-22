@@ -4,6 +4,8 @@ const map = {
   switch: "Switch",
   reference: "Reference",
   slug: "Slug",
+  datetime: "Datetime",
+  date: "Date",
   image: "Image",
 };
 let path = null;

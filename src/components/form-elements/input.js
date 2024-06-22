@@ -4,6 +4,7 @@ import Face from "./face.js";
 export default class Input extends Face {
   static properties = {
     ...Face.properties,
+    input_type: {},
     prefix: {},
     suffix: {},
     hasButtonSuffix: {},
@@ -14,12 +15,15 @@ export default class Input extends Face {
     this.hasButtonSuffix = !!this.querySelector('[slot="suffix-button"]');
   }
 
+  get native_type() {
+    return this.input_type || "text";
+  }
   render_input() {
     return html`<input
       @input=${(e) => this.input_event(e)}
       .value=${this.value}
       id="input"
-      type="text"
+      type="${this.native_type}"
       class="form-control"
     />`;
   }
