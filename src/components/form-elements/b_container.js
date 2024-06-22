@@ -30,6 +30,7 @@ export default class BContainer extends LitElement {
     schemaid: {},
     dialog_button: {},
     dialog_title: {},
+    is_image: { type: Boolean },
     prefix: { type: String },
     value: { type: Object, attribute: false },
   };
@@ -81,6 +82,9 @@ export default class BContainer extends LitElement {
       }
       return f.type;
     });
+    if (this.is_image) {
+      types.push("image");
+    }
     await resolve_components([...new Set(types)]);
 
     if (this.type == "array") {
@@ -118,7 +122,23 @@ export default class BContainer extends LitElement {
       type = "object";
       subtype = field.type;
     }
+    if (schema.is_image(type)) {
+      type = "image";
+      subtype = field.type;
+    }
     switch (type) {
+      case "image":
+        f = new BContainer();
+        f.schemaid = this.schemaid;
+        f.prefix = name;
+        f.value = value ?? { asset: null };
+        f.level = (this.level ?? 0) + 1;
+        f.label = field.title;
+        f.dialog_button = field.dialog_button;
+        f.dialog_title = field.dialog_title;
+        f.type = subtype;
+        f.is_image = true;
+        break;
       case "object":
         f = new BContainer();
         f.schemaid = this.schemaid;
@@ -214,7 +234,15 @@ export default class BContainer extends LitElement {
   }
   build() {
     console.log("+++ build", this.value);
-    this.els = this.schema.fields.map((field) => {
+    let fields = this.schema.fields;
+    let img;
+    if (this.is_image) {
+      img = get_component("image");
+      img.value = this.value.asset;
+      // this.els.unshift(img);
+      fields = fields.filter((f) => f.name != "asset");
+    }
+    this.els = fields.map((field) => {
       let name = `${this.prefix}[${field.name}]`;
       let value = this.value[field.name] ?? "";
       let f = this.new_input(field, name, value);
@@ -234,6 +262,7 @@ export default class BContainer extends LitElement {
       // f.setAttribute("name", f.name);
       return f;
     });
+    if (img) this.els.unshift(img);
   }
   render_actions() {
     if (this.type != "array") return "";

@@ -4,6 +4,7 @@ const map = {
   switch: "Switch",
   reference: "Reference",
   slug: "Slug",
+  image: "Image",
 };
 let path = null;
 let default_comp = "Output";
