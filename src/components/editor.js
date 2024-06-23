@@ -28,7 +28,7 @@ export default class Editor extends LitElement {
     this.type = this.document._type;
     if (!this.type) return;
 
-    console.log("+++ load schema", this.type, this._id);
+    console.log("$$$ load schema", this.type, this._id, this.document);
     this.schema = schema.get_type(this.type);
     this.container = new Container();
     console.log("+++ container created");

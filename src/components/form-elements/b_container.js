@@ -2,6 +2,7 @@ import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 // import { get_schema_type, is_object } from "./schema.js";
 import schema from "../../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
+import api from "../../lib/slow-hand.js";
 
 //import Input from "./input.js";
 //import Switch from "./switch.js";
@@ -41,14 +42,14 @@ export default class BContainer extends LitElement {
 
   constructor() {
     super();
-    console.log("construct container");
+    //console.log("construct container");
     // this.prefix = this.getAttribute("prefix");
     //this.schema = test;
   }
 
   async connectedCallback() {
     super.connectedCallback();
-    console.log("++ connected");
+    // console.log("++ connected");
     await this.init();
   }
 
@@ -89,16 +90,9 @@ export default class BContainer extends LitElement {
 
     if (this.type == "array") {
       this.array = true;
-      console.log("c-array", this.schemaid, this.value);
+      //console.log("c-array", this.schemaid, this.value);
       this.build_array();
     } else {
-      console.log(
-        "c-schema",
-        this.schemaid,
-        this.schema,
-        this.type,
-        this.value
-      );
       this.build();
     }
     this.requestUpdate();
@@ -179,11 +173,11 @@ export default class BContainer extends LitElement {
     }
   }
   new_array_item(e) {
-    console.log("new click", e);
+    //console.log("new click", e);
     e.preventDefault();
     e.stopImmediatePropagation();
     // this.value.push({}); //(this.value || []).concat([{}]);
-    console.log("+++ new array", this.value);
+    //console.log("+++ new array", this.value);
     // this.build_array();
     let type = this.of[0].type;
     let index = this.els.length;
@@ -215,13 +209,6 @@ export default class BContainer extends LitElement {
 
   build_array() {
     let type = this.of[0].type;
-    console.log(
-      "+++ array build value",
-      this.label,
-      this.prefix,
-      type,
-      this.value
-    );
 
     this.els = (this.value || []).map((val, index) => {
       let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
@@ -233,12 +220,14 @@ export default class BContainer extends LitElement {
     });
   }
   build() {
-    console.log("+++ build", this.value);
+    // console.log("+++ build", this.value);
     let fields = this.schema.fields;
     let img;
     if (this.is_image) {
+      // console.log("$ image", this.value);
       img = get_component("image");
       img.value = this.value.asset;
+      img.existing = api.imageurl_from_ref(this.value.asset);
       // this.els.unshift(img);
       fields = fields.filter((f) => f.name != "asset");
     }
@@ -252,13 +241,7 @@ export default class BContainer extends LitElement {
         id: field.name,
       };
       // f.setAttribute("value", this.value[field.name] ?? "");
-      console.log(
-        "++ new field",
-        f.name,
-        field.type,
-        this.value[field.name],
-        f
-      );
+
       // f.setAttribute("name", f.name);
       return f;
     });
@@ -292,7 +275,7 @@ export default class BContainer extends LitElement {
     }
   }
   render() {
-    console.log("render container", this.els);
+    // console.log("render container", this.els);
     return html`<h4 title=${this.type}>${this.label}</h4>
       ${this.dialog_button
         ? html`<b-dialog

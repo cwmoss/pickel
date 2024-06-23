@@ -138,6 +138,9 @@ export default class Image extends LitElement {
 
   static styles = style;
 
+  get_updated_data() {
+    return this.value;
+  }
   render_descr() {
     if (!this.thumb) return "";
     return html`${this.fname}<br />${this.thumb?.naturalWidth} x

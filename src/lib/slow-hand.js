@@ -142,6 +142,19 @@ class SlowHand {
     ).then((resp) => resp.result[0]);
   }
 
+  imageurl_from_ref(ref) {
+    console.log("$ imageurl", ref);
+    if (!ref) return "";
+    if (typeof ref === "object") ref = ref._ref;
+    let parts = ref.split("-");
+    parts.shift();
+    let suffix = parts.pop();
+    console.log("++ parts", parts);
+    return `${this.endpoint}/assets/images/${datasets.current}/${parts.join(
+      "-"
+    )}.${suffix}?size=300x300&mode=fit`;
+  }
+
   async uploadImage(image) {
     return fetch(
       `${this.endpoint}/assets/images/${datasets.current}/?filename=${image.name}`,
@@ -201,6 +214,17 @@ class SlowHand {
             }
           }`;
     return this.graphql(q);
+  }
+
+  block_to_text(block) {
+    if (!Array.isArray(block)) return block;
+    console.log("$ block=>text", block);
+    let text = [];
+    block.forEach((b) => {
+      if (b.children) text.push(this.block_to_text(b.children));
+      if (b.text) text.push(b.text);
+    });
+    return text.join(" ");
   }
 }
 

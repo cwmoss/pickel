@@ -14,6 +14,7 @@ export function once(fn, context) {
     return result;
   };
 }
+// typeof x === 'object' && !Array.isArray(x) && x !== null
 
 export const slugify_simple = (str) => {
   str = str.trim(); // trim leading/trailing spaces

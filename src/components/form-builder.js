@@ -69,7 +69,7 @@ export default class FormBuilder extends LitElement {
 
   load_schema() {
     if (!this.document) return;
-    console.log("+++ load schema", this.document, this._id);
+    console.log("$$$ load schema", this.document, this._id);
     this.schema = get_schema_type(this.document, this._id);
     this.container = new Container();
     console.log("+++ container created");
