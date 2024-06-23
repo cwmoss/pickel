@@ -8,6 +8,7 @@ const map = {
   date: "Date",
   image: "Image",
   text: "Text",
+  geopoint: "Geo",
 };
 let path = null;
 let default_comp = "Output";
