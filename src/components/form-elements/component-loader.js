@@ -7,6 +7,7 @@ const map = {
   datetime: "Datetime",
   date: "Date",
   image: "Image",
+  text: "Text",
 };
 let path = null;
 let default_comp = "Output";

@@ -285,7 +285,14 @@ export default class BContainer extends LitElement {
             <div class="els">${this.render_els()}</div>
           </b-dialog> `
         : html`
-            <div class="els">${this.render_els()}</div>
+            <div
+              @toggle-fullscreen=${(e) => {
+                console.log("$$ fullscreen", e);
+              }}
+              class="els"
+            >
+              ${this.render_els()}
+            </div>
             ${this.render_actions()}
           `} `;
   }

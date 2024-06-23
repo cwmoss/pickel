@@ -11,7 +11,7 @@ export default class Editor extends LitElement {
     id: {},
     /* document _type */
     type: {},
-
+    fullscreen: { type: Boolean },
     document: { type: Object },
     container: { type: Object, attribute: false },
   };
@@ -51,15 +51,21 @@ export default class Editor extends LitElement {
 
     return false;
   }
+  go_fullscreen(e) {
+    console.log("$ fullscreen", e);
+    this.fullscreen = e.detail;
+  }
   // ${this.container}
   render() {
     console.log("render formbuilder", this.document, this.container);
     return html`<p>${this.type}</p>
       <form @submit=${this.submit}>
-        <div class="actions">
+        <div ?hidden=${this.fullscreen} class="actions">
           <button primary class="btn" part="button">Save</button>
         </div>
-        ${this.container}
+        <section @toggle-fullscreen="${this.go_fullscreen}">
+          ${this.container}
+        </section>
       </form>`;
   }
 

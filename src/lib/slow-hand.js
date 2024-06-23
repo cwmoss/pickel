@@ -224,7 +224,7 @@ class SlowHand {
       if (b.children) text.push(this.block_to_text(b.children));
       if (b.text) text.push(b.text);
     });
-    return text.join(" ");
+    return text.join(" ").trim();
   }
 }
 
