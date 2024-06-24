@@ -51,7 +51,7 @@ export default class Editor extends Panel {
       this.load_schema();
     }
   }
-
+  inspect() {}
   submit(e) {
     e.preventDefault();
     let data = this.container.get_updated_data();
@@ -66,10 +66,17 @@ export default class Editor extends Panel {
   send_document(e) {
     e.detail.data = this.container.get_updated_data();
   }
+  // <button type="button" @click=${this.inspect}>i</button>
   render_actions() {
     return html`<button primary form="editor" class="btn" part="button">
-      Save
-    </button>`;
+        Save
+      </button>
+      <b-dialog title="inspect" .trigger_title=${"i"}
+        ><json-viewer
+          .data=${this.document}
+          style="--background-color: white;"
+        ></json-viewer
+      ></b-dialog>`;
   }
   // ${this.container}
   render_content() {

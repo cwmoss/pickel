@@ -84,6 +84,7 @@ const style = css`
   .actions {
     display: flex;
     flex-wrap: nowrap;
+    gap: 1rem;
   }
   .panel-collapsed [not-collabsed] {
     display: none;

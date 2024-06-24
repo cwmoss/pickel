@@ -11,7 +11,9 @@ let styles = css`
     padding: 1.6rem;
     max-width: 400px;
   }
-
+  * {
+    box-sizing: border-box;
+  }
   ::backdrop {
     background-image: linear-gradient(
       45deg,
@@ -21,6 +23,23 @@ let styles = css`
       green
     );
     opacity: 0.75;
+  }
+  h1 {
+    display: flex;
+    margin: 0;
+  }
+  button[close] {
+    appearance: none;
+    border: 0px;
+    background: white;
+    position: absolute;
+    top: 0;
+    right: 6px;
+  }
+  button[close]:after {
+    display: inline-block;
+    font-size: 2rem;
+    content: "\u00d7"; /* This will render the 'X' */
   }
 `;
 
@@ -45,13 +64,13 @@ export default class Dialog extends LitElement {
 
   render() {
     console.log("render dialog", this.content);
-    return html`<button part="button btn-primary" @click=${this.open}>
+    return html`<button part="button" @click=${this.open}>
         ${this.trigger_title}
       </button>
       <dialog>
+        <button close type="button" @click=${this.close}></button>
         <h1>
-          ${this.title}
-          <a href="javascript:;" @click=${this.close}>x</a>
+          <div>${this.title}</div>
         </h1>
         <slot></slot>
       </dialog>`;
