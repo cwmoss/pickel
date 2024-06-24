@@ -150,7 +150,7 @@ class SlowHand {
     parts.shift();
     let suffix = parts.pop();
     console.log("++ parts", parts);
-    return `${this.endpoint}/assets/images/${datasets.current}/${parts.join(
+    return `${this.endpoint}/images/${datasets.current}/${parts.join(
       "-"
     )}.${suffix}?size=300x300&mode=fit`;
   }

@@ -1,5 +1,8 @@
 import Split from "../vendor/split-grid.js";
-import Panel from "./panel.js";
+import Doclist from "./doclist.js";
+import Typelist from "./typelist.js";
+import Editor from "./editor.js";
+
 import { slugify_simple } from "../lib/util.js";
 import urlStore from "../lib/url-store.js";
 //import Preview from "./preview.js";
@@ -219,6 +222,23 @@ export default class PanelManager extends HTMLElement {
     return div;
   }
   make_panel(title, index) {
+    index ??= this.panels.length;
+    console.log("$$ make panel", title, index);
+    let p;
+    if (index == 0) {
+      p = new Typelist();
+    } else if (index == 1) {
+      p = new Doclist();
+    } else {
+      p = new Editor();
+    }
+    p.title = title;
+    p.index = index;
+    p.id = slugify_simple(title);
+
+    return p;
+  }
+  xxmake_panel(title, index) {
     let p = new Panel();
     p.setAttribute("title", title);
     p.index = index ?? this.panels.length;

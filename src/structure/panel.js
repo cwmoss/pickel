@@ -1,11 +1,13 @@
 import { LitElement, css, html, classMap } from "./../vendor/lit-all.min.js";
 import api from "../lib/slow-hand.js";
 import Preview from "../components/preview.js";
-import Editor from "../components/editor.js";
 
 const style = css`
   :host {
     /* --selected-id: "person"; */
+  }
+  * {
+    box-sizing: border-box;
   }
   form-builder {
     padding: 1rem;
@@ -33,13 +35,7 @@ const style = css`
   *::part(btn-primary) {
     background: var(--color-accent);
   }
-  /*
-  bullshit
-  pi-preview[id="var(--selected-id)"] {
-    color: red;
-    background-color: var(--color-accent);
-  }
-    */
+
   .wrapper {
     /* min-height: 100vh;*/
   }
@@ -80,23 +76,14 @@ const style = css`
   .panel--head-collapsed {
     height: 100%;
     width: 100%;
-    padding-top: 14px;
-    padding-left: 12px;
+    padding-top: 17px;
+    padding-left: 4px;
     writing-mode: vertical-lr;
     text-orientation: mixed;
   }
   .actions {
     display: flex;
     flex-wrap: nowrap;
-    /*
-    todo: use panel-head instead
-  */
-    position: sticky;
-    height: 3rem;
-    top: 0;
-    background: white;
-    z-index: 10;
-    padding-bottom: 1rem;
   }
   .panel-collapsed [not-collabsed] {
     display: none;
@@ -144,7 +131,7 @@ export default class Panel extends LitElement {
     await this.fetch_content();
   }
 
-  async fetch_content() {
+  async xxxfetch_content() {
     let content = [];
     let schema = await api.current_schema();
     console.log("+panel=>schema", this.index, schema);
@@ -216,17 +203,15 @@ export default class Panel extends LitElement {
   onPanelHeadClose() {
     // stop
   }
+
+  render_actions() {
+    return "";
+  }
+
   render_content() {
     return html` ${this.content?.map((item) => item)} `;
   }
-  /*
-  let active = "person";
-  <style>
-        [id="${active}"] {
-          background-color: blue;
-        }
-      </style>
-      */
+
   render() {
     console.log("render panel", this);
     return html`
@@ -236,24 +221,16 @@ export default class Panel extends LitElement {
           "panel-collapsed": this.collabsed,
         })}"
       >
-        <div
-          collabsed
-          @click=${this.handle_collapse}
-          class="panel--head-collapsed ellipsis"
-        >
-          <span class="panel--title">${this.title}</span>
+        <div collabsed class="panel--head-collapsed ellipsis">
+          <span @click=${this.handle_collapse} class="panel--title"
+            >${this.title}</span
+          >
         </div>
-        <div not-collabsed class="panel--head" @click=${this.handle_collapse}>
-          <button
-            hidden
-            icon="o_arrow_back"
-            flat
-            @click=${this.onPanelClose}
-          ></button>
-          <span class="panel--title ellipsis">${this.title}</span>
-          <div class="actions">
-            <slot name="actions"></slot>
-          </div>
+        <div not-collabsed class="panel--head">
+          <span @click=${this.handle_collapse} class="panel--title ellipsis"
+            >${this.title}</span
+          >
+          <div class="actions">${this.render_actions()}</div>
         </div>
 
         <div

@@ -1,11 +1,14 @@
-import { LitElement, css, html } from "./../vendor/lit-core.min.js";
+import { LitElement, css, html } from "../vendor/lit-core.min.js";
 import api from "../lib/slow-hand.js";
 import schema from "../lib/schema.js";
+import Panel from "./panel.js";
 
-import Container from "./form-elements/b_container.js";
+import Container from "../components/form-elements/b_container.js";
 
-export default class Editor extends LitElement {
+export default class Editor extends Panel {
   static properties = {
+    // title, doc_id from panels
+    ...Panel.properties,
     /* das schema für den document _type */
     schema: { attribute: false },
     id: {},
@@ -18,12 +21,16 @@ export default class Editor extends LitElement {
 
   _id = Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
 
-  async connectedCallback() {
-    super.connectedCallback();
-    await this.load_schema();
-  }
-
-  async load_schema() {
+  async fetch_content() {
+    /*
+    let formbuilder = new Editor();
+      formbuilder.id = this.doc_id;
+      content.push(formbuilder);
+      // content.textContent = JSON.stringify(doc);
+    }
+    this.content = content;
+    */
+    this.id = this.doc_id;
     this.document = await api.document(this.id);
     this.type = this.document._type;
     if (!this.type) return;
@@ -38,7 +45,8 @@ export default class Editor extends LitElement {
     this.container.level = 0;
     this.container.type = this.type;
   }
-  updated(changedProperties) {
+
+  xxxupdated(changedProperties) {
     if (changedProperties.has("type")) {
       this.load_schema();
     }
@@ -55,21 +63,30 @@ export default class Editor extends LitElement {
     console.log("$ fullscreen", e);
     this.fullscreen = e.detail;
   }
+  send_document(e) {
+    e.detail.data = this.container.get_updated_data();
+  }
+  render_actions() {
+    return html`<button primary form="editor" class="btn" part="button">
+      Save
+    </button>`;
+  }
   // ${this.container}
-  render() {
+  render_content() {
     console.log("render formbuilder", this.document, this.container);
-    return html`<p>${this.type}</p>
-      <form @submit=${this.submit}>
-        <div ?hidden=${this.fullscreen} class="actions">
-          <button primary class="btn" part="button">Save</button>
-        </div>
-        <section @toggle-fullscreen="${this.go_fullscreen}">
-          ${this.container}
-        </section>
-      </form>`;
+    return html`<form id="editor" @submit=${this.submit}>
+      <div ?hidden=${this.fullscreen} class="actions"></div>
+      <section
+        style="padding:1rem;"
+        @get-document=${this.send_document}
+        @toggle-fullscreen="${this.go_fullscreen}"
+      >
+        ${this.container}
+      </section>
+    </form>`;
   }
 
-  createRenderRoot() {
+  xxcreateRenderRoot() {
     return this;
   }
 }

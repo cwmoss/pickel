@@ -128,15 +128,21 @@ export default class Image extends LitElement {
   static properties = {
     thumb: {},
     fname: {},
+    value: {},
     upload_label: { attribute: "upload-label" },
     upload_url: { attribute: "upload-url" },
     remove_url: { attribute: "remove-url" },
-    existing: { reflect: true },
+    existing: { type: Boolean, reflect: true },
     uploading: { type: Boolean, reflect: true },
     error: {},
   };
 
   static styles = style;
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.value) this.set_preview(this.value);
+  }
 
   get_updated_data() {
     return this.value;
@@ -177,7 +183,7 @@ export default class Image extends LitElement {
     };
   }
 
-  set_preview(existing, upload, upload_name) {
+  set_preview(initial_value, upload, upload_name) {
     let thumb = null,
       name = null;
 
@@ -186,18 +192,20 @@ export default class Image extends LitElement {
       console.log("++ upload");
       name = upload_name;
       thumb.src = upload;
+      this.existing = false;
     } else {
-      if (existing) {
+      if (initial_value) {
         thumb = document.createElement("img");
-        thumb.src = existing;
+        thumb.src = initial_value;
         name = thumb.src.split("/").pop();
+        this.existing = true;
       }
     }
     this.thumb = thumb;
     this.fname = name;
     if (thumb) {
       // this.select(".preview").replaceChildren(thumb);
-      this.existing = false;
+
       // size ermitteln
       thumb.onload = () => {
         this.requestUpdate();

@@ -226,8 +226,9 @@ export default class BContainer extends LitElement {
     if (this.is_image) {
       // console.log("$ image", this.value);
       img = get_component("image");
-      img.value = this.value.asset;
-      img.existing = api.imageurl_from_ref(this.value.asset);
+      img.value = api.imageurl_from_ref(this.value.asset); // this.value.asset;
+      //img.existing = img.value ? true : false;
+      // img.existing = api.imageurl_from_ref(this.value.asset);
       // this.els.unshift(img);
       fields = fields.filter((f) => f.name != "asset");
     }
