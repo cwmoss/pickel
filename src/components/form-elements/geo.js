@@ -15,6 +15,11 @@ let style = css`
   #map {
     height: 180px;
   }
+  label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
 `;
 
 export default class Geo extends Face {
@@ -56,7 +61,7 @@ export default class Geo extends Face {
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
         crossorigin=""
       />
-
+      <label for="input" class="form-label">${this.label}</label>
       <div id="map"></div>`;
   }
 }

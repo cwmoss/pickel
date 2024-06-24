@@ -11,7 +11,13 @@ https://stackoverflow.com/questions/54546007/why-doesnt-font-awesome-work-in-my-
 
 https://github.com/Ionaru/easy-markdown-editor?tab=readme-ov-file#toolbar-icons
 */
-let style = css``;
+let style = css`
+  label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+`;
 
 export default class Text extends Face {
   static properties = { ...Face.properties, prefix: {}, suffix: {} };
@@ -62,8 +68,8 @@ export default class Text extends Face {
         href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
         integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
         crossorigin="anonymous"
-      />
-      <textarea></textarea>`;
+      /><label for="input" class="form-label">${this.label}</label
+      ><textarea></textarea>`;
   }
 }
 
