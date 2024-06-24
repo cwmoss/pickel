@@ -93,12 +93,12 @@ export default class PanelManager extends HTMLElement {
     this.add_panel("docs");
   }
 
-  close(panel) {
+  close(detail) {
     // this.panels.splice(panel - 1, Infinity);
-    panel = panel.panel;
-    // this.panels.splice(panel - 1, Infinity);
+    let panel = detail.panel;
+    this.panels.splice(panel, Infinity);
     console.log("$$$ request close panel", panel, this.panels);
-    //this.render();
+    this.render();
   }
 
   open_new(preview) {
