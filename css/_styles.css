@@ -58,6 +58,7 @@ main {
 main:has(desk-page) {
   background-color: white;
   width: 100%;
+  padding: 0;
 }
 
 main > * {
