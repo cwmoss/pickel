@@ -46,7 +46,7 @@ const style = css`
     place-self: start end;
   }
   button.remove::after {
-    content: "\\2716";
+    content: "\u2716";
   }
   .stack {
     display: grid;
@@ -54,6 +54,7 @@ const style = css`
   }
   .stack > * {
     grid-area: 1 / 1;
+    min-width: 0;
   }
   section {
     width: 100%;

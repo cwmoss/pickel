@@ -1,3 +1,4 @@
+import Close from "./close.js";
 import Navigation from "./navigation.js";
 import Slide from "./slide.js";
 import Panel from "../structure/panel.js";

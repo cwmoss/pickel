@@ -28,19 +28,6 @@ let styles = css`
     display: flex;
     margin: 0;
   }
-  button[close] {
-    appearance: none;
-    border: 0px;
-    background: white;
-    position: absolute;
-    top: 0;
-    right: 6px;
-  }
-  button[close]:after {
-    display: inline-block;
-    font-size: 2rem;
-    content: "\u00d7"; /* This will render the 'X' */
-  }
 `;
 
 export default class Dialog extends LitElement {
@@ -61,14 +48,14 @@ export default class Dialog extends LitElement {
   close() {
     this.dialog.close();
   }
-
+  // <button close type="button" @click=${this.close}></button>
   render() {
     console.log("render dialog", this.content);
     return html`<button part="button" @click=${this.open}>
         ${this.trigger_title}
       </button>
       <dialog>
-        <button close type="button" @click=${this.close}></button>
+        <pi-close @click=${this.close}></pi-close>
         <h1>
           <div>${this.title}</div>
         </h1>

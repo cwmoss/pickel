@@ -59,6 +59,14 @@ export default class Editor extends Panel {
 
     return false;
   }
+  close() {
+    let evt = new CustomEvent("close-panel", {
+      detail: { panel: this.index },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(evt);
+  }
   go_fullscreen(e) {
     console.log("$ fullscreen", e);
     this.fullscreen = e.detail;
@@ -76,7 +84,8 @@ export default class Editor extends Panel {
           .data=${this.document}
           style="--background-color: white;"
         ></json-viewer
-      ></b-dialog>`;
+      ></b-dialog>
+      <pi-close @click=${this.close}></pi-close>`;
   }
   // ${this.container}
   render_content() {

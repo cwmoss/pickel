@@ -63,6 +63,7 @@ export default class PanelManager extends HTMLElement {
     this.addEventListener("panel-collapsed", (e) => this.collapse(e));
     this.addEventListener("panel-expanded", (e) => this.expand(e));
     this.addEventListener("open-preview", (e) => this.open_new(e.detail));
+    this.addEventListener("close-panel", (e) => this.close(e.detail));
     this.initialize();
   }
 
@@ -90,6 +91,14 @@ export default class PanelManager extends HTMLElement {
 
   add_rootpanel() {
     this.add_panel("docs");
+  }
+
+  close(panel) {
+    // this.panels.splice(panel - 1, Infinity);
+    panel = panel.panel;
+    // this.panels.splice(panel - 1, Infinity);
+    console.log("$$$ request close panel", panel, this.panels);
+    //this.render();
   }
 
   open_new(preview) {

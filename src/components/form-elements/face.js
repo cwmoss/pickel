@@ -56,6 +56,9 @@ export default class Face extends LitElement {
       label {
         font-weight: 600;
       }
+      .input-group {
+        gap: 0.5rem;
+      }
     `,
   ];
 
