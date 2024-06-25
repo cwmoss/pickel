@@ -1,7 +1,8 @@
 import { LitElement, css, html } from "../../vendor/lit-all.min.js";
 // import Pager from "./pager.js";
-import api from "../../lib/slow-hand.js";
-import urlStore from "../../lib/url-store.js";
+import api from "../lib/slow-hand.js";
+import urlStore from "../lib/url-store.js";
+import FocusPicker from "../misc/focus-picker.js";
 //import cssvars from "./variables.css.js";
 
 // console.log("bootstrap import", cssvars);
@@ -192,4 +193,4 @@ export default class MediaWidget extends LitElement {
   }
 }
 
-window.customElements.define("media-widget", MediaWidget);
+customElements.define("media-widget", MediaWidget);

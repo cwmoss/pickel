@@ -2,7 +2,7 @@ import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import Input from "./input.js";
 import Face from "./face.js";
 import { get_document, api } from "./_helper.js";
-import { slugify, hashID } from "../../lib/util.js";
+import { slugify, hashID } from "../lib/util.js";
 
 /*
 https://stackoverflow.com/questions/63710162/how-to-load-font-face-in-dynamically-loaded-styles-of-web-component-with-shadow

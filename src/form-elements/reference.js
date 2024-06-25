@@ -1,8 +1,8 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
-import Preview from "../preview.js";
+import Preview from "../slowhand/preview.js";
 import Face from "./face.js";
 import { get_document, api } from "./_helper.js";
-import { slugify, hashID } from "../../lib/util.js";
+import { slugify, hashID } from "../lib/util.js";
 
 export default class Reference extends Face {
   static properties = { ...Face.properties, preview: { type: Object } };

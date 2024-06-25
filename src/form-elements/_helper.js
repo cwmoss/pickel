@@ -1,4 +1,4 @@
-import api from "../../lib/slow-hand.js";
+import api from "../lib/slow-hand.js";
 
 // https://stackoverflow.com/questions/8729193/how-to-get-all-parent-nodes-of-given-element-in-pure-javascript
 const getParents = (el) => {

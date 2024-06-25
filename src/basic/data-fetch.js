@@ -1,9 +1,9 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 
-import api from "../../lib/slow-hand.js";
-import { resolve_path } from "../../lib/util.js";
+import api from "../lib/slow-hand.js";
+import { resolve_path } from "../lib/util.js";
 
-class DataFetch extends LitElement {
+export default class DataFetch extends LitElement {
   static properties = {
     url: {},
     api: {},

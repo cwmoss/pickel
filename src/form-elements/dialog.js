@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
-import { add_style, once } from "../../lib/util.js";
+import { add_style, once } from "../lib/util.js";
 
 let add_style_once = once(add_style);
 let styles = css`

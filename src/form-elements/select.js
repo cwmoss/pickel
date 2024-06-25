@@ -80,4 +80,4 @@ export default class Select extends Face {
   }
 }
 
-customElements.define("b-select", Select);
+customElements.define("pi-select", Select);

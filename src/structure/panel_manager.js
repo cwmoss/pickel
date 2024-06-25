@@ -260,4 +260,4 @@ export default class PanelManager extends HTMLElement {
   }
 }
 
-customElements.define("pi-panelmanager", PanelManager);
+customElements.define("pi-panel-manager", PanelManager);

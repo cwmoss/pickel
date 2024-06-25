@@ -1,4 +1,4 @@
-import router from "./vendor/page.mjs";
+import router from "../vendor/page.mjs";
 import routes from "./routes.js";
 
 // let router = window.page;

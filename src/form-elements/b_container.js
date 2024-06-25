@@ -1,8 +1,8 @@
-import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
+import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 // import { get_schema_type, is_object } from "./schema.js";
-import schema from "../../lib/schema.js";
+import schema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
-import api from "../../lib/slow-hand.js";
+import api from "../lib/slow-hand.js";
 
 //import Input from "./input.js";
 //import Switch from "./switch.js";

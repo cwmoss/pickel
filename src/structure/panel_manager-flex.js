@@ -1,4 +1,4 @@
-import Split from "../vendor/split.js";
+import Split from "../../vendor/split.js";
 import Panel from "./panel.js";
 
 //import Preview from "./preview.js";
