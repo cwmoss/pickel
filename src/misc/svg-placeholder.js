@@ -25,3 +25,5 @@ export default class SvgPlaceholder extends HTMLElement {
     this.innerHTML = svg;
   }
 }
+
+customElements.define("svg-placeholder", SvgPlaceholder);

@@ -167,3 +167,5 @@ export default class Countdown extends HTMLElement {
     }
   }
 }
+
+customElements.define("count-down", Countdown);

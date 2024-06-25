@@ -28,7 +28,10 @@ export default class Bulkselect extends HTMLElement {
     if (e.target.tagName == "INPUT") {
       this.update_button_status();
     } else {
-      if (this.implicit_select && e.target.tagName != "A"/*&& e.target.matches(this.implicit_select)*/) {
+      if (
+        this.implicit_select &&
+        e.target.tagName != "A" /*&& e.target.matches(this.implicit_select)*/
+      ) {
         // console.log("+++ implicit!", e);
         const cb = e.target
           .closest(".postbox-item")
@@ -65,3 +68,5 @@ export default class Bulkselect extends HTMLElement {
     this.update_button_status();
   }
 }
+
+customElements.define("bulk-select", Bulkselect);

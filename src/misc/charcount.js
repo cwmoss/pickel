@@ -70,3 +70,5 @@ export default class CharCount extends HTMLElement {
     this.appendChild(temp);
   }
 }
+
+customElements.define("char-count", CharCount);

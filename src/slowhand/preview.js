@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "./../vendor/lit-core.min.js";
+import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 
 let style = css`
   * {
@@ -100,3 +100,5 @@ export default class Preview extends LitElement {
     </div>`;
   }
 }
+
+customElements.define("pi-preview", Preview);

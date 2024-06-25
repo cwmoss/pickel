@@ -34,3 +34,5 @@ export default class AdPreview extends HTMLElement {
     );
   }
 }
+
+customElements.define("ad-preview", AdPreview);

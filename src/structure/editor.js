@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "../vendor/lit-core.min.js";
+import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import api from "../lib/slow-hand.js";
 import schema from "../lib/schema.js";
 import Panel from "./panel.js";

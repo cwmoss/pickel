@@ -17,3 +17,5 @@ export default class MtanCountdown extends Countdown {
     window.location.href = url;
   }
 }
+
+customElements.define("mtan-countdown", MtanCountdown);

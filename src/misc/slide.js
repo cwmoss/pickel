@@ -39,3 +39,5 @@ export default class Slide extends HTMLElement {
     }).mount();
   }
 }
+
+customElements.define("pi-slide", Slide);

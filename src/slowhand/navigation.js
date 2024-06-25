@@ -14,3 +14,5 @@ export default class Navigation extends HTMLElement {
     });
   }
 }
+
+customElements.define("pi-navigation", Navigation);

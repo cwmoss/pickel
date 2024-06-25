@@ -1,4 +1,4 @@
-import Split from "../vendor/split-grid.js";
+import Split from "../../vendor/split-grid.js";
 import Doclist from "./doclist.js";
 import Typelist from "./typelist.js";
 import Editor from "./editor.js";
@@ -259,3 +259,5 @@ export default class PanelManager extends HTMLElement {
     return div;
   }
 }
+
+customElements.define("pi-panelmanager", PanelManager);

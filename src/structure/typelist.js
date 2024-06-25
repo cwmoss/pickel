@@ -1,4 +1,4 @@
-import { LitElement, css, html, classMap } from "./../vendor/lit-all.min.js";
+import { LitElement, css, html, classMap } from "../../vendor/lit-all.min.js";
 import api from "../lib/slow-hand.js";
 import Panel from "./panel.js";
 import Preview from "../components/preview.js";
