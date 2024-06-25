@@ -142,7 +142,7 @@ class SlowHand {
     ).then((resp) => resp.result[0]);
   }
 
-  imageurl_from_ref(ref) {
+  imageurl_from_ref(ref, opts = {}) {
     console.log("$ imageurl", ref);
     if (!ref) return "";
     if (typeof ref === "object") ref = ref._ref;
@@ -150,9 +150,13 @@ class SlowHand {
     parts.shift();
     let suffix = parts.pop();
     console.log("++ parts", parts);
+    let size = "size=300x300&mode=fit";
+    if (opts.preview) {
+      size = "size=50x50&mode=fit";
+    }
     return `${this.endpoint}/images/${datasets.current}/${parts.join(
       "-"
-    )}.${suffix}?size=300x300&mode=fit`;
+    )}.${suffix}?${size}`;
   }
 
   async uploadImage(image) {

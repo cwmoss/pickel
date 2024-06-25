@@ -9,7 +9,9 @@ let styles = css`
     border-radius: calc(5px * var(--ratio));
     box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     padding: 1.6rem;
-    max-width: 400px;
+    width: 90%;
+    height: 90%;
+    overflow: auto;
   }
   * {
     box-sizing: border-box;

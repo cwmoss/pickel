@@ -63,6 +63,7 @@ export default class Preview extends LitElement {
     simple: { type: Boolean, reflect: true },
     icon: {},
     title: {},
+    image: {},
     data: { type: Object },
   };
 
@@ -71,6 +72,7 @@ export default class Preview extends LitElement {
   set_data(data) {
     this.id = data.id ?? data._id ?? data.name ?? data.title;
     this.title = data.title ?? data.name ?? this.id;
+    this.image = data.image ?? null;
     this.data = data;
   }
   open() {
@@ -86,7 +88,8 @@ export default class Preview extends LitElement {
   render() {
     let detail = this.id;
     let media = "";
-    if (this.icon) media = html`<sl-icon name="${this.icon}"></sl-icon>`;
+    if (this.image) media = html`<img src="${this.image}" />`;
+    else if (this.icon) media = html`<sl-icon name="${this.icon}"></sl-icon>`;
     return html`<div class="flx" @click=${this.open}>
       <div class="media">${media}</div>
       <div>

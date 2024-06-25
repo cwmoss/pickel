@@ -9,9 +9,12 @@ export default class Doclist extends Panel {
     let schema = await api.current_schema();
     console.log("+panel=>schema", this.index, schema);
 
-    let docs = await api.documents(this.title);
+    let docs = await api.documents(this.title, { preview: true });
     docs.forEach((item) => {
       let el = new Preview();
+      if (item.image) {
+        item.image = api.imageurl_from_ref(item.image, { preview: true });
+      }
       el.set_data(item);
       el.icon = "file-earmark";
       content.push(el);
