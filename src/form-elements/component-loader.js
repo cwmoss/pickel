@@ -9,6 +9,8 @@ const map = {
   image: "Image",
   text: "Text",
   geopoint: "Geo",
+  array: "ArrayContainer",
+  imageobject: "ImageContainer",
 };
 let path = null;
 let default_comp = "Output";

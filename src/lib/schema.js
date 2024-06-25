@@ -17,8 +17,11 @@ class schema {
   }
 
   get_type(name) {
+    if (name == "array") return "array";
     console.log("get schema", name);
-    return this.schema.types.find((el) => el.name == name);
+    let type = this.schema.types.find((el) => el.name == name);
+    if (!type) console.error("schema-error type not found", name);
+    return type;
   }
   get_schema_first_document() {
     return this.schema.types.find((el) => el.type == "document").name;
