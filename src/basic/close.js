@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "../vendor/lit-core.min.js";
+import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 
 export default class Close extends LitElement {
   static properties = {

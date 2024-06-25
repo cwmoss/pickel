@@ -1,11 +1,11 @@
-import { LitElement, css, html } from "../vendor/lit-core.min.js";
+import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import {
   set_schema,
   get_schema_type,
   get_schema_first_document,
-} from "./form-elements/schema.js";
-import testschema from "./testschema.js";
-import Container from "./form-elements/b_container.js";
+} from "./schema.js";
+import testschema from "../testschema.js";
+import Container from "./b_container.js";
 set_schema(testschema);
 
 let test = {

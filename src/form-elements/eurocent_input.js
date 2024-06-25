@@ -1,4 +1,4 @@
-import converter from "./lib/number_conversion.js";
+import converter from "../../lib/number_conversion.js";
 
 export default class EurocentInput extends HTMLElement {
   connectedCallback() {

@@ -8,7 +8,7 @@ credits:
     https://henry.codes/writing/pure-css-focal-points
 */
 
-import { LitElement, css, html, svg } from "../vendor/lit-all.min.js";
+import { LitElement, css, html, svg } from "../../vendor/lit-all.min.js";
 
 const retina = svg`<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
 <g fill="none" fill-rule="evenodd">

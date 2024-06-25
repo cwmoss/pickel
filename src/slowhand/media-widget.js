@@ -1,7 +1,7 @@
-import { LitElement, css, html } from "./../vendor/lit-all.min.js";
+import { LitElement, css, html } from "../../vendor/lit-all.min.js";
 // import Pager from "./pager.js";
-import api from "./../lib/slow-hand.js";
-import urlStore from "../lib/url-store.js";
+import api from "../../lib/slow-hand.js";
+import urlStore from "../../lib/url-store.js";
 //import cssvars from "./variables.css.js";
 
 // console.log("bootstrap import", cssvars);

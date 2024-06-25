@@ -1,4 +1,4 @@
-import { LitElement, css, html, map, range } from "../vendor/lit-all.min.js";
+import { LitElement, css, html, map, range } from "../../vendor/lit-all.min.js";
 //import cssvars from "./variables.css.js";
 
 // console.log("bootstrap import", cssvars);

@@ -1,4 +1,4 @@
-import Splide from "./../vendor/splide.esm.js";
+import Splide from "../../vendor/splide.esm.js";
 
 let loaded = false;
 // <li class="splide__slide">Slide 01</li>

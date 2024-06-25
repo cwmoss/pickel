@@ -1,6 +1,6 @@
-import { LitElement, css, html } from "./../vendor/lit-core.min.js";
+import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 
-import dataset from "./../lib/datasets.js";
+import dataset from "../../lib/datasets.js";
 
 export default class DatasetSwitch extends LitElement {
   static properties = {

@@ -1,4 +1,4 @@
-import { css, html } from "./../vendor/lit-core.min.js";
+import { css, html } from "../../vendor/lit-core.min.js";
 
 import Card from "./card.js";
 

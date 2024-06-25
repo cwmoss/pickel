@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "../vendor/lit-core.min.js";
+import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 
 export default class Value extends LitElement {
   static properties = {
