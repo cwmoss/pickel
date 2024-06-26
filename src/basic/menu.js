@@ -6,7 +6,6 @@ export default class Menu extends LitElement {
     css`
       :host {
         display: block;
-
         --menu-pos-top: 0;
         --menu-pos-left: 0;
       }
@@ -21,15 +20,15 @@ export default class Menu extends LitElement {
       #menu {
         position: absolute;
         border: none;
-        --card-shadow-outline-color: rgba(114, 120, 146, 0.3);
-        --card-shadow-umbra-color: rgba(114, 120, 146, 0.1);
-        --card-shadow-penumbra-color: rgba(114, 120, 146, 0.07);
-        --card-shadow-ambient-color: rgba(114, 120, 146, 0.06);
+        --shadow-linie-color: rgba(114, 120, 146, 0.3);
+        --shadow-schatten-color: rgba(114, 120, 146, 0.1);
+        --shadow-halbschatten-color: rgba(114, 120, 146, 0.07);
+        --shadow-umgebung-color: rgba(114, 120, 146, 0.06);
         border-radius: 0.375rem;
-        box-shadow: 0 0 0 0.03125rem var(--card-shadow-outline-color),
-          0 0.4375rem 0.5rem -0.25rem var(--card-shadow-umbra-color),
-          0 0.75rem 1.0625rem 0.125rem var(--card-shadow-penumbra-color),
-          0 0.3125rem 1.375rem 0.25rem var(--card-shadow-ambient-color);
+        box-shadow: 0 0 0 0.03125rem var(--shadow-linie-color),
+          0 0.4375rem 0.5rem -0.25rem var(--shadow-schatten-color),
+          0 0.75rem 1.0625rem 0.125rem var(--shadow-halbschatten-color),
+          0 0.3125rem 1.375rem 0.25rem var(--shadow-umgebung-color);
       }
       :popover-open {
         width: 300px;
