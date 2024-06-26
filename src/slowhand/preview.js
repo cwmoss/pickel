@@ -31,8 +31,11 @@ let style = css`
   }
   .media {
     align-content: center;
+    text-align: center;
+    flex-shrink: 0;
     width: 50px;
     height: 50px;
+    margin-right: 0.2rem;
   }
   :host([simple]) .media {
     height: auto;

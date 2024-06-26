@@ -16,11 +16,16 @@ https://github.com/nathancahill/split/tree/master/packages/splitjs
 */
 template.innerHTML = /*html*/ `
 <style>
+:host{
+display:block;
+height: 100%;
+}
 .split {
     display: grid;
     grid-template-columns: 200px;
     grid-template-rows:1fr;
     max-height:calc(100vh - 170px);
+    height: 100%;
     transition: grid-template-columns 0.2s;
 }
 .split > *{

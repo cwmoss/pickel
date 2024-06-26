@@ -13,9 +13,12 @@ export default class Reference extends Face {
   }
 
   async init() {
-    let doc = await api.document(this.value._ref);
+    let doc = await api.document_preview(this.value._ref);
     console.log("doc:", this.value._ref);
     this.preview = new Preview();
+    if (doc.image) {
+      doc.image = api.imageurl_from_ref(doc.image, { preview: true });
+    }
     this.preview.set_data(doc, 2);
     this.preview.icon = "file-earmark";
   }

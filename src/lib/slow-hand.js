@@ -181,8 +181,15 @@ class SlowHand {
     ).then((resp) => resp.json());
   }
 
-  async document(documentId) {
-    return this.get(`/data/doc/${datasets.current}/${documentId}`)
+  async document_preview(documentId) {
+    return this.document(documentId, true);
+  }
+  async document(documentId, preview) {
+    return this.get(
+      `/data/doc/${datasets.current}/${documentId}${
+        preview ? "?preview=1" : ""
+      }`
+    )
       .then(({ documents }) => (documents ? documents[0] : null))
       .then((doc) => doc); //this.documentStore.setDocument(doc)
   }
