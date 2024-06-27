@@ -26,6 +26,9 @@ export default class Close extends LitElement {
         color: #aaa;
         content: "\u00d7"; /* This will render the 'X' */
       }
+      button:hover {
+        background: #eee;
+      }
     `,
   ];
 

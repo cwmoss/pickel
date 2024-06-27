@@ -1,6 +1,10 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 
 export default class Menu extends LitElement {
+  static properties = {
+    items: { type: Array },
+  };
+
   static styles = [
     // cssvars,
     css`
@@ -75,6 +79,12 @@ export default class Menu extends LitElement {
     e.preventDefault();
     console.log("selected", e.target);
     this.shadowRoot.getElementById("menu").hidePopover();
+    let evt = new CustomEvent("menu-select", {
+      detail: { item: e.target.getAttribute("href") },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(evt);
   }
   set_position() {
     let rel = this.shadowRoot.getElementById("rel");
@@ -85,22 +95,30 @@ export default class Menu extends LitElement {
     this.style.setProperty("--menu-pos-top", "" + top + "px");
     this.style.setProperty("--menu-pos-left", "" + left + "px");
     console.log("set pos", rel, toggle, menu); // querySelector("#toggle"));
+    menu.showPopover();
   }
-
+  active = false;
+  toggle() {}
   render() {
     return html`<div id="rel">
-      <button
-        id="toggle"
-        class="actions"
-        popovertarget="menu"
-        popovertargetaction="toggle"
-        @click=${this.set_position}
-      >
-        select
-      </button>
+      <slot @click=${this.set_position}>
+        <button id="toggle" class="actions">Open</button>
+      </slot>
       <div id="menu" popover @click=${this.select}>
         <nav class="listcontainer">
-          <a href="home">Home</a>
+          ${this.items.map((it) => {
+            return html`<a href=${it.name}>${it.title}</a>`;
+          })}
+        </nav>
+      </div>
+    </div>`;
+  }
+}
+
+window.customElements.define("pi-menu", Menu);
+
+/*
+<a href="home">Home</a>
           <div class="subcontainer" tabindex="0">
             <a href="#">Pizza <strong>></strong></a>
             <div id="subpopover" popover>
@@ -115,10 +133,4 @@ export default class Menu extends LitElement {
           <a href="music">Music</a>
           <a href="wombats">Wombats</a>
           <a href="finland">Finland</a>
-        </nav>
-      </div>
-    </div>`;
-  }
-}
-
-window.customElements.define("pi-menu", Menu);
+          */

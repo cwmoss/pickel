@@ -76,9 +76,7 @@ export default class Editor extends Panel {
   }
   // <button type="button" @click=${this.inspect}>i</button>
   render_actions() {
-    return html`<button primary form="editor" class="btn" part="button">
-        Save
-      </button>
+    return html`<pi-btn primary form="editor"> Save </pi-btn>
       <b-dialog title="inspect" .trigger_title=${"i"}
         ><json-viewer
           .data=${this.document}
