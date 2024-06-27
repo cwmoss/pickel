@@ -25,6 +25,7 @@ export default class ArrayContainer extends Container {
 
   after_init() {
     setTimeout(() => {
+      return;
       let sortable = Sortable.create(this.querySelector(".els"), {
         delay: 100,
         handle: ".handle",
@@ -88,6 +89,7 @@ export default class ArrayContainer extends Container {
         label: this.name,
         // id: field.name,
       };
+      f.noLabel = true;
       return f;
     });
   }
@@ -106,8 +108,9 @@ export default class ArrayContainer extends Container {
 
   render_els() {
     return html`${this.els.map((el) => {
+      console.log("els array element", el);
       return html`<div class="el">
-        <div class="handle">${draghandle_image}</div>
+        <div class="handle"></div>
         ${el}
       </div> `;
     })}
@@ -117,7 +120,16 @@ export default class ArrayContainer extends Container {
   }
 
   render_preview() {
-    return "";
+    return html`${this.els.map((el) => {
+      console.log("preview array element", el);
+      return html`<div class="el">
+        <div class="handle"></div>
+        ${el}
+      </div> `;
+    })}
+    ${this.els.length == 0
+      ? html`<div class="container--empty-array">no entries</div>`
+      : ""} `;
   }
 }
 
