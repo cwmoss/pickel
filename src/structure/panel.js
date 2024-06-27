@@ -36,8 +36,15 @@ const style = css`
     background: var(--color-accent);
   }
 
+  .array-el {
+    display: flex;
+  }
   .handle {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+    width: 10px;
+  }
+  .array-el .el-content {
+    width: 100%;
   }
   .wrapper {
     /* min-height: 100vh;*/

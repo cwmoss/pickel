@@ -20,7 +20,7 @@ export default class Container extends LitElement {
     is_image: { type: Boolean },
     prefix: { type: String },
     value: { type: Object, attribute: false },
-    editmode: { type: Boolean },
+    editmode: { type: Boolean, reflect: true },
     noLabel: { type: Boolean },
     preview: { type: Object },
   };
@@ -170,7 +170,7 @@ export default class Container extends LitElement {
   }
 
   build() {
-    this.editmode = false;
+    //this.editmode = false;
     // console.log("+++ build", this.value);
     let fields = this.schema.fields;
     this.els = this.fields_to_els(fields);
@@ -189,9 +189,9 @@ export default class Container extends LitElement {
   }
 
   render_els() {
+    return this.els;
     let preview = this.level > 0 && !this.editmode;
     if (preview) return this.preview;
-    return this.els;
   }
 
   get_preview(from) {
@@ -217,26 +217,29 @@ export default class Container extends LitElement {
     // if (preview) return this.render_preview();
     return html`<div @preview-data=${this.new_previewdata}>
       ${this.noLabel ? "" : html`<h4 title=${this.type}>${this.label}</h4>`}
-      ${preview
-        ? this.render_preview()
-        : html`${this.dialog_button
-            ? html`<b-dialog
-                title=${this.dialog_title ?? "edit"}
-                trigger_title=${this.dialog_button}
+      <div ?hidden=${this.editmode} class="preview">
+        ${this.render_preview()}
+      </div>
+      <div ?hidden=${!this.editmode} class="edit">
+        ${this.dialog_button
+          ? html`<b-dialog
+              title=${this.dialog_title ?? "edit"}
+              trigger_title=${this.dialog_button}
+            >
+              <div class="els">${this.render_els()}</div>
+            </b-dialog>`
+          : html`
+              <div
+                @toggle-fullscreen=${(e) => {
+                  console.log("$$ fullscreen", e);
+                }}
+                class="els"
               >
-                <div class="els">${this.render_els()}</div>
-              </b-dialog>`
-            : html`
-                <div
-                  @toggle-fullscreen=${(e) => {
-                    console.log("$$ fullscreen", e);
-                  }}
-                  class="els"
-                >
-                  ${this.render_els()}
-                </div>
-                ${this.render_actions()}
-              `}`}
+                ${this.render_els()}
+              </div>
+              ${this.render_actions()}
+            `}
+      </div>
     </div>`;
   }
 

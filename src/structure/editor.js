@@ -38,6 +38,7 @@ export default class Editor extends Panel {
     console.log("$$$ load schema", this.type, this._id, this.document);
     this.schema = schema.get_type(this.type);
     this.container = new Container();
+    this.container.editmode = true;
     console.log("+++ container created");
     this.container.value = this.document;
     this.container.prefix = "";

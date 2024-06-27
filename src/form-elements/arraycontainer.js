@@ -81,6 +81,7 @@ export default class ArrayContainer extends Container {
   rearrange(from, to) {}
 
   build() {
+    this.editmode = true;
     let type = this.of[0].type;
 
     this.els = (this.value || []).map((val, index) => {
@@ -109,9 +110,9 @@ export default class ArrayContainer extends Container {
   render_els() {
     return html`${this.els.map((el) => {
       console.log("els array element", el);
-      return html`<div class="el">
+      return html`<div class="array-el">
         <div class="handle"></div>
-        ${el}
+        <div class="el-content">${el}</div>
       </div> `;
     })}
     ${this.els.length == 0
@@ -122,7 +123,7 @@ export default class ArrayContainer extends Container {
   render_preview() {
     return html`${this.els.map((el) => {
       console.log("preview array element", el);
-      return html`<div class="el">
+      return html`<div class="array-el">
         <div class="handle"></div>
         ${el}
       </div> `;
