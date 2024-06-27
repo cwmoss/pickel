@@ -1,4 +1,5 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
+import { resolve_path } from "../lib/util.js";
 
 let style = css`
   * {
@@ -59,9 +60,8 @@ let style = css`
   }
 `;
 
-export default class Preview extends LitElement {
+export default class ObjectPreview extends LitElement {
   static properties = {
-    id: { reflect: true },
     active: { type: Boolean, reflect: true },
     simple: { type: Boolean, reflect: true },
     icon: {},
@@ -69,15 +69,20 @@ export default class Preview extends LitElement {
     subtitle: {},
     media: {},
     data: { type: Object },
+    schema: { type: Object },
   };
 
   static styles = [style];
 
-  set_data(data) {
-    this.id = data.id ?? data._id ?? data.name ?? data.title;
-    this.title = data.title ?? data.name ?? this.id;
-    this.subtitle = data.subtitle ?? data?.slug?.current ?? this.id;
-    this.media = data.image ?? data.media ?? null;
+  set_data(data, schema) {
+    this.schema = schema;
+    if (schema?.preview?.title)
+      this.title = resolve_path(data, schema.preview.title);
+    if (schema?.preview?.subtitle)
+      this.subtitle = resolve_path(data, schema.preview.subtitle);
+    if (schema?.preview?.media)
+      this.media = resolve_path(data, schema.preview.media);
+    console.log("$$ preview data", data);
     this.data = data;
   }
   open() {
@@ -91,7 +96,7 @@ export default class Preview extends LitElement {
     );
   }
   render() {
-    let detail = this.id;
+    let detail = this.subtitle;
     let media = "";
     if (this.media) media = html`<img src="${this.media}" />`;
     else if (this.icon) media = html`<sl-icon name="${this.icon}"></sl-icon>`;
@@ -109,4 +114,4 @@ export default class Preview extends LitElement {
   }
 }
 
-customElements.define("pi-preview", Preview);
+customElements.define("pi-object-preview", ObjectPreview);

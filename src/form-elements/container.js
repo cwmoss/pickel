@@ -4,6 +4,7 @@ import { get_component, resolve_components } from "./component-loader.js";
 import api from "../lib/slow-hand.js";
 
 import Dialog from "./dialog.js";
+import ObjectPreview from "./object-preview.js";
 
 export default class Container extends LitElement {
   static properties = {
@@ -23,7 +24,9 @@ export default class Container extends LitElement {
 
   _type = "";
   _value = {};
+  _preview_data = {};
   els = [];
+  refs = {};
 
   // TODO: better way to deal with circular dependency?
   //load_container($name){
@@ -139,6 +142,9 @@ export default class Container extends LitElement {
         f.originalType = type;
         f.value = value;
     }
+    if (type == "reference") {
+      this.refs[field.name] = f;
+    }
     f._name = field.name;
     return f;
   }
@@ -166,6 +172,12 @@ export default class Container extends LitElement {
     this.els = this.fields_to_els(fields);
   }
 
+  new_previewdata(e) {
+    e.stopPropagation();
+    console.log("++preview", this.type, this.prefix, e.detail);
+    this._preview_data[e.detail.name] = e.detail;
+    this.requestUpdate();
+  }
   render_actions() {
     return "";
   }
@@ -174,9 +186,23 @@ export default class Container extends LitElement {
     return this.els;
   }
 
+  render_preview() {
+    if (this.level == 0) return "";
+    let data = {};
+    Object.assign(data, this._value, this._preview_data);
+    console.log("++preview", this.refs?.person);
+    // let title = this.schema?.preview?.title;
+    let p = new ObjectPreview();
+
+    p.set_data(data, this.schema);
+    return p;
+    return html`${title}`;
+  }
   render() {
     // console.log("render container", this.els);
-    return html`<h4 title=${this.type}>${this.label}</h4>
+    return html`<div @preview-data=${this.new_previewdata}>
+      <h4 title=${this.type}>${this.label}</h4>
+      ${this.render_preview()}
       ${this.dialog_button
         ? html`<b-dialog
             title=${this.dialog_title ?? "edit"}
@@ -194,7 +220,8 @@ export default class Container extends LitElement {
               ${this.render_els()}
             </div>
             ${this.render_actions()}
-          `} `;
+          `}
+    </div>`;
   }
 
   createRenderRoot() {

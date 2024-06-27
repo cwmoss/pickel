@@ -16,11 +16,22 @@ export default class Reference extends Face {
     let doc = await api.document_preview(this.value._ref);
     console.log("doc:", this.value._ref);
     this.preview = new Preview();
-    if (doc.image) {
-      doc.image = api.imageurl_from_ref(doc.image, { preview: true });
+    if (doc.media) {
+      doc.media = api.imageurl_from_ref(doc.media, { preview: true });
     }
     this.preview.set_data(doc, 2);
     this.preview.icon = "file-earmark";
+    const evt = new CustomEvent("preview-data", {
+      detail: {
+        name: this._name,
+        title: this.preview.title,
+        subtitle: this.preview.subtitle,
+        media: this.preview.media,
+      },
+      bubbles: true,
+      composed: true,
+    });
+    this.dispatchEvent(evt);
   }
 
   update_input(e) {

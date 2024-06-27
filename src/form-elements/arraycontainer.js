@@ -115,6 +115,10 @@ export default class ArrayContainer extends Container {
       ? html`<div class="container--empty-array">no entries</div>`
       : ""} `;
   }
+
+  render_preview() {
+    return "";
+  }
 }
 
 customElements.define("pi-arraycontainer", ArrayContainer);

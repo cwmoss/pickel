@@ -26,6 +26,10 @@ export default class ImageContainer extends Container {
     this.els = this.fields_to_els(fields);
     this.els.unshift(img);
   }
+
+  render_preview() {
+    return "";
+  }
 }
 
 customElements.define("pi-imagecontainer", ImageContainer);
