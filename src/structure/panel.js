@@ -35,13 +35,21 @@ const style = css`
   *::part(btn-primary) {
     background: var(--color-accent);
   }
-
+  /*
+for editor array container
+*/
   .array-el {
     display: flex;
   }
   .handle {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
     width: 10px;
+    background-color: #fafafa;
+    background-repeat: no-repeat;
+    background-position-x: 50%;
+    background-position-y: center;
+    cursor: grab; /*move ?? */
+    /*border-left: 1px solid #ccc;*/
   }
   .array-el .el-content {
     width: 100%;
