@@ -6,6 +6,7 @@ const map = {
   slug: "Slug",
   datetime: "Datetime",
   date: "Date",
+  number: "Number",
   image: "Image",
   text: "Text",
   geopoint: "Geo",

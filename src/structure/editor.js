@@ -75,9 +75,14 @@ export default class Editor extends Panel {
   send_document(e) {
     e.detail.data = this.container.get_updated_data();
   }
+  save(e) {
+    console.log("$ save", this.container.get_updated_data());
+  }
   // <button type="button" @click=${this.inspect}>i</button>
   render_actions() {
-    return html`<pi-btn primary form="editor"> Save </pi-btn>
+    return html`<pi-btn primary form="editor" @click=${this.save}>
+        Save
+      </pi-btn>
       <b-dialog title="inspect" .trigger_title=${"i"}
         ><json-viewer
           .data=${this.document}
@@ -89,7 +94,7 @@ export default class Editor extends Panel {
   // ${this.container}
   render_content() {
     console.log("render formbuilder", this.document, this.container);
-    return html`<form id="editor" @submit=${this.submit}>
+    return html`<form id="editor" @submit=${this.save}>
       <div ?hidden=${this.fullscreen} class="actions"></div>
       <section
         style="padding:1rem;"
