@@ -4,7 +4,6 @@ import { get_component, resolve_components } from "./component-loader.js";
 import api from "../lib/slow-hand.js";
 
 import Dialog from "./dialog.js";
-import ObjectPreview from "./object-preview.js";
 
 export default class Container extends LitElement {
   static properties = {
@@ -25,8 +24,8 @@ export default class Container extends LitElement {
     preview: { type: Object },
   };
 
-  _type = "";
   _value = {};
+  _type = "";
   _preview_data = {};
   els = [];
   refs = {};
@@ -49,13 +48,10 @@ export default class Container extends LitElement {
   }
 
   get value() {
+    console.log("$$$ GETTER FOR VALUE");
     return this._value;
   }
   set value(v) {
-    if (!v) {
-      if (this.type == "array") v = [];
-      else if (this.type == "object") v = {};
-    }
     this._value = v;
   }
   get_updated_data() {
@@ -68,21 +64,7 @@ export default class Container extends LitElement {
     return value;
   }
 
-  get_types() {
-    let fields = this.schema.fields || [];
-    fields = fields.map((f) => {
-      if (schema.is_object(f.type)) {
-        return "object";
-      }
-      if (schema.is_image(f.type)) {
-        return "imageobject";
-      }
-      return f.type;
-    });
-    return fields;
-  }
-
-  after_init() {}
+  async after_init() {}
 
   async init() {
     this.schema = schema.get_type(this.type);
@@ -92,7 +74,7 @@ export default class Container extends LitElement {
 
     this.build();
     this.requestUpdate();
-    this.after_init();
+    await this.after_init();
   }
 
   new_input(field, name, value) {
@@ -120,7 +102,7 @@ export default class Container extends LitElement {
         f.type = subtype;
         break;
       case "object":
-        f = new Container();
+        f = get_component("object");
         f.schemaid = this.schemaid;
         f.prefix = name;
         f.value = value ?? {};
@@ -153,6 +135,8 @@ export default class Container extends LitElement {
   }
 
   fields_to_els(fields) {
+    let val = this.value;
+    console.log("$ fields=>array", this._value);
     return fields.map((field) => {
       let name = `${this.prefix}[${field.name}]`;
       let value = this.value[field.name] ?? "";
@@ -169,14 +153,6 @@ export default class Container extends LitElement {
     });
   }
 
-  build() {
-    //this.editmode = false;
-    // console.log("+++ build", this.value);
-    let fields = this.schema.fields;
-    this.els = this.fields_to_els(fields);
-    this.preview = this.get_preview("container");
-  }
-
   new_previewdata(e) {
     e.stopPropagation();
     console.log("++preview DATA", this.type, this.prefix, e.detail);
@@ -184,43 +160,36 @@ export default class Container extends LitElement {
     this.preview = this.get_preview("containerUPDATE");
     this.requestUpdate();
   }
+
   render_actions() {
     return "";
   }
 
   render_els() {
     return this.els;
-    let preview = this.level > 0 && !this.editmode;
-    if (preview) return this.preview;
   }
 
-  get_preview(from) {
-    let data = {};
-    Object.assign(data, this._value, this._preview_data);
-    console.log("++getpreview", from, this.refs?.person);
-    // let title = this.schema?.preview?.title;
-    let p = new ObjectPreview();
-
-    p.set_data(data, this.schema);
-    return p;
-  }
   render_preview() {
-    if (this.level == 0) return "";
     return this.get_preview();
-    return html`${title}`;
   }
+
   render() {
     // ${this.render_preview()}
     // console.log("render container", this.els);
-    let preview = this.level > 0 && !this.editmode;
-    preview = false;
+    let preview = true;
+
+    if (this.editmode !== undefined) {
+      preview = !this.editmode;
+    } else {
+      if (this.level > 3) preview = true;
+      else preview = false;
+    }
+
     // if (preview) return this.render_preview();
     return html`<div @preview-data=${this.new_previewdata}>
       ${this.noLabel ? "" : html`<h4 title=${this.type}>${this.label}</h4>`}
-      <div ?hidden=${this.editmode} class="preview">
-        ${this.render_preview()}
-      </div>
-      <div ?hidden=${!this.editmode} class="edit">
+      <div ?hidden=${!preview} class="preview">${this.render_preview()}</div>
+      <div ?hidden=${preview} class="edit">
         ${this.dialog_button
           ? html`<b-dialog
               title=${this.dialog_title ?? "edit"}

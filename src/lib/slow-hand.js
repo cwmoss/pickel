@@ -159,6 +159,10 @@ class SlowHand {
     )}.${suffix}?${size}`;
   }
 
+  upload_image_url() {
+    return `${this.endpoint}/assets/images/${datasets.current}/`;
+  }
+
   async uploadImage(image) {
     return fetch(
       `${this.endpoint}/assets/images/${datasets.current}/?filename=${image.name}`,

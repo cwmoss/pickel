@@ -115,6 +115,7 @@ const style = css`
     border: none;
     height: 3px;
     width: 100%;
+    z-index: 1;
   }
   .message:empty {
     display: none;
@@ -180,7 +181,7 @@ export default class Image extends LitElement {
     reader.onload = (event) => {
       //creating a thumbnail
       this.set_preview(null, event.target.result, file.name);
-      // this.upload(file);
+      this.upload(file);
     };
   }
 
@@ -216,9 +217,9 @@ export default class Image extends LitElement {
   async upload(file) {
     this.remove_error();
     const blob = file; // new Blob([new Uint8Array(10 * 1024 * 1024)]); // any Blob, including a File
-    //const uploadProgress = this.select("progress");
+    const uploadProgress = this.shadowRoot.querySelector("progress");
     let url = new URLSearchParams();
-    url.append("name", file.name);
+    url.append("filename", file.name);
 
     const xhr = new XMLHttpRequest();
     const success = await new Promise((resolve) => {
@@ -238,7 +239,9 @@ export default class Image extends LitElement {
     if (success) {
       try {
         let data = JSON.parse(xhr.response);
-        if (data.res == "ok") {
+        // if (data.res == "ok") {
+        if (data._id) {
+          this.dispatch("image-uploaded", data);
         } else {
           this.handle_error(data.msg, "upload");
         }
@@ -275,8 +278,16 @@ export default class Image extends LitElement {
     this.process(file);
   }
 
+  remove() {
+    this.thumb = null;
+    this.existing = false;
+  }
   async handleRemove() {
     this.remove_error();
+    if (!this.remove_url) {
+      this.dispatch("image-removed", {});
+      return;
+    }
     let res = await fetch(this.remove_url, {
       method: "POST",
     }).catch((e) => this.handle_error(e));
@@ -286,7 +297,7 @@ export default class Image extends LitElement {
         this.handle_error(data.msg);
       } else {
         // this.select(".preview").innerHTML = "";
-        this.thumb = null;
+        this.remove();
       }
     } else {
       this.handle_error(res.status);
@@ -309,7 +320,9 @@ export default class Image extends LitElement {
   }
 
   dispatch(event, arg) {
-    this.dispatchEvent(new CustomEvent(event, { detail: arg }));
+    this.dispatchEvent(
+      new CustomEvent(event, { detail: arg, bubbles: true, composed: true })
+    );
   }
 }
 

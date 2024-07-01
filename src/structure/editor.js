@@ -3,7 +3,7 @@ import api from "../lib/slow-hand.js";
 import schema from "../lib/schema.js";
 import Panel from "./panel.js";
 
-import Container from "../form-elements/container.js";
+import ObjectContainer from "../form-elements/objectcontainer.js";
 
 export default class Editor extends Panel {
   static properties = {
@@ -37,7 +37,7 @@ export default class Editor extends Panel {
 
     console.log("$$$ load schema", this.type, this._id, this.document);
     this.schema = schema.get_type(this.type);
-    this.container = new Container();
+    this.container = new ObjectContainer();
     this.container.editmode = true;
     console.log("+++ container created");
     this.container.value = this.document;

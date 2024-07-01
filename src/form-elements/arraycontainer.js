@@ -19,6 +19,16 @@ let draghandle_image = html`<svg
 https://github.com/SortableJS/Sortable?tab=readme-ov-file
 */
 export default class ArrayContainer extends Container {
+  get value() {
+    return this._value || [];
+  }
+  set value(v) {
+    if (!v) {
+      v = [];
+    }
+    this._value = v;
+  }
+
   get_types() {
     return [this.of[0].type];
   }
@@ -84,13 +94,14 @@ export default class ArrayContainer extends Container {
     this.editmode = true;
     let type = this.of[0].type;
 
-    this.els = (this.value || []).map((val, index) => {
+    this.els = this.value.map((val, index) => {
       let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
       f.opts = {
         label: this.name,
         // id: field.name,
       };
       f.noLabel = true;
+      f.editmode = false;
       return f;
     });
   }

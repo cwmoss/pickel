@@ -120,6 +120,10 @@ for editor array container
   .els > * {
     margin-bottom: 1rem;
   }
+  .image-container {
+    display: flex;
+    gap: 1rem;
+  }
 `;
 
 export default class Panel extends LitElement {

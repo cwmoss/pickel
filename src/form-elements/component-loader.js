@@ -11,6 +11,7 @@ const map = {
   text: "Text",
   geopoint: "Geo",
   array: "ArrayContainer",
+  object: "ObjectContainer",
   imageobject: "ImageContainer",
 };
 let path = null;
