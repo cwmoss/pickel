@@ -145,7 +145,12 @@ export default class Image extends LitElement {
     super.connectedCallback();
     if (this.value) this.set_preview(this.value);
   }
-
+  set_image(imageurl) {
+    console.log("SET IMAGEURL", imageurl);
+    this.value = imageurl;
+    this.set_preview(this.value);
+    this.requestUpdate();
+  }
   get_updated_data() {
     return this.value;
   }

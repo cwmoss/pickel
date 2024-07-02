@@ -14,6 +14,7 @@ export default class MediaWidget extends LitElement {
     page: { type: Number },
     loading: { type: Boolean },
     edit: { type: Boolean },
+    picker: { type: Boolean, reflect: true },
     item: { type: Object },
   };
 
@@ -22,6 +23,9 @@ export default class MediaWidget extends LitElement {
     css`
       :host {
         display: block;
+      }
+      :host([picker]) .item img:hover {
+        outline: 8px solid var(--color-accent);
       }
       header {
         margin-bottom: 1rem;
@@ -107,7 +111,9 @@ export default class MediaWidget extends LitElement {
     if (!this.page) this.page = 1;
     let res, assets;
     let type = "image";
-    let q = `q(_type=="${type == "image" ? "sh.image" : "sh.file"}")`;
+    let q = `q(_type=="${
+      type == "image" ? "sh.image" : "sh.file"
+    }")order(_createdAt desc)`;
     res = await api.query(q, {
       count: true,
       limit: this.limit,
@@ -130,8 +136,21 @@ export default class MediaWidget extends LitElement {
     if (!e.target.matches("img")) return;
     let id = e.target.getAttribute("id");
     this.item = this.assets.find((img) => img._id == id);
-    this.edit = true;
-    this.shadowRoot.querySelector("dialog").showModal();
+    if (this.picker) {
+      this.dispatchEvent(
+        new CustomEvent("close-dialog", { bubbles: true, composed: true })
+      );
+      this.dispatchEvent(
+        new CustomEvent("pick-image", {
+          detail: this.item,
+          bubbles: true,
+          composed: true,
+        })
+      );
+    } else {
+      this.edit = true;
+      this.shadowRoot.querySelector("dialog").showModal();
+    }
   }
   render_body() {
     return html`<json-viewer

@@ -53,18 +53,15 @@ export default class Dialog extends LitElement {
   // <button close type="button" @click=${this.close}></button>
   render() {
     console.log("render dialog", this.content);
-    return html`<pi-btn
-        flat
-        icon="info"
-        @click=${this.open}
-        title=${this.trigger_title}
-      ></pi-btn>
+    return html`<slot name="button" @click=${this.open}
+        ><pi-btn flat icon="info" title=${this.trigger_title}></pi-btn
+      ></slot>
       <dialog>
         <pi-close @click=${this.close}></pi-close>
         <h1>
           <div>${this.title}</div>
         </h1>
-        <slot></slot>
+        <slot @close-dialog=${this.close}></slot>
       </dialog>`;
   }
 }

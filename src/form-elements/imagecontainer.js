@@ -1,6 +1,7 @@
 import { html } from "../../vendor/lit-core.min.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import ObjectContainer from "./objectcontainer.js";
+import MediaWidget from "../slowhand/media-widget.js";
 import schema from "../lib/schema.js";
 import api from "../lib/slow-hand.js";
 
@@ -20,6 +21,23 @@ export default class ImageContainer extends ObjectContainer {
     }
     this._value = v;
   }
+
+  get_updated_data() {
+    let value = this._value || {};
+    console.log("$$$ image updated data", this.schema);
+    value._type = this.schema.name ?? "image";
+    value.asset = {
+      type: "reference",
+      _ref: this.asset._id,
+    };
+    this.els.forEach((el) => {
+      const val = el.get_updated_data();
+      let name = el._name;
+      value[name] = val;
+    });
+    return value;
+  }
+
   get_types() {
     let types = super.get_types();
     types.push("image");
@@ -53,11 +71,26 @@ export default class ImageContainer extends ObjectContainer {
     this.asset = null;
     this.requestUpdate();
   }
+  image_picked(e) {
+    console.log("$ picked image", e.detail);
+    this.asset = e.detail;
+    this.uploader.set_image(api.imageurl_from_ref(this.asset._id));
+    // this.requestUpdate();
+  }
   image_uploaded(e) {
     console.log("$ uploaded image", e.detail);
+    this.asset = e.detail;
+    this.uploader.value = api.imageurl_from_ref(this.asset._id);
   }
   render_imageactions() {
-    return html`<pi-btn>pick image</pi-btn>`;
+    return html`
+      <b-dialog
+        ><pi-btn slot="button">pick image</pi-btn
+        ><media-widget picker @pick-image=${this.image_picked}></media-widget
+      ></b-dialog>
+
+      <pi-btn>set hotspot</pi-btn>
+    `;
   }
   render_info() {
     if (!this.asset) return "";
