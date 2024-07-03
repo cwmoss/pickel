@@ -8,6 +8,7 @@ class schema {
   schema = {};
   name = "";
   load(schema, name) {
+    console.log("$$ set schema (load)", schema, name);
     this.schema = schema;
     this.name = name;
   }

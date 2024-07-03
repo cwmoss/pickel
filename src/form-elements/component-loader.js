@@ -7,11 +7,12 @@ const map = {
   datetime: "Datetime",
   date: "Date",
   number: "Number",
-  image: "Image",
+  imageupload: "ImageUpload",
   text: "Text",
   geopoint: "Geo",
   array: "ArrayContainer",
   object: "ObjectContainer",
+  image: "ImageContainer",
   imageobject: "ImageContainer",
 };
 let path = null;
@@ -24,6 +25,9 @@ export const get_classname = (name) => {
 export const get_component = (name) => {
   let classname = get_classname(name);
   // console.log("++ get component", name, classname, classes);
+  if (!classes[classname]) {
+    console.error("could not load component", name, classname);
+  }
   return new classes[classname]();
 };
 

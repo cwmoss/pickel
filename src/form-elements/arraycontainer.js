@@ -4,7 +4,6 @@ import schema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import api from "../lib/slow-hand.js";
 
-import Dialog from "./dialog.js";
 import Sortable from "../../vendor/sortable.complete.esm.js";
 let draghandle_image = html`<svg
   xmlns="http://www.w3.org/2000/svg"
@@ -57,28 +56,32 @@ export default class ArrayContainer extends Container {
 
   new_array_item(e) {
     //console.log("new click", e);
-    e.preventDefault();
-    e.stopImmediatePropagation();
+    //e.preventDefault();
+    //e.stopImmediatePropagation();
     // this.value.push({}); //(this.value || []).concat([{}]);
     //console.log("+++ new array", this.value);
     // this.build_array();
     let type = this.of[0].type;
     let index = this.els.length;
     let val = this.new_array_item_value(type);
-    if (!this.value) {
+    /*if (!this.value) {
       this.value = [val];
     } else {
       this.value.push(val);
     }
-
+*/
     let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
     f.opts = {
       label: this.name,
       // id: field.name,
     };
     //this
-    this.els.push(f);
-    this.requestUpdate();
+    console.log("$$ new array item", f);
+    // this.els.push(f);
+    this.edit_item = f;
+    // this.requestUpdate();
+    console.log(this.querySelector("pi-dialog"));
+    // setTimeout(() => this.querySelector("pi-dialog").open(), 100);
   }
   dropped(e) {
     console.log(
@@ -91,6 +94,7 @@ export default class ArrayContainer extends Container {
   rearrange(from, to) {}
 
   build() {
+    this.new_array_item();
     this.editmode = true;
     let type = this.of[0].type;
 
@@ -106,33 +110,53 @@ export default class ArrayContainer extends Container {
     });
   }
 
+  item_new() {
+    console.log("$ item new", this.querySelector("pi-dialog.new-item"));
+    this.querySelector("pi-dialog.new-item").open();
+  }
+  item_new_save(e) {
+    console.log("$ item new save", e, this.edit_item);
+  }
+  item_remove(idx) {
+    console.log("item-remove", idx);
+    this.value.splice(idx, 1);
+    this.els.splice(idx, 1);
+    this.requestUpdate();
+  }
+  item_edit(item) {
+    item.editmode = true;
+  }
   render_actions() {
     return html`<div class="container--actions">
-      <button
-        type="button"
-        @click=${(e) => this.new_array_item(e)}
-        part="button"
-      >
-        add
+      <button type="button" @click=${this.item_new} part="button">
+        Add Item
       </button>
     </div>`;
   }
 
   render_els() {
-    return html`${this.els.map((el) => {
-      console.log("els array element", el);
-      return html`<div class="array-el">
-        <div class="handle"></div>
-        <div class="el-content">${el}</div>
-      </div> `;
-    })}
-    ${this.els.length == 0
-      ? html`<div class="container--empty-array">no entries</div>`
-      : ""} `;
+    console.log("+++ render ArrayContainer", this.els);
+    return html`${this.els.map((el, idx) => {
+        console.log("els array element", el);
+        return html`<div class="array-el">
+          <div class="handle"></div>
+          <div class="el-content" @click=${() => this.item_edit(el)}>${el}</div>
+          <div class="el-actions">
+            <pi-btn flat @click=${() => this.item_remove(idx, el)}>X</pi-btn>
+          </div>
+        </div> `;
+      })}
+      ${this.els.length == 0
+        ? html`<div class="container--empty-array">no entries</div>`
+        : ""}
+
+      <pi-dialog nobutton class="new-item" @close=${this.item_new_save}
+        >${this.edit_item}</pi-dialog
+      > `;
   }
 
   render_preview() {
-    return html`${this.els.map((el) => {
+    return html`${this.els.map((el, idx) => {
       console.log("preview array element", el);
       return html`<div class="array-el">
         <div class="handle"></div>

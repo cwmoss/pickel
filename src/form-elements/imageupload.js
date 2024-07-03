@@ -126,7 +126,7 @@ const style = css`
   }
 `;
 
-export default class Image extends LitElement {
+export default class ImageUpload extends LitElement {
   static properties = {
     thumb: {},
     fname: {},
@@ -166,6 +166,7 @@ export default class Image extends LitElement {
   }
 
   render() {
+    // return html`<h1>Uploader</h1>`;
     return html`<section class="stack">
       <input @change=${this.handleChange} hidden id="fileUpload" type="file" />
       <progress max="100" value="0"></progress>
@@ -331,4 +332,4 @@ export default class Image extends LitElement {
   }
 }
 
-window.customElements.define("pi-image", Image);
+window.customElements.define("pi-imageupload", ImageUpload);

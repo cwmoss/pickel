@@ -149,7 +149,7 @@ export default class MediaWidget extends LitElement {
       );
     } else {
       this.edit = true;
-      this.shadowRoot.querySelector("dialog").showModal();
+      this.shadowRoot.querySelector("pi-dialog").open();
     }
   }
   render_body() {
@@ -161,14 +161,14 @@ export default class MediaWidget extends LitElement {
   }
 
   render_editor() {
-    return html`<dialog>
+    return html`<pi-dialog nobutton>
       ${this.item
         ? html`<json-viewer .data=${this.item}></json-viewer>
             <focus-picker
               img="${api.images()}/${this.item.path}"
             ></focus-picker>`
         : ""}
-    </dialog>`;
+    </pi-dialog>`;
   }
 
   files_dropped(e) {

@@ -38,6 +38,10 @@ let style = css`
     height: 50px;
     margin-right: 0.2rem;
   }
+  .media img {
+    max-width: 100%;
+    max-height: 100%;
+  }
   :host([simple]) .media {
     height: auto;
     width: 24px;
@@ -76,19 +80,17 @@ export default class ObjectPreview extends LitElement {
 
   set_data(data, schema) {
     this.schema = schema;
-    if (schema?.preview?.title)
-      this.title = resolve_path(data, schema.preview.title);
-    if (schema?.preview?.subtitle)
-      this.subtitle = resolve_path(data, schema.preview.subtitle);
-    if (schema?.preview?.media)
-      this.media = resolve_path(data, schema.preview.media);
-    console.log("$$ preview data", data);
-    this.data = data;
+    this.title = resolve_path(data, schema?.preview?.title || "title");
+    if (!this.title) this.title = "Untitled";
+    this.subtitle = resolve_path(data, schema?.preview?.subtitle || "subtitle");
+    this.media = resolve_path(data, schema?.preview?.media || "media");
+    console.log("$$ object-preview data", data);
+    // this.data = data;
   }
   open() {
-    this.active = true;
+    // this.active = true;
     this.dispatchEvent(
-      new CustomEvent("open-preview", {
+      new CustomEvent("open-edit", {
         detail: { id: this.id },
         bubbles: 1,
         composed: 1,

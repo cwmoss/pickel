@@ -69,13 +69,14 @@ class SlowHand {
   async mutate(document) {
     return this.post(`/data/mutate/${datasets.current}`, {
       mutations: [{ createOrReplace: document }],
-    }).then(() => this.documentStore.document(document));
+    }).then(() => document);
+    // this.documentStore.document(document)
   }
 
   async create(document) {
     return this.post(`/data/mutate/${datasets.current}`, {
       mutations: [{ createOrReplace: document }],
-    }).then(() => this.documentStore.document(document));
+    }).then(() => document);
   }
 
   search(term) {
@@ -142,10 +143,12 @@ class SlowHand {
     ).then((resp) => resp.result[0]);
   }
 
+  // ref can be a reference or asset or ID
   imageurl_from_ref(ref, opts = {}) {
-    console.log("$ imageurl", ref);
+    console.log("$ api-imageurl", ref);
     if (!ref) return "";
-    if (typeof ref === "object") ref = ref._ref;
+    if (typeof ref === "object") ref = ref?._ref ?? ref._id ?? null;
+    if (!ref) return "";
     let parts = ref.split("-");
     parts.shift();
     let suffix = parts.pop();

@@ -3,8 +3,6 @@ import schema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import api from "../lib/slow-hand.js";
 
-import Dialog from "./dialog.js";
-
 export default class Container extends LitElement {
   static properties = {
     schema: { attribute: false },
@@ -22,6 +20,7 @@ export default class Container extends LitElement {
     editmode: { type: Boolean, reflect: true },
     noLabel: { type: Boolean },
     preview: { type: Object },
+    edit_item: { type: Object },
   };
 
   _value = {};
@@ -191,12 +190,12 @@ export default class Container extends LitElement {
       <div ?hidden=${!preview} class="preview">${this.render_preview()}</div>
       <div ?hidden=${preview} class="edit">
         ${this.dialog_button
-          ? html`<b-dialog
+          ? html`<pi-dialog
               title=${this.dialog_title ?? "edit"}
               trigger_title=${this.dialog_button}
             >
               <div class="els">${this.render_els()}</div>
-            </b-dialog>`
+            </pi-dialog>`
           : html`
               <div
                 @toggle-fullscreen=${(e) => {

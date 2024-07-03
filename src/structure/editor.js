@@ -30,6 +30,7 @@ export default class Editor extends Panel {
     }
     this.content = content;
     */
+    await api.current_schema();
     this.id = this.doc_id;
     this.document = await api.document(this.id);
     this.type = this.document._type;
@@ -75,20 +76,42 @@ export default class Editor extends Panel {
   send_document(e) {
     e.detail.data = this.container.get_updated_data();
   }
-  save(e) {
-    console.log("$ save", this.container.get_updated_data());
+  show_json(e) {
+    this.document = this.container.get_updated_data();
+    this.requestUpdate();
+    // this.shadowRoot.querySelector("json-viewer").data = {};
+    //this.shadowRoot.querySelector("json-viewer").data = JSON.parse(
+    //  JSON.stringify(this.document)
+    //);
+    // this.shadowRoot.querySelector("json-viewer").requestUpdate();
+    // console.log("$ doc", this.document);
+    this.shadowRoot.querySelector("#editor-json-view").open();
+  }
+  async save(e) {
+    let doc = this.container.get_updated_data();
+    console.log("$ save", doc);
+    await api.mutate(doc);
+    this.document = doc;
   }
   // <button type="button" @click=${this.inspect}>i</button>
   render_actions() {
+    let json = JSON.stringify(this.document) || "{}";
+    // console.log("JSON", json);
+    let doc = JSON.parse(json);
     return html`<pi-btn primary form="editor" @click=${this.save}>
         Save
       </pi-btn>
-      <b-dialog title="inspect" .trigger_title=${"i"}
+      <pi-btn flat icon="info" title=${"i"} @click=${this.show_json}></pi-btn>
+      <pi-dialog
+        id="editor-json-view"
+        nobutton
+        title="inspect"
+        .trigger_title=${"i"}
         ><json-viewer
-          .data=${this.document}
+          .data=${doc}
           style="--background-color: white;"
         ></json-viewer
-      ></b-dialog>
+      ></pi-dialog>
       <pi-close @click=${this.close}></pi-close>`;
   }
   // ${this.container}

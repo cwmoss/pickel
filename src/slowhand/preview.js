@@ -74,6 +74,7 @@ export default class Preview extends LitElement {
   static styles = [style];
 
   set_data(data) {
+    console.log("$$ preview data", data);
     this.id = data.id ?? data._id ?? data.name ?? data.title;
     this.title = data.title ?? data.name ?? this.id;
     this.subtitle = data.subtitle ?? data?.slug?.current ?? this.id;

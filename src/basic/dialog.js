@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
+import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import { add_style, once } from "../lib/util.js";
 
 let add_style_once = once(add_style);
@@ -6,8 +6,8 @@ let styles = css`
   dialog {
     margin: 2rem auto;
     border: none !important;
-    border-radius: calc(5px * var(--ratio));
-    box-shadow: 0 0 #0000, 0 0 #0000, 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border-radius: var(--overlay-border-radius); /*calc(5px * var(--ratio));*/
+    box-shadow: var(--overlay-box-shadow);
     padding: 1.6rem;
     width: 90%;
     height: 90%;
@@ -36,6 +36,7 @@ export default class Dialog extends LitElement {
   static properties = {
     title: {},
     trigger_title: {},
+    nobutton: { type: Boolean },
     content: { type: Object },
   };
   static styles = styles;
@@ -47,15 +48,22 @@ export default class Dialog extends LitElement {
   open() {
     this.dialog.showModal();
   }
-  close() {
+  close(e) {
+    e.stopPropagation();
     this.dialog.close();
   }
   // <button close type="button" @click=${this.close}></button>
   render() {
     console.log("render dialog", this.content);
     return html`<slot name="button" @click=${this.open}
-        ><pi-btn flat icon="info" title=${this.trigger_title}></pi-btn
-      ></slot>
+        >${this.nobutton
+          ? ""
+          : html`<pi-btn
+              flat
+              icon="info"
+              title=${this.trigger_title}
+            ></pi-btn>`}</slot
+      >
       <dialog>
         <pi-close @click=${this.close}></pi-close>
         <h1>
@@ -66,4 +74,4 @@ export default class Dialog extends LitElement {
   }
 }
 
-customElements.define("b-dialog", Dialog);
+customElements.define("pi-dialog", Dialog);

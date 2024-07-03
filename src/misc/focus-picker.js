@@ -38,13 +38,15 @@ export default class FocusPicker extends LitElement {
         --crop-focus-x: 0.5;
         --crop-focus-y: 0.5;
       }
-      dialog {
+      dialog[open] {
         /* margin: 0;
         padding: 0; */
         /* box-sizing: border-box; */
         width: 100%;
         height: 100%;
-        border: 5px solid white;
+        border: none !important;
+        /* border-radius: var(--overlay-border-radius);
+        box-shadow: var(--overlay-box-shadow);*/
       }
       ::backdrop {
         color: white;

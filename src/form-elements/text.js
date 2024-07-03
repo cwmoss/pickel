@@ -33,6 +33,7 @@ export default class Text extends Face {
       element: this.textarea,
       autoDownloadFontAwesome: false,
       spellChecker: false,
+      minHeight: "100px",
       onToggleFullScreen: (fs) => {
         console.log("$ fullscreen", fs);
         const evt = new CustomEvent("toggle-fullscreen", {

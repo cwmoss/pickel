@@ -22,7 +22,7 @@ export default class Switch extends Face {
       <div class="form-check form-switch">
         <input
           @click=${(e) => this.input_event(e)}
-          ?checked=${this.value == "on"}
+          ?checked=${this.value == "on" || this.value === true}
           class="form-check-input"
           type="checkbox"
           role="switch"

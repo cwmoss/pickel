@@ -1,6 +1,7 @@
 import { html } from "../../vendor/lit-core.min.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import ObjectContainer from "./objectcontainer.js";
+import ObjectPreview from "./object-preview.js";
 import MediaWidget from "../slowhand/media-widget.js";
 import schema from "../lib/schema.js";
 import api from "../lib/slow-hand.js";
@@ -28,7 +29,7 @@ export default class ImageContainer extends ObjectContainer {
     value._type = this.schema.name ?? "image";
     value.asset = {
       type: "reference",
-      _ref: this.asset._id,
+      _ref: this.asset?._id,
     };
     this.els.forEach((el) => {
       const val = el.get_updated_data();
@@ -40,7 +41,7 @@ export default class ImageContainer extends ObjectContainer {
 
   get_types() {
     let types = super.get_types();
-    types.push("image");
+    types.push("imageupload");
     return types;
   }
 
@@ -51,19 +52,34 @@ export default class ImageContainer extends ObjectContainer {
   }
 
   build() {
-    this.uploader = get_component("image");
+    this.uploader = get_component("imageupload");
     this.uploader.value = api.imageurl_from_ref(this.value.asset); // this.value.asset;
     this.uploader.upload_url = api.upload_image_url();
     // console.log("+++ build", this.value);
-    let fields = this.schema.fields;
+    let fields = this.schema.fields || [];
     //img.existing = img.value ? true : false;
     // img.existing = api.imageurl_from_ref(this.value.asset);
     // this.els.unshift(img);
     fields = fields.filter((f) => f.name != "asset");
 
     this.els = this.fields_to_els(fields);
-  }
+    this.preview = new ObjectPreview();
 
+    this.preview.set_data({
+      id: this.value?.asset?._ref,
+      title: this.value?.asset?._ref,
+      media: this.image_url_from_value,
+    });
+  }
+  get image_url_from_value() {
+    if (!this.value.asset) return "";
+    return api.imageurl_from_ref(this.value.asset);
+  }
+  get image_url() {
+    // ${api.images()}/${this.item.path}
+    if (!this.asset) return "";
+    return api.imageurl_from_ref(this.asset._id);
+  }
   image_removed() {
     console.log("$ remove image");
     this.value = null;
@@ -74,22 +90,23 @@ export default class ImageContainer extends ObjectContainer {
   image_picked(e) {
     console.log("$ picked image", e.detail);
     this.asset = e.detail;
-    this.uploader.set_image(api.imageurl_from_ref(this.asset._id));
+    this.uploader.set_image(this.image_url);
     // this.requestUpdate();
   }
   image_uploaded(e) {
     console.log("$ uploaded image", e.detail);
     this.asset = e.detail;
-    this.uploader.value = api.imageurl_from_ref(this.asset._id);
+    this.uploader.set_image(this.image_url);
   }
   render_imageactions() {
     return html`
-      <b-dialog
+      <pi-dialog
         ><pi-btn slot="button">pick image</pi-btn
         ><media-widget picker @pick-image=${this.image_picked}></media-widget
-      ></b-dialog>
-
-      <pi-btn>set hotspot</pi-btn>
+      ></pi-dialog>
+      <focus-picker img="${this.image_url}"
+        ><pi-btn slot="open">set hotspot</pi-btn></focus-picker
+      >
     `;
   }
   render_info() {
@@ -97,6 +114,7 @@ export default class ImageContainer extends ObjectContainer {
     return html`${this.asset.width} x ${this.asset.height} (${this.asset.size})`;
   }
   render_els() {
+    console.log("+++ render ImageContainer", this.value.asset);
     return html`<div
         class="image-container"
         @image-removed=${this.image_removed}
@@ -113,7 +131,7 @@ export default class ImageContainer extends ObjectContainer {
       <div class="image-container--fields">${this.els}</div> `;
   }
   render_preview() {
-    return "";
+    return this.preview;
   }
 }
 
