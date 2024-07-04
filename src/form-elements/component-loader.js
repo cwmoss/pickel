@@ -20,6 +20,9 @@ let default_comp = "Output";
 let classes = {};
 
 export const get_classname = (name) => {
+  if (/^[A-Z]/.test(name)) {
+    return name;
+  }
   return map[name] || default_comp;
 };
 export const get_component = (name) => {
@@ -42,6 +45,12 @@ export const resolve_components = async (types) => {
 export const load_component = async (classname) => {
   if (path == null) path = "./";
   let file = path + classname.toLowerCase() + ".js";
+  console.log("+++ load component ", classname);
+  if (/^Custom/.test(classname)) {
+    file =
+      "/src/custom/" + classname.replace("Custom", "").toLowerCase() + ".js";
+  }
+
   // console.log("++ load_component import as", classname, file);
   const { default: Component } = await import(file);
   classes[classname] = Component;

@@ -10,6 +10,9 @@ export default class ObjectContainer extends Container {
   get_types() {
     let fields = this.schema.fields || [];
     fields = fields.map((f) => {
+      if (f.component) {
+        return f.component;
+      }
       if (schema.is_object(f.type)) {
         return "object";
       }

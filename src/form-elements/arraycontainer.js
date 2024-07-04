@@ -4,7 +4,9 @@ import schema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import api from "../lib/slow-hand.js";
 
-import Sortable from "../../vendor/sortable.complete.esm.js";
+// import Sortable from "../../vendor/sortable.complete.esm.js";
+import { LitSortable } from "../../vendor/lit-sortable.js";
+
 let draghandle_image = html`<svg
   xmlns="http://www.w3.org/2000/svg"
   height="24"
@@ -34,8 +36,7 @@ export default class ArrayContainer extends Container {
 
   after_init() {
     setTimeout(() => {
-      return;
-      let sortable = Sortable.create(this.querySelector(".els"), {
+      let sortable = LitSortable.create(this.querySelector(".dnd"), {
         delay: 100,
         handle: ".handle",
         onEnd: (e) => this.dropped(e),
@@ -85,11 +86,22 @@ export default class ArrayContainer extends Container {
   }
   dropped(e) {
     console.log(
-      "+++ dropped old=>new",
+      "$$$$ +++ dropped old=>new",
       e.oldIndex,
-      e.newIndex,
-      this.querySelectorAll(".els > *")
+      e.newIndex
+      // this.querySelectorAll(".els > *")
     );
+    [this.value[e.oldIndex], this.value[e.newIndex]] = [
+      this.value[e.newIndex],
+      this.value[e.oldIndex],
+    ];
+    console.log("++ new value", this.value);
+    this.build();
+    /* [this.els[e.oldIndex], this.els[e.newIndex]] = [
+      this.els[e.newIndex],
+      els[e.oldIndex],
+    ];*/
+    this.requestUpdate();
   }
   rearrange(from, to) {}
 
@@ -136,16 +148,20 @@ export default class ArrayContainer extends Container {
 
   render_els() {
     console.log("+++ render ArrayContainer", this.els);
-    return html`${this.els.map((el, idx) => {
-        console.log("els array element", el);
-        return html`<div class="array-el">
-          <div class="handle"></div>
-          <div class="el-content" @click=${() => this.item_edit(el)}>${el}</div>
-          <div class="el-actions">
-            <pi-btn flat @click=${() => this.item_remove(idx, el)}>X</pi-btn>
-          </div>
-        </div> `;
-      })}
+    return html`<div class="dnd" @dropped=${this.dropped}>
+        ${this.els.map((el, idx) => {
+          console.log("els array element", el);
+          return html`<div class="array-el">
+            <div class="handle"></div>
+            <div class="el-content" @click=${() => this.item_edit(el)}>
+              ${el}
+            </div>
+            <div class="el-actions">
+              <pi-btn flat @click=${() => this.item_remove(idx, el)}>X</pi-btn>
+            </div>
+          </div> `;
+        })}
+      </div>
       ${this.els.length == 0
         ? html`<div class="container--empty-array">no entries</div>`
         : ""}

@@ -88,6 +88,8 @@ export default class Container extends LitElement {
       type = "image";
       subtype = field.type;
     }
+    let component = "";
+
     switch (type) {
       case "image":
         f = get_component("imageobject");
@@ -112,7 +114,11 @@ export default class Container extends LitElement {
         f.type = subtype;
         break;
       case "array":
-        f = get_component("array");
+        component = "array";
+        if (field.component) {
+          component = field.component;
+        }
+        f = get_component(component);
         f.schemaid = this.schemaid;
         f.prefix = name;
         f.value = value ?? [];

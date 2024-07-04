@@ -43,7 +43,7 @@ for editor array container
   }
   .handle {
     background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
-    width: 10px;
+    width: 25px;
     background-color: #fafafa;
     background-repeat: no-repeat;
     background-position-x: 50%;
