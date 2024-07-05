@@ -84,6 +84,10 @@ export default class ArrayContainer extends Container {
     console.log(this.querySelector("pi-dialog"));
     // setTimeout(() => this.querySelector("pi-dialog").open(), 100);
   }
+
+  /*
+  https://www.geeksforgeeks.org/how-to-move-an-array-element-from-one-array-position-to-another-in-javascript/
+  */
   dropped(e) {
     console.log(
       "$$$$ +++ dropped old=>new",
