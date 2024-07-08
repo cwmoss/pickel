@@ -33,19 +33,24 @@ export default class Editor extends Panel {
     await api.current_schema();
     this.id = this.doc_id;
     this.document = await api.document(this.id);
+    console.log("$$$$ document loaded", this.id, this.document);
     this.type = this.document._type;
     if (!this.type) return;
 
     console.log("$$$ load schema", this.type, this._id, this.document);
     this.schema = schema.get_type(this.type);
+
     this.container = new ObjectContainer();
     this.container.editmode = true;
-    console.log("+++ container created");
+
     this.container.value = this.document;
+
     this.container.prefix = "";
     this.container.schemaid = this._id;
     this.container.level = 0;
     this.container.type = this.type;
+    //this.container = "";
+    return;
   }
 
   xxxupdated(changedProperties) {
@@ -116,6 +121,7 @@ export default class Editor extends Panel {
   }
   // ${this.container}
   render_content() {
+    if (!this.document) return "";
     console.log("render formbuilder", this.document, this.container);
     return html`<form id="editor" @submit=${this.save}>
       <div ?hidden=${this.fullscreen} class="actions"></div>

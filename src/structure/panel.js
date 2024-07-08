@@ -78,6 +78,9 @@ for editor array container
     justify-content: space-between;
     padding: 20px;
   }
+  .panel--head2 {
+    padding: 20px;
+  }
   .panel--title {
     font-size: 16px;
     font-weight: bold;
@@ -231,12 +234,17 @@ export default class Panel extends LitElement {
     return "";
   }
 
+  render_head() {
+    return "";
+  }
+
   render_content() {
     return html` ${this.content?.map((item) => item)} `;
   }
 
   render() {
     console.log("render panel", this);
+    let head2 = this.render_head();
     return html`
       <div
         class="wrapper ${classMap({
@@ -255,6 +263,11 @@ export default class Panel extends LitElement {
           >
           <div class="actions">${this.render_actions()}</div>
         </div>
+        ${head2
+          ? html`<div not-collabsed class="panel--head2">
+              ${this.render_head()}
+            </div>`
+          : ""}
 
         <div
           not-collabsed

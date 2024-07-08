@@ -1,4 +1,5 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
+import api from "../lib/slow-hand.js";
 
 let style = css`
   * {
@@ -79,6 +80,9 @@ export default class Preview extends LitElement {
     this.title = data.title ?? data.name ?? this.id;
     this.subtitle = data.subtitle ?? data?.slug?.current ?? this.id;
     this.media = data.image ?? data.media ?? null;
+    if (this.media) {
+      this.media = api.imageurl_from_ref(this.media, { preview: true });
+    }
     this.data = data;
   }
   open() {

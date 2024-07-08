@@ -33,6 +33,8 @@ export default class CustomRwGallery extends ArrayContainer {
         width: 130px;
         height: 130px;
         object-fit: contain;
+        // better drag-n-drop
+        pointer-events: none;
       }
       .dbl {
         /* float:left; */

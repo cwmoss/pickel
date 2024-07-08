@@ -9,6 +9,7 @@ class App extends HTMLElement {
     super();
     this.define_routes();
     // this.innerHTML = layout;
+    this.addEventListener("open-doc", this.opendoc);
   }
 
   connectedCallback() {
@@ -19,6 +20,11 @@ class App extends HTMLElement {
       console.log("+++ nav => ", this.nav);
       router();
     });
+  }
+
+  opendoc(e) {
+    console.log("$ open-doc", e.detail);
+    router(`/desk?z=${e.detail.type}~${e.detail.id}`);
   }
 
   async load_page(name, ctx) {

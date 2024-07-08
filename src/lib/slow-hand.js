@@ -148,11 +148,12 @@ class SlowHand {
     console.log("$ api-imageurl", ref);
     if (!ref) return "";
     if (typeof ref === "object") ref = ref?._ref ?? ref._id ?? null;
+    console.log("$ api-imageurl ++ parts", ref);
     if (!ref) return "";
     let parts = ref.split("-");
     parts.shift();
     let suffix = parts.pop();
-    console.log("++ parts", parts);
+    console.log("$ api-imageurl ++ parts", ref, parts);
     let size = "size=300x300&mode=fit";
     if (opts.preview) {
       size = "size=50x50&mode=fit";
@@ -198,7 +199,10 @@ class SlowHand {
       }`
     )
       .then(({ documents }) => (documents ? documents[0] : null))
-      .then((doc) => doc); //this.documentStore.setDocument(doc)
+      .then((doc) => {
+        console.log("received DOC", doc);
+        return doc;
+      }); //this.documentStore.setDocument(doc)
   }
 
   async checkSlug(slug, type, docid) {

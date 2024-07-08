@@ -17,15 +17,22 @@ export default class ImageContainer extends ObjectContainer {
     return this._value || {};
   }
   set value(v) {
+    console.log("$$$$ imagecontainer SET", JSON.stringify(v));
     if (!v) {
       v = {};
     }
     this._value = v;
   }
 
+  // TODO: warum wird das so früh aufgerufen?
   get_updated_data() {
+    if (!this.asset) return this._value;
     let value = this._value || {};
-    console.log("$$$ image updated data", this.schema);
+    console.log(
+      "$$$$ image updated data",
+      JSON.stringify(this.value),
+      this.schema
+    );
     value._type = this.schema.name ?? "image";
     value.asset = {
       type: "reference",
@@ -46,8 +53,11 @@ export default class ImageContainer extends ObjectContainer {
   }
 
   async after_init() {
+    console.log("$$$$ after init start0", JSON.stringify(this.value));
     if (this.value.asset?._ref) {
+      console.log("$$$$ after init start");
       this.asset = await api.document(this.value.asset._ref);
+      console.log("$$$$ after init end");
     }
   }
 
@@ -68,7 +78,7 @@ export default class ImageContainer extends ObjectContainer {
     this.preview.set_data({
       id: this.value?.asset?._ref,
       title: this.value?.asset?._ref,
-      media: this.image_url_from_value,
+      media: this.value?.asset ?? "",
     });
   }
   get image_url_from_value() {

@@ -13,13 +13,12 @@ export default class Reference extends Face {
   }
 
   async init() {
+    // TODO: create new reference
+    if (this.value == "") return;
     let doc = await api.document_preview(this.value._ref);
-    console.log("doc:", this.value._ref);
+    console.log("doc:", this.value, doc);
     this.preview = new Preview();
-    if (doc.media) {
-      doc.media = api.imageurl_from_ref(doc.media, { preview: true });
-    }
-    this.preview.set_data(doc, 2);
+    this.preview.set_data(doc);
     this.preview.icon = "file-earmark";
     const evt = new CustomEvent("preview-data", {
       detail: {
@@ -39,6 +38,7 @@ export default class Reference extends Face {
     this.value.current = e.target.value;
   }
   render() {
+    if (!this.preview) return "";
     console.log("render reference");
     return html`<label>${this.label}</label>
       ${this.preview} `;

@@ -29,7 +29,7 @@ export default class Input extends Face {
   }
   render() {
     return html`<div class="fgroup">
-      <label for="input" class="form-label">${this.label}</label>
+      ${this.render_label()}
       <div class="input-group">
         ${this.prefix
           ? html` <span class="input-group-text">${this.prefix}</span> `
