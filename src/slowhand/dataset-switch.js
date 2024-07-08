@@ -20,7 +20,7 @@ export default class DatasetSwitch extends LitElement {
   render() {
     return html`<pi-select
       no-label
-      @input=${this.switch}
+      @pi-input=${this.switch}
       .value=${this.current}
       .items=${dataset.datasets}
     ></pi-select>`;

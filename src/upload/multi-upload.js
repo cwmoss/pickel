@@ -21,7 +21,6 @@ const style = css`
     display: none;
   }
   :host(:not([existing])) {
-    font-size: 20px;
   }
   :host(:not([existing])) .details,
   :host(:not([existing])) .remove {
@@ -65,7 +64,7 @@ const style = css`
     box-sizing: border-box;
     margin: 1em auto;
     margin-bottom: 1em;
-    padding: 2rem;
+    padding: 1rem;
     border: 0.3em dashed rgba(66, 66, 66, 0.15);
     border-radius: 0;
     cursor: pointer;
@@ -148,8 +147,10 @@ export default class MultiUpload extends LitElement {
 
   handleChange(e) {
     this.files = [];
+    console.log("$$$ upl url2", this.upload_url);
     for (const file of e.target.files) {
       let el = new MultiUploadItem();
+      el.upload_url = this.upload_url;
       el.process(file);
       this.files.push(el);
     }
@@ -159,6 +160,12 @@ export default class MultiUpload extends LitElement {
     // this.select("span").innerText = file.name;
     // this.dispatch("change", file);
     // this.process(file);
+  }
+
+  // remove element
+  upload_ok(e) {
+    console.log("upl ready", e, e.target);
+    this.files = this.files.filter((item) => item !== e.target);
   }
   // html`<multi-upload-item .file=${f}></multi-upload-item>`
   render() {
@@ -176,7 +183,9 @@ export default class MultiUpload extends LitElement {
         >
         <div class="message">${this.error}</div>
       </section>
-      <section class="uploads">${this.files?.map((f) => f)}</section> `;
+      <section class="uploads" @image-uploaded=${this.upload_ok}>
+        ${this.files?.map((f) => f)}
+      </section> `;
   }
 
   process(file) {
@@ -186,7 +195,7 @@ export default class MultiUpload extends LitElement {
     reader.onload = (event) => {
       //creating a thumbnail
       this.set_preview(null, event.target.result, file.name);
-      // this.upload(file);
+      this.upload(file);
     };
   }
 

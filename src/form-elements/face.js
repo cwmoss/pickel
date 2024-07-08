@@ -91,8 +91,12 @@ export default class Face extends LitElement {
   }
   input_event(e) {
     this.value = this.get_input_value(e);
-    e.stopPropagation();
-    const evt = new Event("input", { bubbles: true, composed: true });
+    //e.stopPropagation();
+    const evt = new CustomEvent("pi-input", {
+      detail: this.value,
+      bubbles: true,
+      composed: true,
+    });
     this.dispatchEvent(evt);
   }
   get_input_value(e) {

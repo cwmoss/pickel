@@ -21,6 +21,7 @@ export default class Container extends LitElement {
     noLabel: { type: Boolean },
     preview: { type: Object },
     edit_item: { type: Object },
+    has_image: { type: Boolean },
   };
 
   _value = {};

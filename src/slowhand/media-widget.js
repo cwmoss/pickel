@@ -42,7 +42,7 @@ export default class MediaWidget extends LitElement {
       }
       .item,
       img {
-        width: 150px;
+        /*width: 150px;*/
       }
 
       /* Settings start */

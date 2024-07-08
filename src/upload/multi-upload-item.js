@@ -11,7 +11,6 @@ const icon = svg`
 const style = css`
   :host {
     display: block;
-    font-size: 16px;
     height: 50px;
   }
   :host * {
@@ -151,7 +150,7 @@ export default class MultiUploadItem extends LitElement {
     reader.onload = (event) => {
       //creating a thumbnail
       this.set_preview(null, event.target.result, file.name);
-      // this.upload(file);
+      this.upload(file);
     };
   }
 
@@ -185,9 +184,9 @@ export default class MultiUploadItem extends LitElement {
   async upload(file) {
     this.remove_error();
     const blob = file; // new Blob([new Uint8Array(10 * 1024 * 1024)]); // any Blob, including a File
-    //const uploadProgress = this.select("progress");
+    const uploadProgress = this.shadowRoot.querySelector("progress");
     let url = new URLSearchParams();
-    url.append("name", file.name);
+    url.append("filename", file.name);
 
     const xhr = new XMLHttpRequest();
     const success = await new Promise((resolve) => {
@@ -207,7 +206,8 @@ export default class MultiUploadItem extends LitElement {
     if (success) {
       try {
         let data = JSON.parse(xhr.response);
-        if (data.res == "ok") {
+        if (data._id) {
+          this.dispatch("image-uploaded", data);
         } else {
           this.handle_error(data.msg, "upload");
         }
@@ -278,7 +278,9 @@ export default class MultiUploadItem extends LitElement {
   }
 
   dispatch(event, arg) {
-    this.dispatchEvent(new CustomEvent(event, { detail: arg }));
+    this.dispatchEvent(
+      new CustomEvent(event, { detail: arg, bubbles: true, composed: true })
+    );
   }
 }
 

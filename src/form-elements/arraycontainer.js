@@ -3,7 +3,7 @@ import Container from "./container.js";
 import schema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import api from "../lib/slow-hand.js";
-
+import MultiUpload from "../upload/multi-upload.js";
 // import Sortable from "../../vendor/sortable.complete.esm.js";
 import { LitSortable } from "../../vendor/lit-sortable.js";
 
@@ -35,8 +35,13 @@ export default class ArrayContainer extends Container {
   }
 
   after_init() {
+    console.log("$$$ array type", this.of[0].type);
+    this.has_image = false;
+    if (schema.is_image(this.of[0].type)) {
+      this.has_image = true;
+    }
     setTimeout(() => {
-      let sortable = LitSortable.create(this.querySelector(".dnd"), {
+      let sortable = LitSortable.create(this.renderRoot.querySelector(".dnd"), {
         delay: 100,
         handle: ".handle",
         onEnd: (e) => this.dropped(e),
@@ -78,13 +83,17 @@ export default class ArrayContainer extends Container {
     };
     //this
     console.log("$$ new array item", f);
+    return f;
+  }
+
+  new_array_item_edit(e) {
+    let item = this.new_array_item(e);
     // this.els.push(f);
-    this.edit_item = f;
+    this.edit_item = item;
     // this.requestUpdate();
     console.log(this.querySelector("pi-dialog"));
     // setTimeout(() => this.querySelector("pi-dialog").open(), 100);
   }
-
   /*
   https://www.geeksforgeeks.org/how-to-move-an-array-element-from-one-array-position-to-another-in-javascript/
   */
@@ -110,7 +119,7 @@ export default class ArrayContainer extends Container {
   rearrange(from, to) {}
 
   build() {
-    this.new_array_item();
+    this.new_array_item_edit();
     this.editmode = true;
     let type = this.of[0].type;
 
@@ -142,12 +151,30 @@ export default class ArrayContainer extends Container {
   item_edit(item) {
     item.editmode = true;
   }
+  uploaded_ok(e) {
+    //let item = this.new_array_item();
+    let asset = e.detail;
+    let item = { asset: { type: "reference", _ref: asset._id } };
+    this.value.push(item);
+    console.log("$$$ new upload", asset, item, this.value);
+    this.build();
+    this.requestUpdate();
+  }
   render_actions() {
-    return html`<div class="container--actions">
-      <button type="button" @click=${this.item_new} part="button">
-        Add Item
-      </button>
-    </div>`;
+    let uploader = "";
+    console.log("$$$ upl url", api.upload_image_url());
+    if (this.has_image) {
+      uploader = html`<multi-upload
+        .upload_url=${api.upload_image_url()}
+        @image-uploaded=${this.uploaded_ok}
+      ></multi-upload>`;
+    }
+    return html`${uploader}
+      <div class="container--actions">
+        <button type="button" @click=${this.item_new} part="button">
+          Add Item
+        </button>
+      </div>`;
   }
 
   render_els() {
