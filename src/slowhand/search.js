@@ -1,5 +1,6 @@
 import { LitElement, css, html, unsafeHTML } from "../../vendor/lit-all.min.js";
 import FormInput from "../form-elements/input.js";
+import Select from "../form-elements/select.js";
 import api from "../lib/slow-hand.js";
 
 let style = css`
@@ -21,7 +22,7 @@ let style = css`
       0 0.3125rem 1.375rem 0.25rem var(--shadow-umgebung-color);
   }
   :popover-open {
-    width: 300px;
+    width: 50vw;
     position: absolute;
     inset: unset;
     top: var(--menu-pos-top);
@@ -35,17 +36,27 @@ let style = css`
   #menu > *:hover {
     background-color: #eee;
   }
+  #menu em {
+    color: #666;
+    text-transform: uppercase;
+    font-style: normal;
+  }
 `;
 
 export default class Search extends LitElement {
   static properties = {
     id: { reflect: true },
     type: {},
+    types: { type: Array },
     result: { type: Array },
   };
 
   static styles = [style];
-
+  async connectedCallback() {
+    super.connectedCallback();
+    let schema = await api.current_schema();
+    this.types = schema.document_types;
+  }
   open() {
     this.dispatchEvent(
       new CustomEvent("open-doc", {
@@ -86,13 +97,24 @@ export default class Search extends LitElement {
   render() {
     return html`<div id="rel">
       <form-input
+        plain
         @input=${this.typeing}
         no-label
         .input_type=${"search"}
+        decostart="search"
+        ><pi-select
+          plain
+          end
+          slot="suffix-button"
+          class="input-group-text"
+          .items=${["Type", ...(this.types ?? [])]}
+        ></pi-select
       ></form-input>
       <div id="menu" popover @click=${this.select}>
         ${this?.result?.map((el, idx) => {
-          return html`<div data-idx=${idx}>${unsafeHTML(el.body)}</div>`;
+          return html`<div data-idx=${idx}>
+            ${unsafeHTML(el.body)}<br /><em>${el._type}</em>
+          </div>`;
         })}
       </div>
     </div>`;

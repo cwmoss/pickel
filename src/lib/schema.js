@@ -17,6 +17,10 @@ class schema {
     return this.schema.types.filter((el) => el.type == "document");
   }
 
+  get document_types() {
+    return this.documents.map((d) => d.name);
+  }
+
   get_type(name) {
     if (name == "array") return "array";
     console.log("get schema", name);

@@ -16,6 +16,7 @@ export default class Editor extends Panel {
     type: {},
     fullscreen: { type: Boolean },
     document: { type: Object },
+    doc_create: { type: Object },
     container: { type: Object, attribute: false },
   };
 
@@ -32,7 +33,11 @@ export default class Editor extends Panel {
     */
     await api.current_schema();
     this.id = this.doc_id;
-    this.document = await api.document(this.id);
+    if (this.doc_create) {
+      this.document = this.doc_create;
+    } else {
+      this.document = await api.document(this.id);
+    }
     console.log("$$$$ document loaded", this.id, this.document);
     this.type = this.document._type;
     if (!this.type) return;

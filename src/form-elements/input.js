@@ -8,6 +8,7 @@ export default class Input extends Face {
     prefix: {},
     suffix: {},
     hasButtonSuffix: {},
+    decostart: {},
   };
 
   connectedCallback() {
@@ -27,14 +28,18 @@ export default class Input extends Face {
       class="form-control"
     />`;
   }
+
   render() {
-    return html`<div class="fgroup">
+    let outp = html`
       ${this.render_label()}
       <div class="input-group">
         ${this.prefix
           ? html` <span class="input-group-text">${this.prefix}</span> `
           : ""}
         ${this.render_input()}
+        ${this.decostart
+          ? html`<sl-icon name=${this.decostart} decostart></sl-icon>`
+          : ""}
         ${this.suffix
           ? html` <span class="input-group-text">${this.suffix}</span> `
           : ""}
@@ -42,7 +47,8 @@ export default class Input extends Face {
       </div>
       <slot name="footer"></slot>
       <div class="invalid-feedback"></div>
-    </div>`;
+    `;
+    return this.plain ? outp : this.wrap(outp);
   }
 }
 

@@ -54,12 +54,46 @@ export default class Container extends LitElement {
   set value(v) {
     this._value = v;
   }
+  // https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
+  is_empty() {
+    let value = this.value;
+
+    //if (typeof value !== 'object') {
+    // boolean, number, string, function, etc.
+    //  return false;
+    //}
+
+    // console.error("empty array?", this._name, value);
+    if (Array.isArray(value)) {
+      return value.length == 0;
+    }
+
+    const proto = Object.getPrototypeOf(value);
+
+    // consider `Object.create(null)`, commonly used as a safe map
+    // before `Map` support, an empty object as well as `{}`
+    if (proto !== null && proto !== Object.prototype) {
+      return false;
+    }
+
+    for (const prop in value) {
+      if (Object.hasOwn(value, prop)) {
+        return false;
+      }
+    }
+    return true;
+  }
   get_updated_data() {
     let value = this._value || {};
     this.els.forEach((el) => {
       const val = el.get_updated_data();
+
       let name = el._name;
-      value[name] = val;
+      if (el.is_empty()) {
+        delete value[name];
+      } else {
+        value[name] = val;
+      }
     });
     return value;
   }

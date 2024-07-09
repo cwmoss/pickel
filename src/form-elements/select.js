@@ -7,8 +7,10 @@ https://stackoverflow.com/questions/56351274/how-to-pass-option-tags-to-a-custom
 export default class Select extends Face {
   static properties = {
     ...Face.properties,
+    end: { type: Boolean },
     items: {
       type: Array,
+
       converter: (value, type) => {
         if (value.substring(0, 1) == "[") {
           return JSON.parse(value);
@@ -62,10 +64,12 @@ export default class Select extends Face {
   }
 
   render() {
-    console.log("render switch", this);
-    return html`<div class="fgroup">
-      ${this.render_label()}
-      <select @change=${this.input_event} class="form-select" id="input">
+    let outp = html`<select
+        ?end=${this.end}
+        @change=${this.input_event}
+        class="form-select"
+        id="input"
+      >
         ${this.items
           ? this.items.map(
               (item) =>
@@ -75,8 +79,9 @@ export default class Select extends Face {
             )
           : this.slotitems}
       </select>
-      <slot></slot>
-    </div>`;
+      <slot></slot>`;
+
+    return this.plain ? outp : this.wrap(outp);
   }
 }
 

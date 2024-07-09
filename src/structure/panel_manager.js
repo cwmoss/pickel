@@ -111,6 +111,7 @@ export default class PanelManager extends HTMLElement {
     this.panels[preview.panel].set_active(preview.id);
     let panel = this.make_panel(preview.id, preview.panel + 1);
     panel.doc_id = preview.id;
+    panel.doc_create = preview.create ?? null;
     this.panels.splice(preview.panel + 1, Infinity, panel);
     let active = this.panels.map((p) => p.doc_id);
     console.log("$$$ path", active);

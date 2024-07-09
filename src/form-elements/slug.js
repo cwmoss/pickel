@@ -19,6 +19,10 @@ export default class Slug extends Face {
     return doc[this.from];
   }
 
+  get_default_value() {
+    return { current: "" };
+  }
+
   async generate() {
     let doc = get_document(this);
     console.log("generate ", doc, this.from_text);
@@ -37,7 +41,7 @@ export default class Slug extends Face {
     console.log("render slug");
     return html`<form-input
       @input=${this.update_input}
-      .value=${this.value.current}
+      .value=${this.value?.current ?? ""}
       .label=${this.label}
     >
       ${this.from

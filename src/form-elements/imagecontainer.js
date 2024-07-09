@@ -28,6 +28,10 @@ export default class ImageContainer extends ObjectContainer {
   get_updated_data() {
     if (!this.asset) return this._value;
     let value = this._value || {};
+    /*
+      do some corrections
+    */
+    if (Array.isArray(value)) value = {};
     console.log(
       "$$$$ image updated data",
       JSON.stringify(this.value),

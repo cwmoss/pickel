@@ -12,6 +12,7 @@ export default class Face extends LitElement {
     name: { reflect: true },
     label: {},
     noLabel: { type: Boolean, attribute: "no-label" },
+    plain: { type: Boolean },
     inline: { type: Boolean },
     id: {},
     placeholder: {},
@@ -52,12 +53,28 @@ export default class Face extends LitElement {
       *::part(btn-primary) {
         background: var(--color-accent);
       }
-
+      select[end] {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-left: 0;
+      }
       label {
         font-weight: 600;
       }
       .input-group {
-        gap: 0.5rem;
+        /*gap: 0.5rem;*/
+      }
+      .input-group:has([decostart]) {
+        position: relative;
+      }
+      [decostart] {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        z-index: 11;
+      }
+      .input-group:has([decostart]) input {
+        padding-left: 30px;
       }
     `,
   ];
@@ -78,6 +95,9 @@ export default class Face extends LitElement {
     return this.value;
   }
 
+  is_empty() {
+    return !this.value || this.value == "";
+  }
   /*
   set value(v) {
     console.log("++FACE set value", v);
@@ -106,8 +126,12 @@ export default class Face extends LitElement {
     Object.assign(this, o);
   }
 
+  wrap(h) {
+    return html`<div class="fgroup">${h}</div>`;
+  }
+
   render_label() {
-    return !this.noLabel
+    return !this.noLabel && !this.plain
       ? html`<label for="input" class="form-label">${this.label}</label>`
       : "";
   }

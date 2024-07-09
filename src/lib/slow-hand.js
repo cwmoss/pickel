@@ -79,8 +79,11 @@ class SlowHand {
     }).then(() => document);
   }
 
-  search(term) {
-    return this.get(`/data/search/${datasets.current}?q=${term}`);
+  search(term, type, preview = false) {
+    let q = `/data/search/${datasets.current}?q=${term}`;
+    if (type) q += `&type=${type}`;
+    if (preview) q += `&preview=1`;
+    return this.get(q);
   }
 
   info() {
@@ -216,6 +219,13 @@ class SlowHand {
   }
 
   async documents(documentType, options) {
+    if (!options) options = {};
+    if (!options.order) {
+      options.order = {
+        by: "_updatedAt",
+        desc: true,
+      };
+    }
     return this.documentQuery(`_type=="${documentType}"`, options);
   }
 
