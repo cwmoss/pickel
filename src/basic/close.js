@@ -14,7 +14,7 @@ export default class Close extends LitElement {
       }
       button {
         position: absolute;
-        top: 0;
+        top: 8px;
         right: 6px;
         appearance: none;
         border: 0px;
@@ -23,7 +23,8 @@ export default class Close extends LitElement {
       button:after {
         display: inline-block;
         font-size: 2rem;
-        color: #aaa;
+        color: #333;
+        line-height: 0.8;
         content: "\u00d7"; /* This will render the 'X' */
       }
       button:hover {

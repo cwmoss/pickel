@@ -1,8 +1,9 @@
-import router from "../vendor/page.mjs";
+import router from "../vendor/page.m.js";
 import routes from "./routes.js";
 
 // let router = window.page;
 router.configure({ window: window });
+// router.base("/studio");
 
 class App extends HTMLElement {
   constructor() {

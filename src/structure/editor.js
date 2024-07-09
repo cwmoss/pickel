@@ -111,7 +111,12 @@ export default class Editor extends Panel {
     return html`<pi-btn primary form="editor" @click=${this.save}>
         Save
       </pi-btn>
-      <pi-btn flat icon="info" title=${"i"} @click=${this.show_json}></pi-btn>
+      <pi-btn
+        flat
+        icon="info"
+        title=${"inspect document"}
+        @click=${this.show_json}
+      ></pi-btn>
       <pi-dialog
         id="editor-json-view"
         nobutton

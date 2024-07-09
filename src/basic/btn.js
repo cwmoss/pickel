@@ -36,6 +36,7 @@ export default class Button extends LitElement {
     css`
       :host {
         display: content;
+        --size: 20px;
       }
       button {
         background: white;
@@ -61,7 +62,7 @@ export default class Button extends LitElement {
       button[primary]:hover {
         background: color-mix(
           in lch shorter hue,
-          var(--color-accent) 80%,
+          var(--color-accent) 50%,
           white
         );
       }
@@ -72,6 +73,10 @@ export default class Button extends LitElement {
       button:hover,
       :host([active]) button {
         background: #eee;
+      }
+      svg {
+        width: var(--size);
+        height: var(--size);
       }
     `,
   ];

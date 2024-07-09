@@ -27,7 +27,9 @@ class PageElement extends HTMLElement {
     console.log("++ page", klas);
     if (!templates[klas]) {
       console.log("++loading template", klas);
-      let tpl = await fetch(`/src/pages/${klas.toLowerCase()}.html`);
+      let tpl = await fetch(
+        `${import.meta.url}/../../pages/${klas.toLowerCase()}.html`
+      );
       let text = await tpl.text();
       let parser = new DOMParser();
       let doc = parser.parseFromString(text, "text/html");

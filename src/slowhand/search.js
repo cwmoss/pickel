@@ -7,7 +7,9 @@ let style = css`
   #rel {
     position: relative;
   }
-
+  pi-select {
+    width: 40%;
+  }
   #menu {
     position: absolute;
     border: none;

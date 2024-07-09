@@ -42,7 +42,9 @@ export default class Doclist extends Panel {
     await this.fetch_content(e.detail);
   }
   render_actions() {
-    return html`<button title="create" @click=${this.create}>+</button>`;
+    return html`<pi-btn flat title="create" @click=${this.create}
+      ><sl-icon name="plus-lg" style="font-size: 24px;"></sl-icon
+    ></pi-btn>`;
   }
   render_head() {
     return html`<form-input
