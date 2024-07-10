@@ -45,7 +45,7 @@ export default class ObjectContainer extends Container {
   get_preview(from) {
     let data = {};
     Object.assign(data, this._value, this._preview_data);
-    console.log("++getpreview", from, this.refs?.person);
+    // console.log("++getpreview", from, this.refs?.person);
     // let title = this.schema?.preview?.title;
     let p = new ObjectPreview();
 
