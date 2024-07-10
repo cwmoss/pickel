@@ -90,6 +90,11 @@ export default class Search extends LitElement {
       );
     }
   }
+  hasfocus(e) {
+    console.log("++ search focus");
+    let menu = this.shadowRoot.getElementById("menu");
+    menu.showPopover();
+  }
   async typeing(e) {
     let res = await api.search(e.target.value);
     this.result = res.result;
@@ -100,6 +105,8 @@ export default class Search extends LitElement {
     return html`<div id="rel">
       <form-input
         plain
+        @focusin=${this.hasfocus}
+        @click=${this.hasfocus}
         @input=${this.typeing}
         no-label
         .input_type=${"search"}
