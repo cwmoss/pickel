@@ -72,8 +72,12 @@ export default class Search extends LitElement {
     let rel = this.shadowRoot.getElementById("rel");
     let toggle = this.shadowRoot.getElementById("toggle");
     let menu = this.shadowRoot.getElementById("menu");
+    console.log("$$ MENU POS", rel);
     let top = rel.offsetHeight + rel.offsetTop + 8;
     let left = rel.offsetLeft - 300;
+    if (left < 0) {
+      left = 20;
+    }
     this.style.setProperty("--menu-pos-top", "" + top + "px");
     this.style.setProperty("--menu-pos-left", "" + left + "px");
     menu.showPopover();
@@ -91,6 +95,7 @@ export default class Search extends LitElement {
     }
   }
   async typeing(e) {
+    this.set_position();
     let res = await api.search(e.target.value);
     this.result = res.result;
     let menu = this.shadowRoot.getElementById("menu");

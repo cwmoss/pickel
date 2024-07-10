@@ -162,14 +162,24 @@ export default class Container extends LitElement {
         f.of = field.of;
         f.type = field.type;
         break;
+      case "reference":
+        f = get_component("reference");
+        f.schemaid = this.schemaid;
+        f.originalType = type;
+        f.value = value ?? {};
+        f.level = (this.level ?? 0) + 1;
+        f.label = field.title;
+        f.dialog_button = field.dialog_button;
+        f.dialog_title = field.dialog_title;
+        f.schema = field;
+        this.refs[field.name] = f;
+        break;
       default:
         f = get_component(type);
         f.originalType = type;
         f.value = value;
     }
-    if (type == "reference") {
-      this.refs[field.name] = f;
-    }
+
     f._name = field.name;
     return f;
   }

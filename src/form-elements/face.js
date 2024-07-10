@@ -76,6 +76,16 @@ export default class Face extends LitElement {
       .input-group:has([decostart]) input {
         padding-left: 30px;
       }
+      .reference {
+        display: flex;
+      }
+      .reference > *:first-child {
+        width: 100%;
+      }
+      .reference .actions {
+        width: 100px;
+        min-width: 0;
+      }
     `,
   ];
 

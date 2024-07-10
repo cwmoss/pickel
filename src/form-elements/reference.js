@@ -1,11 +1,16 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import Preview from "../slowhand/preview.js";
 import Face from "./face.js";
+import Search from "../slowhand/search.js";
 import { get_document, api } from "./_helper.js";
 import { slugify, hashID } from "../lib/util.js";
 
 export default class Reference extends Face {
-  static properties = { ...Face.properties, preview: { type: Object } };
+  static properties = {
+    ...Face.properties,
+    preview: { type: Object },
+    schema: { type: Object },
+  };
 
   async connectedCallback() {
     super.connectedCallback();
@@ -33,15 +38,44 @@ export default class Reference extends Face {
     this.dispatchEvent(evt);
   }
 
+  get allowed_type() {
+    return this.schema.to[0].type;
+  }
+  async select(e) {
+    e.stopPropagation();
+    this.value = {
+      _type: "reference",
+      _ref: e.detail.id,
+    };
+    await this.init();
+  }
+  search() {}
+  remove() {
+    console.log("++remove REF");
+    this.preview = null;
+    this.value = {};
+  }
   update_input(e) {
     console.log("+++ update", hashID(5), e, e.target.value);
     this.value.current = e.target.value;
   }
+  render_search() {
+    return html`<pi-search
+      @open-doc=${this.select}
+      .type=${this.allowed_type}
+    ></pi-search>`;
+  }
   render() {
-    if (!this.preview) return "";
-    console.log("render reference");
+    // if (!this.preview) return "";
+    console.log("render reference", this.schema);
     return html`<label>${this.label}</label>
-      ${this.preview} `;
+      <div class="reference">
+        ${this.preview ? this.preview : this.render_search()}
+        <div class="actions">
+          <pi-btn @click=${this.search}>search</pi-btn
+          ><pi-btn @click=${this.remove}>remove</pi-btn>
+        </div>
+      </div>`;
   }
 }
 
