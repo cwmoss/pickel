@@ -45,7 +45,12 @@ export default class Slug extends Face {
       .label=${this.label}
     >
       ${this.from
-        ? html`<pi-btn stretch slot="suffix-button" @click=${this.generate}>
+        ? html`<pi-btn
+            style="margin-left: 0.5rem;"
+            stretch
+            slot="suffix-button"
+            @click=${this.generate}
+          >
             Generate
           </pi-btn>`
         : ""}
