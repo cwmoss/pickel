@@ -1,8 +1,23 @@
 {
+  "name": "pickel",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.15.1",
+    "@tiptap/core": "^2.4.0",
+    "@tiptap/pm": "^2.4.0",
+    "@tiptap/starter-kit": "^2.4.0",
     "fecha": "^4.2.3",
     "sortablejs": "^1.15.2",
     "split-grid": "^1.0.11"
+  },
+  "devDependencies": {
+    "vite": "^5.3.1"
   }
 }
