@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script type="importmap">
+      {
+        "imports": {
+          "prosemirror-model": "https://esm.sh/*prosemirror-model@1.19.4",
+          "orderedmap": "https://esm.sh/*orderedmap@2.1.1",
+          "prosemirror-schema-basic": "https://esm.sh/*prosemirror-schema-basic@1.2.2",
+          "prosemirror-state": "https://esm.sh/*prosemirror-state@1.4.3",
+          "prosemirror-transform": "https://esm.sh/*prosemirror-transform@1.8.0",
+          "prosemirror-view": "https://esm.sh/*prosemirror-view@1.33.3",
+          "rope-sequence": "https://esm.sh/*rope-sequence@1.3.4",
+          "prosemirror-history": "https://esm.sh/*prosemirror-history@1.4.0",
+          "prosemirror-keymap": "https://esm.sh/*prosemirror-keymap@1.2.2",
+          "w3c-keyname": "https://esm.sh/*w3c-keyname@2.2.8",
+          "prosemirror-commands": "https://esm.sh/*prosemirror-commands@1.5.2"
+        }
+      }
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Block test</title>
+    <link rel="stylesheet" href="css/_styles.css" class="rel" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: content-box;
+      }
+
+      body {
+        font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+          sans-serif;
+      }
+
+      .container {
+        width: 500px;
+        margin: 1rem auto;
+      }
+
+      form {
+        gap: 1rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .editor-wrapper {
+        border: 2px solid gray;
+      }
+
+      #lexical-state {
+        width: 100%;
+        height: 300px;
+      }
+
+      .PlaygroundEditorTheme__quote {
+        margin: 0;
+        margin-left: 20px;
+        margin-bottom: 10px;
+        font-size: 15px;
+        color: rgb(101, 103, 107);
+        border-left-color: rgb(206, 208, 212);
+        border-left-width: 4px;
+        border-left-style: solid;
+        padding-left: 16px;
+      }
+    </style>
+    <!--script type="module" src="src/basic/index.js"></script-->
+  </head>
+
+  <body>
+    <div class="container">
+      <h3>test block editor</h3>
+      <pi-btn id="_save">Save</pi-btn>
+      <prosemirror-editor
+        change-event="custom-change-event-name"
+        html="
+    <p>Lorem ipsum dolor sit amet, <a href='/this'>consectetur</a> adipiscing elit. Etiam efficitur, diam eu hendrerit dapibus, turpis lorem convallis felis, nec volutpat elit enim nec orci. Aliquam eget cursus nulla. Maecenas quis mauris turpis. Nullam id faucibus ex. Nulla cursus velit nibh, sit amet maximus dolor pulvinar non. Quisque ut efficitur odio. Phasellus vitae justo a purus semper imperdiet.</p>
+    <p>Nunc <a href='/this'>cursus</a>, odio nec egestas eleifend, dui enim porttitor dui, quis bibendum arcu felis eget ante. Donec vulputate massa velit, nec tempus dolor pulvinar non. Sed ultrices velit et tempus fermentum. Morbi interdum id est sit amet efficitur. Suspendisse venenatis in augue nec commodo. Ut vehicula eros vitae leo commodo cursus. Mauris viverra sodales massa, a bibendum nisl malesuada ultrices. Morbi pulvinar urna nec justo pharetra eleifend. Nunc aliquet diam malesuada dui placerat venenatis. Sed at libero rutrum, aliquam turpis eget, imperdiet nisl.</p>
+	"
+      >
+      </prosemirror-editor>
+    </div>
+
+    <script type="module">
+      import {
+        Schema,
+        DOMParser as PMDOMParser,
+        DOMSerializer,
+      } from "prosemirror-model";
+      import { EditorState } from "prosemirror-state";
+      import { EditorView } from "prosemirror-view";
+      import { undo, redo, history } from "prosemirror-history";
+      import { keymap } from "prosemirror-keymap";
+      import { baseKeymap } from "prosemirror-commands";
+
+      console.log("$ editor");
+
+      document
+        .querySelector("prosemirror-editor")
+        .addEventListener("custom-change-event-name", (e) => {
+          console.log(e.detail.html);
+          console.log(e.detail.json);
+        });
+      const schema = new Schema({
+        nodes: {
+          doc: { content: "block+" },
+          paragraph: {
+            content: "text*",
+            group: "block",
+            parseDOM: [{ tag: "p" }],
+            toDOM() {
+              return ["p", 0];
+            },
+          },
+          text: { group: "inline" },
+        },
+        marks: {
+          link: {
+            attrs: {
+              href: {},
+            },
+            // By default, marks are inclusive, meaning that they
+            // get applied to content inserted at their end (as well
+            // as at their start when they start at the start
+            // of their parent node)
+            inclusive: false,
+            parseDOM: [
+              {
+                tag: "a[href]",
+                getAttrs(dom) {
+                  return {
+                    href: dom.getAttribute("href"),
+                    title: dom.getAttribute("title"),
+                  };
+                },
+              },
+            ],
+            toDOM(node) {
+              return ["a", node.attrs, 0];
+            },
+          },
+        },
+      });
+
+      class ProseMirrorEditor extends HTMLElement {
+        constructor() {
+          super();
+          this.editorView = null;
+        }
+
+        connectedCallback() {
+          this.innerHTML = `<div id="editor"></div>`;
+          const editorElement = this.querySelector("#editor");
+          const initialContent = this.getAttribute("html");
+          const customChangeEventName = this.getAttribute("change-event");
+          // default empty paragraph
+          let doc = schema.node("doc", null, [schema.node("paragraph")]);
+          if (initialContent) {
+            // HTML string -> DOM
+            const contentElement = new DOMParser().parseFromString(
+              initialContent,
+              "text/html"
+            ).body;
+            // DOM -> Prosemirror doc
+            doc = PMDOMParser.fromSchema(schema).parse(contentElement);
+          }
+          const state = EditorState.create({
+            doc,
+            schema,
+            plugins: [
+              history(),
+              keymap({ "Mod-z": undo, "Mod-y": redo }),
+              keymap(baseKeymap),
+            ],
+          });
+          this.editorView = new EditorView(editorElement, {
+            state,
+            dispatchTransaction: (transaction) => {
+              const newState = this.editorView.state.apply(transaction);
+              this.editorView.updateState(newState);
+              if (transaction.docChanged) {
+                this.dispatchEvent(
+                  new CustomEvent(customChangeEventName || "editor-change", {
+                    detail: {
+                      html: getHTMLStringFromState(newState),
+                      json: newState.doc.toJSON(),
+                    },
+                  })
+                );
+              }
+            },
+          });
+        }
+
+        disconnectedCallback() {
+          if (this.editorView) {
+            this.editorView.destroy();
+          }
+        }
+      }
+
+      function getHTMLStringFromState(state) {
+        // Prosemirror doc => DOM
+        const fragment = DOMSerializer.fromSchema(
+          state.schema
+        ).serializeFragment(state.doc.content);
+        const div = document.createElement("div");
+        div.appendChild(fragment);
+        // DOM => HTML string
+        return div.innerHTML;
+      }
+      customElements.define("prosemirror-editor", ProseMirrorEditor);
+    </script>
+  </body>
+</html>
