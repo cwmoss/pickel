@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <script type="module">
+      import { Editor } from "https://esm.sh/@tiptap/core";
+      import StarterKit from "https://esm.sh/@tiptap/starter-kit";
+      // https://vikramthyagarajan.medium.com/how-to-build-a-notion-like-text-editor-in-react-and-tiptap-7f394c36ed9d
+      const defaultContent = `
+            <h1>HTML Ipsum Presents</h1>
+
+            <p><strong>Pellentesque habitant morbi tristique</strong> senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. <em>Aenean ultricies mi vitae est.</em> Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, <code>commodo vitae</code>, ornare sit amet, wisi. Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. <a href="#">Donec non enim</a> in turpis pulvinar facilisis. Ut felis.</p>
+
+            <h2>Header Level 2</h2>
+
+            <ol>
+              <li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
+              <li>Aliquam tincidunt mauris eu risus.</li>
+            </ol>
+
+            <blockquote><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna. Cras in mi at felis aliquet congue. Ut a est eget ligula molestie gravida. Curabitur massa. Donec eleifend, libero at sagittis mollis, tellus est malesuada tellus, at luctus turpis elit sit amet quam. Vivamus pretium ornare est.</p></blockquote>
+
+            <h3>Header Level 3</h3>
+
+            <ul>
+              <li>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</li>
+              <li>Aliquam tincidunt mauris eu risus.</li>
+            </ul>
+
+            <pre><code>
+            #header h1 a {
+              display: block;
+              width: 300px;
+              height: 80px;
+            }
+            </code></pre>
+        `;
+
+      const buttons = {
+        bold: document.querySelector('[data-tiptap-button="bold"]'),
+        italic: document.querySelector('[data-tiptap-button="italic"]'),
+        underline: document.querySelector('[data-tiptap-button="underline"]'),
+      };
+
+      const content = document.querySelector("[data-tiptap-content]");
+
+      const editor = new Editor({
+        element: document.querySelector("[data-tiptap-editor]"),
+        extensions: [StarterKit],
+        content: defaultContent,
+        onUpdate({ editor }) {
+          content.innerHTML = JSON.stringify(editor.getJSON());
+
+          buttons.bold.classList.toggle("active", editor.isActive("bold"));
+          buttons.italic.classList.toggle("active", editor.isActive("italic"));
+          buttons.underline.classList.toggle(
+            "active",
+            editor.isActive("underline")
+          );
+        },
+        onSelectionUpdate({ editor }) {
+          console.log("selection update");
+          buttons.bold.classList.toggle("active", editor.isActive("bold"));
+          buttons.italic.classList.toggle("active", editor.isActive("italic"));
+          buttons.underline.classList.toggle(
+            "active",
+            editor.isActive("underline")
+          );
+        },
+        onCreate({ editor }) {
+          content.innerHTML = JSON.stringify(editor.getJSON());
+        },
+      }); // add your configuration, extensions, content, etc.
+
+      buttons.bold.addEventListener("click", () => {
+        editor.chain().focus().toggleBold().run();
+      });
+
+      buttons.italic.addEventListener("click", () => {
+        editor.chain().focus().toggleItalic().run();
+      });
+
+      buttons.underline.addEventListener("click", () => {
+        editor.chain().focus().toggleUnderline().run();
+      });
+    </script>
+    <style>
+      :root {
+        background: #fff;
+        color: #000;
+        font-family: sans-serif;
+      }
+
+      .editor-toolbar {
+        margin-bottom: 1rem;
+      }
+
+      .editor-toolbar__buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .editor-toolbar__button {
+        appearance: none;
+        border: 2px solid #000;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        min-width: 4rem;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      .editor-toolbar__button:hover {
+        background: rgba(0, 0, 0, 0.1);
+      }
+
+      .editor-toolbar__button.active,
+      .editor-toolbar__button.active:hover {
+        background: #000;
+        color: #fff;
+      }
+
+      [data-tiptap-editor] .ProseMirror {
+        border: 2px solid #000;
+        border-radius: 1rem;
+        padding: 1rem;
+        max-width: 60rem;
+      }
+
+      pre {
+        max-width: 40rem;
+        width: 100%;
+        background: #101010;
+        color: #fff;
+        padding: 1rem;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="editor-toolbar">
+      <div class="editor-toolbar__buttons">
+        <button class="editor-toolbar__button" data-tiptap-button="bold">
+          Bold
+        </button>
+        <button class="editor-toolbar__button" data-tiptap-button="italic">
+          Italic
+        </button>
+        <button class="editor-toolbar__button" data-tiptap-button="underline">
+          Underline
+        </button>
+      </div>
+    </div>
+    <div class="my-editor" data-tiptap-editor></div>
+    <pre data-tiptap-content></pre>
+  </body>
+</html>
