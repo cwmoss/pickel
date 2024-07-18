@@ -104,6 +104,7 @@ export default class Container extends LitElement {
     this.schema = schema.get_type(this.type);
     let types = this.get_types();
 
+    console.log("$ resolve (C) for", this._name, this.type);
     await resolve_components([...new Set(types)]);
 
     this.build();
@@ -115,6 +116,10 @@ export default class Container extends LitElement {
     let f;
     let type = field.type;
     let subtype = "";
+    if (schema.is_reference(type)) {
+      type = "reference";
+      subtype = field.type;
+    }
     if (schema.is_object(type)) {
       type = "object";
       subtype = field.type;
@@ -164,6 +169,7 @@ export default class Container extends LitElement {
         break;
       case "reference":
         f = get_component("reference");
+        f.type = subtype;
         f.schemaid = this.schemaid;
         f.originalType = type;
         f.value = value ?? {};
@@ -202,6 +208,8 @@ export default class Container extends LitElement {
       return f;
     });
   }
+
+  get_preview() {}
 
   new_previewdata(e) {
     e.stopPropagation();

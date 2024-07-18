@@ -21,7 +21,7 @@ export default class Reference extends Face {
     // TODO: create new reference
     if (this.value == "") return;
     let doc = await api.document_preview(this.value._ref);
-    console.log("doc:", this.value, doc);
+    console.log("$REF: doc-preview", this._name, this.value, doc);
     this.preview = new Preview();
     this.preview.set_data(doc);
     this.preview.icon = "file-earmark";
@@ -35,11 +35,13 @@ export default class Reference extends Face {
       bubbles: true,
       composed: true,
     });
+    // this.requestUpdate();
     this.dispatchEvent(evt);
   }
 
   get allowed_type() {
-    return this.schema.to[0].type;
+    console.log("$REF", this._name, this.schema);
+    return this.schema.to ? this.schema.to[0].type ?? "" : "";
   }
   async select(e) {
     e.stopPropagation();
@@ -66,8 +68,9 @@ export default class Reference extends Face {
     ></pi-search>`;
   }
   render() {
+    // if (!this._name) return;
     // if (!this.preview) return "";
-    console.log("render reference", this.schema);
+    console.log("$REF render", this.schema);
     return html`<label>${this.label}</label>
       <div class="reference">
         ${this.preview ? this.preview : this.render_search()}

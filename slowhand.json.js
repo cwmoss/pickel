@@ -1,5 +1,5 @@
 const data = `{
-    "datasets": ["fashionblog", "movies", "crm", "photog"]
-}`
+    "datasets": ["fashionblog", "movies", "crm", "photog", "schweden"]
+}`;
 
-export default JSON.parse(data)
+export default JSON.parse(data);

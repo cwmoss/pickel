@@ -37,8 +37,8 @@ class schema {
   is_image(name) {
     return this.schema.image_types.includes(name);
   }
-  is_ref(name) {
-    return this.schema.refs.includes(name);
+  is_reference(name) {
+    return this.schema.reference_types.includes(name);
   }
 }
 

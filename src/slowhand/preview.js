@@ -96,7 +96,7 @@ export default class Preview extends LitElement {
     );
   }
   render() {
-    let detail = this.id;
+    let detail = this.subtitle;
     let media = "";
     if (this.media) media = html`<img src="${this.media}" />`;
     else if (this.icon) media = html`<sl-icon name="${this.icon}"></sl-icon>`;

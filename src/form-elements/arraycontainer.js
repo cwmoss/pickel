@@ -31,7 +31,21 @@ export default class ArrayContainer extends Container {
   }
 
   get_types() {
-    return [this.of[0].type];
+    let types = this.of || [];
+    types = types.map((f) => {
+      if (schema.is_reference(f.type)) {
+        return "reference";
+      }
+      if (schema.is_object(f.type)) {
+        return "object";
+      }
+      if (schema.is_image(f.type)) {
+        return "imageobject";
+      }
+      return f.type;
+    });
+    console.log("$ get types for array", this._name, this.of[0].type, types);
+    return types;
   }
 
   after_init() {
@@ -40,6 +54,10 @@ export default class ArrayContainer extends Container {
     if (schema.is_image(this.of[0].type)) {
       this.has_image = true;
     }
+    /*if (schema.is_ref(this.of[0].type)) {
+      this.subtype = this.of[0].type;
+      this.of[0].type = "reference";
+    }*/
     setTimeout(() => {
       let sortable = LitSortable.create(this.renderRoot.querySelector(".dnd"), {
         delay: 100,
@@ -47,6 +65,10 @@ export default class ArrayContainer extends Container {
         onEnd: (e) => this.dropped(e),
       });
     });
+  }
+
+  get_preview() {
+    this.requestUpdate();
   }
 
   new_array_item_value(type) {
@@ -76,7 +98,11 @@ export default class ArrayContainer extends Container {
       this.value.push(val);
     }
 */
-    let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
+    let f = this.new_input(
+      { type: type, subtype: this.subtype },
+      `${this.prefix}[${index}]`,
+      val
+    );
     f.opts = {
       label: this.name,
       // id: field.name,

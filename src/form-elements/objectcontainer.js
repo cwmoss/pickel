@@ -13,6 +13,9 @@ export default class ObjectContainer extends Container {
       if (f.component) {
         return f.component;
       }
+      if (schema.is_reference(f.type)) {
+        return "reference";
+      }
       if (schema.is_object(f.type)) {
         return "object";
       }

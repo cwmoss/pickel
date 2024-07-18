@@ -21,8 +21,10 @@ let classes = {};
 
 export const get_classname = (name) => {
   if (/^[A-Z]/.test(name)) {
+    console.log("(L)", name);
     return name;
   }
+  console.log("(L) map", name);
   return map[name] || default_comp;
 };
 export const get_component = (name) => {
@@ -36,9 +38,10 @@ export const get_component = (name) => {
 
 export const resolve_components = async (types) => {
   types = types.map((t) => get_classname(t));
+  console.log("$$ resolve (L) types0", types);
   types = [...new Set(types)];
   types = types.filter((el) => (classes[el] ? false : true));
-  // console.log("resolve types", types);
+  console.log("$$ resolve (L) types", types);
   return Promise.all(types.map((t) => load_component(t)));
 };
 

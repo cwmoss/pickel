@@ -24,6 +24,10 @@ export function is_object(name, schemaid = "default") {
   return schema[schemaid].object_types.includes(name);
 }
 
+export function is_reference(name, schemaid = "default") {
+  return schema[schemaid].reference_types.includes(name);
+}
+
 export function is_image(name, schemaid = "default") {
   return schema[schemaid].image_types.includes(name);
 }
