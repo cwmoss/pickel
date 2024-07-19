@@ -1,3 +1,5 @@
+import { kebabize } from "../lib/util.js";
+
 const map = {
   string: "Input",
   boolean: "Switch",
@@ -47,11 +49,10 @@ export const resolve_components = async (types) => {
 
 export const load_component = async (classname) => {
   if (path == null) path = "./";
-  let file = path + classname.toLowerCase() + ".js";
+  let file = path + kebabize(classname) + ".js";
   console.log("+++ load component ", classname);
   if (/^Custom/.test(classname)) {
-    file =
-      "/src/custom/" + classname.replace("Custom", "").toLowerCase() + ".js";
+    file = "/src/custom/" + kebabize(classname.replace("Custom", "")) + ".js";
   }
 
   // console.log("++ load_component import as", classname, file);

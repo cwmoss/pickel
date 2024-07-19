@@ -3,7 +3,7 @@ import api from "../lib/slow-hand.js";
 import schema from "../lib/schema.js";
 import Panel from "./panel.js";
 
-import ObjectContainer from "../form-elements/objectcontainer.js";
+import ObjectContainer from "../form-elements/object-container.js";
 
 export default class Editor extends Panel {
   static properties = {

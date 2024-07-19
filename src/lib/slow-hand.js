@@ -4,6 +4,7 @@ import schema from "./schema.js";
 class SlowHand {
   constructor() {
     this.endpoint = `http://localhost:10245`;
+    this.datasets = [];
     // this.documentStore = useDocumentStore();
   }
 
@@ -94,6 +95,10 @@ class SlowHand {
     if (schema.name == datasets.current) {
       return schema;
     }
+    let all = await this.schema_all();
+    console.log("$schemaswitch all", all);
+    datasets.datasets = all;
+    this.datasets = all;
     let s = await this.schema();
     schema.load(s, datasets.current);
     return schema;
@@ -102,6 +107,11 @@ class SlowHand {
   async schema() {
     let schema = await this.get(`/data/schema/${datasets.current}`);
     return schema;
+  }
+
+  async schema_all() {
+    let all = await this.get(`/data/index`);
+    return all;
   }
 
   images() {

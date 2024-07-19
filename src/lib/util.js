@@ -52,6 +52,12 @@ export const hashID = (size) => {
   return bytes.reduce((acc, byte) => `${acc}${charset[byte & MASK]}`, "");
 };
 
+export const kebabize = (str) =>
+  str.replace(
+    /[A-Z]+(?![a-z])|[A-Z]/g,
+    ($, ofs) => (ofs ? "-" : "") + $.toLowerCase()
+  );
+
 // https://stackoverflow.com/questions/6491463/accessing-nested-javascript-objects-and-arrays-by-string-path
 /**
  * Retrieve nested item from object/array

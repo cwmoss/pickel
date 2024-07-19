@@ -1,6 +1,6 @@
 import { html } from "../../vendor/lit-core.min.js";
 import { get_component, resolve_components } from "./component-loader.js";
-import ObjectContainer from "./objectcontainer.js";
+import ObjectContainer from "./object-container.js";
 import ObjectPreview from "./object-preview.js";
 import MediaWidget from "../slowhand/media-widget.js";
 import schema from "../lib/schema.js";
