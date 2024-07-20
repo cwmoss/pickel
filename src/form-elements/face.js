@@ -78,6 +78,7 @@ export default class Face extends LitElement {
       }
       .reference {
         display: flex;
+        gap: 1rem;
       }
       .reference > *:first-child {
         width: 100%;

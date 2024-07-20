@@ -75,8 +75,7 @@ export default class Reference extends Face {
       <div class="reference">
         ${this.preview ? this.preview : this.render_search()}
         <div class="actions">
-          <pi-btn @click=${this.search}>search</pi-btn
-          ><pi-btn @click=${this.remove}>remove</pi-btn>
+          <pi-btn @click=${this.remove}>remove</pi-btn>
         </div>
       </div>`;
   }
