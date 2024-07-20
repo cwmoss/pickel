@@ -1,5 +1,6 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import api from "../lib/slow-hand.js";
+import schema from "../lib/schema.js";
 
 let style = css`
   * {
@@ -74,16 +75,27 @@ export default class Preview extends LitElement {
 
   static styles = [style];
 
-  set_data(data) {
-    console.log("$$ preview data", data);
+  set_data(data, type) {
+    console.log("$$ preview data", data, type);
     this.id = data.id ?? data._id ?? data.name ?? data.title;
+    this.data = data;
+
+    let schema_preview;
+    if (type) schema_preview = schema.get_preview(type, data);
+    if (schema_preview) {
+      this.title = schema_preview.title;
+      this.subtitle = schema_preview.subtitle;
+      this.media = schema_preview.media;
+
+      return;
+    }
+
     this.title = data.title ?? data.name ?? this.id;
     this.subtitle = data.subtitle ?? data?.slug?.current ?? this.id;
     this.media = data.image ?? data.media ?? null;
     if (this.media) {
       this.media = api.imageurl_from_ref(this.media, { preview: true });
     }
-    this.data = data;
   }
   open() {
     this.active = true;

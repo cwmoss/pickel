@@ -99,6 +99,22 @@ class SlowHand {
     console.log("$schemaswitch all", all);
     datasets.datasets = all;
     this.datasets = all;
+    await schema.load(
+      datasets.current,
+      `${this.endpoint}/data/schema/${datasets.current}?js=1`
+    );
+
+    return schema;
+  }
+
+  async xxxcurrent_schema() {
+    if (schema.name == datasets.current) {
+      return schema;
+    }
+    let all = await this.schema_all();
+    console.log("$schemaswitch all", all);
+    datasets.datasets = all;
+    this.datasets = all;
     let s = await this.schema();
     await schema.load(s, datasets.current);
 

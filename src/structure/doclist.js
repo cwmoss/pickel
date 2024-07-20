@@ -19,7 +19,7 @@ export default class Doclist extends Panel {
 
     docs.forEach((item) => {
       let el = new Preview();
-      el.set_data(item);
+      el.set_data(item, this.title);
       el.icon = "file-earmark";
       content.push(el);
     });
