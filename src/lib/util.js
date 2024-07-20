@@ -52,6 +52,15 @@ export const hashID = (size) => {
   return bytes.reduce((acc, byte) => `${acc}${charset[byte & MASK]}`, "");
 };
 
+export const JSTRING = (strings, ...expressions) => {
+  let returnString = "";
+  for (let i = 0; i < expressions.length; i++) {
+    returnString += strings[i] + expressions[i];
+  }
+  returnString += strings[strings.length - 1];
+  return returnString;
+};
+
 export const kebabize = (str) =>
   str.replace(
     /[A-Z]+(?![a-z])|[A-Z]/g,

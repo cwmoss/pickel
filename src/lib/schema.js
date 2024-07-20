@@ -7,10 +7,20 @@ global slowhand schema
 class schema {
   schema = {};
   name = "";
-  load(schema, name) {
+  previews = {};
+
+  async load(schema, name) {
     console.log("$$ set schema (load)", schema, name);
     this.schema = schema;
     this.name = name;
+    let previews = await import("../../schema/" + name + "/preview.js").catch(
+      (e) => {
+        console.warn("no previews for schema", name);
+        return { default: {} };
+      }
+    );
+    this.previews = previews.default;
+    console.log("previews", this.previews);
   }
 
   get documents() {
@@ -39,6 +49,14 @@ class schema {
   }
   is_reference(name) {
     return this.schema.reference_types.includes(name);
+  }
+
+  get_preview(type, data) {
+    console.log("$ schema preview", type, this.previews);
+    if (this.previews[type]) {
+      return this.previews[type](data);
+    }
+    return null;
   }
 }
 

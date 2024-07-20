@@ -100,7 +100,8 @@ class SlowHand {
     datasets.datasets = all;
     this.datasets = all;
     let s = await this.schema();
-    schema.load(s, datasets.current);
+    await schema.load(s, datasets.current);
+
     return schema;
   }
 
