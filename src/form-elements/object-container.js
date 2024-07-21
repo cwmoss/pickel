@@ -52,7 +52,7 @@ export default class ObjectContainer extends Container {
     // let title = this.schema?.preview?.title;
     let p = new ObjectPreview();
 
-    p.set_data(data, this.schema, schema.get_preview(this.type, data));
+    p.set_data(data, this.schema, schema.get_preview(data));
     return p;
   }
 

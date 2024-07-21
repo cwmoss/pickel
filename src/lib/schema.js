@@ -66,13 +66,20 @@ class schema {
     return this.schema.reference_types.includes(name);
   }
 
-  get_preview(type, data) {
-    console.log("$ schema get_preview", type, data);
+  get_icon(type) {
+    if (type) {
+      return this.get_type(type).icon ?? "";
+    }
+  }
+  get_preview(data) {
+    let type = data?._type;
+    console.log("$ schema get_preview", type, data, this.previews[type]);
+    if (!type) return null;
     if (this.previews[type] && data) {
       try {
         return this.previews[type](data);
       } catch (e) {
-        console.warn("preview problem", e);
+        console.warn("$schema could not make preview", e);
         return null;
       }
     }

@@ -20,6 +20,7 @@ let draghandle_image = html`<svg
 https://github.com/SortableJS/Sortable?tab=readme-ov-file
 */
 export default class ArrayContainer extends Container {
+  enable_add = true;
   get value() {
     return this._value || [];
   }
@@ -196,11 +197,13 @@ export default class ArrayContainer extends Container {
       ></multi-upload>`;
     }
     return html`${uploader}
-      <div class="container--actions">
-        <button type="button" @click=${this.item_new} part="button">
-          Add Item
-        </button>
-      </div>`;
+    ${this.enable_add
+      ? html` <div class="container--actions">
+          <button type="button" @click=${this.item_new} part="button">
+            Add Item
+          </button>
+        </div>`
+      : ""}`;
   }
 
   render_els() {
@@ -214,7 +217,9 @@ export default class ArrayContainer extends Container {
               ${el}
             </div>
             <div class="el-actions">
-              <pi-btn flat @click=${() => this.item_remove(idx, el)}>X</pi-btn>
+              <pi-btn flat @click=${() => this.item_remove(idx, el)}
+                ><sl-icon name="x"></sl-icon
+              ></pi-btn>
             </div>
           </div> `;
         })}

@@ -76,20 +76,25 @@ export default class Preview extends LitElement {
   static styles = [style];
 
   set_data(data, type) {
+    if (!data) return;
     console.log("$$ preview data", data, type);
     this.id = data.id ?? data._id ?? data.name ?? data.title;
     this.data = data;
-
+    //if (!this.icon) {
+    this.dummy = schema.get_icon(data._type ?? null);
+    // console.log("$preview icon", this.icon, schema.get_type(data._type));
+    //}
     let schema_preview;
-    if (type) schema_preview = schema.get_preview(type, data);
+    schema_preview = schema.get_preview(data);
     if (schema_preview) {
+      console.log("$$ yes schema data", schema_preview);
       this.title = schema_preview.title;
       this.subtitle = schema_preview.subtitle;
       this.media = schema_preview.media;
 
       return;
     }
-
+    console.log("$$ no schema data");
     this.title = data.title ?? data.name ?? this.id;
     this.subtitle = data.subtitle ?? data?.slug?.current ?? this.id;
     this.media = data.image ?? data.media ?? null;
@@ -110,12 +115,15 @@ export default class Preview extends LitElement {
   render() {
     let detail = this.subtitle;
     let media = "";
+    let icon = this.dummy;
+    if (!icon) icon = this.icon;
     if (this.media) media = html`<img src="${this.media}" />`;
-    else if (this.icon) media = html`<sl-icon name="${this.icon}"></sl-icon>`;
+    else if (icon)
+      media = html`<sl-icon name="${icon}" style="font-size:20px;"></sl-icon>`;
     return html`<div class="flx" @click=${this.open}>
       <div class="media">${media}</div>
       <div>
-        <h2 title="${this.title}">${this.title}</h2>
+        <h2 title="${this.title}">${this.title ?? this._id}</h2>
         ${this.simple
           ? ""
           : html` <div class="detail">

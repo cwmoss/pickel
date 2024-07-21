@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import ArrayContainer from "../form-elements/arraycontainer.js";
+import ArrayContainer from "../form-elements/array-container.js";
 import api from "../lib/slow-hand.js";
 
 export default class CustomRwGallery extends ArrayContainer {
@@ -77,7 +77,7 @@ export default class CustomRwGallery extends ArrayContainer {
       }
     `,
   ];
-
+  enable_add = false;
   toggle_dbl(item, idx) {
     if (item.double) item.double = false;
     else item.double = true;
@@ -137,11 +137,7 @@ export default class CustomRwGallery extends ArrayContainer {
       </div>
       ${this.els.length == 0
         ? html`<div class="container--empty-array">no entries</div>`
-        : ""}
-
-      <pi-dialog nobutton class="new-item" @close=${this.item_new_save}
-        >${this.edit_item}</pi-dialog
-      > `;
+        : ""} `;
   }
 
   createRenderRoot() {
