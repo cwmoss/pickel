@@ -258,7 +258,7 @@ class SlowHand {
     return this.graphql(q);
   }
 
-  block_to_text(block) {
+  xxxblock_to_text(block) {
     if (!Array.isArray(block)) return block;
     console.log("$ block=>text", block);
     let text = [];
@@ -267,6 +267,16 @@ class SlowHand {
       if (b.text) text.push(b.text);
     });
     return text.join(" ").trim();
+  }
+
+  block_to_text(blocks = []) {
+    return blocks
+      .map((block) =>
+        block._type !== "block" || !block.children
+          ? ""
+          : block.children.map((child) => child.text).join(" ")
+      )
+      .join("\n\n");
   }
 }
 
