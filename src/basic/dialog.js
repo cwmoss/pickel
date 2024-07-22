@@ -48,6 +48,11 @@ export default class Dialog extends LitElement {
   open() {
     this.dialog.showModal();
   }
+  maybe_close(e) {
+    if (e.target.hasAttribute("close")) {
+      this.dialog.close();
+    }
+  }
   close(e) {
     e.stopPropagation();
     this.dialog.close();
@@ -64,12 +69,13 @@ export default class Dialog extends LitElement {
               title=${this.trigger_title}
             ></pi-btn>`}</slot
       >
-      <dialog>
+      <dialog @click=${this.maybe_close}>
         <pi-close @click=${this.close}></pi-close>
         <h1>
           <div>${this.title}</div>
         </h1>
         <slot @close-dialog=${this.close}></slot>
+        <slot name="footer"></slot>
       </dialog>`;
   }
 }

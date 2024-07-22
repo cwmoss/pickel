@@ -286,7 +286,8 @@ class SlowHand {
     return text.join(" ").trim();
   }
 
-  block_to_text(blocks = []) {
+  block_to_text(blocks) {
+    if (!Array.isArray(blocks)) return blocks;
     return blocks
       .map((block) =>
         block._type !== "block" || !block.children

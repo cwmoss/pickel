@@ -20,6 +20,7 @@ export default class Container extends LitElement {
     editmode: { type: Boolean, reflect: true },
     noLabel: { type: Boolean },
     preview: { type: Object },
+    options: { type: Object },
     edit_item: { type: Object },
     has_image: { type: Boolean },
   };
@@ -154,6 +155,7 @@ export default class Container extends LitElement {
         f.type = subtype;
         break;
       case "array":
+        console.log("$container ++ array container // field", field);
         component = "array";
         if (field.component) {
           component = field.component;
@@ -165,7 +167,9 @@ export default class Container extends LitElement {
         f.level = (this.level ?? 0) + 1;
         f.label = field.title;
         f.of = field.of;
+        f.options = field.opts || {};
         f.type = field.type;
+        console.log("$container ++ array container2 // container", f, f.opts);
         break;
       case "reference":
         f = get_component("reference");

@@ -70,11 +70,29 @@ export default class Search extends LitElement {
     this.isopen = false;
 
     // hide the menu when a click event occurs outside the menu
+    /*
+    https://stackoverflow.com/questions/37369960/determine-if-user-clicked-outside-shadow-dom
+    */
     document.addEventListener("click", (event) => {
-      if (!this.contains(event.target)) {
+      console.log(
+        "$search click outside check",
+        event.composedPath(),
+        event.path,
+        event.target,
+        event.currentTarget,
+        event.originalTarget
+      );
+      // if (!this.contains(event.target)) {
+      if (!event.composedPath().includes(this.shadowRoot)) {
+        console.log("$search click outside");
         this.isopen = false;
       }
     });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    console.log("$search disconnected");
   }
   open() {
     this.dispatchEvent(

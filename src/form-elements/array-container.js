@@ -3,6 +3,7 @@ import Container from "./container.js";
 import schema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import api from "../lib/slow-hand.js";
+import { hashID } from "../lib/util.js";
 import MultiUpload from "../upload/multi-upload.js";
 // import Sortable from "../../vendor/sortable.complete.esm.js";
 import { LitSortable } from "../../vendor/lit-sortable.js";
@@ -59,19 +60,25 @@ export default class ArrayContainer extends Container {
       this.subtype = this.of[0].type;
       this.of[0].type = "reference";
     }*/
-    setTimeout(() => {
-      let sortable = LitSortable.create(this.renderRoot.querySelector(".dnd"), {
-        delay: 100,
-        handle: ".handle",
-        onEnd: (e) => this.dropped(e),
+    if (this.options?.sortable !== false) {
+      setTimeout(() => {
+        let sortable = LitSortable.create(
+          this.renderRoot.querySelector(".dnd"),
+          {
+            delay: 100,
+            handle: ".handle",
+            onEnd: (e) => this.dropped(e),
+          }
+        );
       });
-    });
+    }
   }
 
   get_preview() {
     this.requestUpdate();
   }
 
+  // TODO: alle varianten
   new_array_item_value(type) {
     switch (type) {
       case "reference":
@@ -79,7 +86,7 @@ export default class ArrayContainer extends Container {
       case "string":
         return "";
       default:
-        return {};
+        return { _type: type, _key: hashID(8) };
     }
   }
 
@@ -167,7 +174,12 @@ export default class ArrayContainer extends Container {
     this.querySelector("pi-dialog.new-item").open();
   }
   item_new_save(e) {
-    console.log("$ item new save", e, this.edit_item);
+    console.log("$array item new save", e, this.edit_item.get_updated_data());
+    this.value.push(this.edit_item.get_updated_data());
+    this.build();
+  }
+  item_new_cancel(e) {
+    console.log("$array item new cancel", e, this.edit_item);
   }
   item_remove(idx) {
     console.log("item-remove", idx);
@@ -200,19 +212,21 @@ export default class ArrayContainer extends Container {
     ${this.enable_add
       ? html` <div class="container--actions">
           <button type="button" @click=${this.item_new} part="button">
-            Add Item
+            Add Item ${this.opts.sortable}
           </button>
         </div>`
       : ""}`;
   }
 
   render_els() {
-    console.log("+++ render ArrayContainer", this.els);
+    console.log("+++ render ArrayContainer", this.els, this.options);
     return html`<div class="dnd" @dropped=${this.dropped}>
         ${this.els.map((el, idx) => {
           console.log("els array element", el);
           return html`<div class="array-el">
-            <div class="handle"></div>
+            ${this.options?.sortable !== false
+              ? html`<div class="handle"></div>`
+              : ""}
             <div class="el-content" @click=${() => this.item_edit(el)}>
               ${el}
             </div>
@@ -229,8 +243,10 @@ export default class ArrayContainer extends Container {
         : ""}
 
       <pi-dialog nobutton class="new-item" @close=${this.item_new_save}
-        >${this.edit_item}</pi-dialog
-      > `;
+        >${this.edit_item}
+        <pi-btn close primary @click=${this.item_new_save}>Save</pi-btn>
+        <pi-btn close @click=${this.item_new_cancel}>Cancel</pi-btn>
+      </pi-dialog> `;
   }
 
   render_preview() {

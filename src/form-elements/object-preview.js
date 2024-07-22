@@ -81,7 +81,7 @@ export default class ObjectPreview extends LitElement {
 
   set_data(data, schema, schema_preview) {
     this.schema = schema;
-    console.log("$$ object-preview data0", schema_preview);
+    //console.log("$$ object-preview data0", this, data, schema_preview);
 
     if (schema_preview) {
       this.title = schema_preview.title;
@@ -89,6 +89,7 @@ export default class ObjectPreview extends LitElement {
       this.media = schema_preview.media;
       return;
     }
+    //console.error("$$ object-preview data1", this, data, schema_preview);
     this.title = resolve_path(data, schema?.preview?.title || "title");
     if (!this.title) this.title = "Untitled";
     this.subtitle = resolve_path(data, schema?.preview?.subtitle || "subtitle");

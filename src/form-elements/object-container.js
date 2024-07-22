@@ -46,6 +46,18 @@ export default class ObjectContainer extends Container {
   }
 
   get_preview(from) {
+    // top level document
+    console.log(
+      "$object container get_preview RENDER",
+      this.type,
+      schema.is_document(this.type)
+    );
+    if (schema.is_document(this.type)) return "";
+    console.log(
+      "$object container get_preview RENDER 01",
+      this.type,
+      schema.is_document(this.type)
+    );
     let data = {};
     Object.assign(data, this._value, this._preview_data);
     // console.log("++getpreview", from, this.refs?.person);

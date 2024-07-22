@@ -65,7 +65,9 @@ class schema {
   is_reference(name) {
     return this.schema.reference_types.includes(name);
   }
-
+  is_document(name) {
+    return this.document_types.includes(name);
+  }
   get_icon(type) {
     if (type) {
       return this.get_type(type).icon ?? "";
