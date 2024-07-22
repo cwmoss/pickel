@@ -43,7 +43,9 @@ export default class Geo extends Face {
       // this.marker.addTo(this.map)
       this.value = latlong;
     } else {
-      this.marker = L.marker(latlong, { draggable: true }).addTo(this.map);
+      this.marker = Leaflet.marker(latlong, { draggable: true }).addTo(
+        this.map
+      );
       this.value = latlong;
       let content = document.createElement("div");
       let btn = html`<pi-btn
@@ -78,9 +80,10 @@ export default class Geo extends Face {
 
   init() {
     this.el = this.shadowRoot.querySelector("div");
-    this.map = L.map(this.el).setView(this.latlong, 13); // [51.505, -0.09]
-    L.Icon.Default.imagePath = "https://unpkg.com/leaflet@1.9.4/dist/images/";
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    this.map = Leaflet.map(this.el).setView(this.latlong, 13); // [51.505, -0.09]
+    Leaflet.Icon.Default.imagePath =
+      "https://unpkg.com/leaflet@1.9.4/dist/images/";
+    Leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -102,7 +105,7 @@ export default class Geo extends Face {
     }
     console.log("++ latlong ++", latlong);
     return latlong;
-    return L.latLng(latlong.lat, latlong.lng);
+    return Leaflet.latLng(latlong.lat, latlong.lng);
   }
   get_updated_data() {
     return this.value;

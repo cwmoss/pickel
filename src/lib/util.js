@@ -17,6 +17,7 @@ export function once(fn, context) {
 // typeof x === 'object' && !Array.isArray(x) && x !== null
 
 export const slugify_simple = (str) => {
+  if (!str) return "";
   str = str.trim(); // trim leading/trailing spaces
   str = str.toLowerCase(); // convert to lowercase
   str = str
@@ -50,6 +51,15 @@ export const hashID = (size) => {
   crypto.getRandomValues(bytes);
 
   return bytes.reduce((acc, byte) => `${acc}${charset[byte & MASK]}`, "");
+};
+
+export const js = (strings, ...expressions) => {
+  let returnString = "";
+  for (let i = 0; i < expressions.length; i++) {
+    returnString += strings[i] + expressions[i];
+  }
+  returnString += strings[strings.length - 1];
+  return returnString;
 };
 
 export const kebabize = (str) =>

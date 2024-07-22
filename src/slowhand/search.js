@@ -10,8 +10,10 @@ let style = css`
   pi-select {
     width: 40%;
   }
-  #menu {
+  :host([isopen]) #menu {
     position: absolute;
+    z-index: 99;
+    background: white;
     border: none;
     --shadow-linie-color: rgba(114, 120, 146, 0.3);
     --shadow-schatten-color: rgba(114, 120, 146, 0.1);
@@ -22,6 +24,12 @@ let style = css`
       0 0.4375rem 0.5rem -0.25rem var(--shadow-schatten-color),
       0 0.75rem 1.0625rem 0.125rem var(--shadow-halbschatten-color),
       0 0.3125rem 1.375rem 0.25rem var(--shadow-umgebung-color);
+    width: 150%;
+    // max-height: 100%;
+    overflow: auto;
+  }
+  :host(:not([isopen])) #menu {
+    display: none;
   }
   :popover-open {
     width: 50vw;
@@ -49,6 +57,7 @@ export default class Search extends LitElement {
   static properties = {
     id: { reflect: true },
     type: {},
+    isopen: { reflect: true, type: Boolean },
     types: { type: Array },
     result: { type: Array },
   };
@@ -58,6 +67,14 @@ export default class Search extends LitElement {
     super.connectedCallback();
     let schema = await api.current_schema();
     this.types = schema.document_types;
+    this.isopen = false;
+
+    // hide the menu when a click event occurs outside the menu
+    document.addEventListener("click", (event) => {
+      if (!this.contains(event.target)) {
+        this.isopen = false;
+      }
+    });
   }
   open() {
     this.dispatchEvent(
@@ -69,6 +86,7 @@ export default class Search extends LitElement {
     );
   }
   set_position() {
+    return;
     let rel = this.shadowRoot.getElementById("rel");
     let toggle = this.shadowRoot.getElementById("toggle");
     let menu = this.shadowRoot.getElementById("menu");
@@ -96,6 +114,8 @@ export default class Search extends LitElement {
   }
   hasfocus(e) {
     console.log("++ search focus");
+    this.isopen = true;
+    return;
     let menu = this.shadowRoot.getElementById("menu");
     menu.showPopover();
   }
@@ -104,7 +124,7 @@ export default class Search extends LitElement {
     let res = await api.search(e.target.value);
     this.result = res.result;
     let menu = this.shadowRoot.getElementById("menu");
-    menu.showPopover();
+    // menu.showPopover();
   }
   render() {
     return html`<div id="rel">
@@ -124,12 +144,14 @@ export default class Search extends LitElement {
           .items=${["Type", ...(this.types ?? [])]}
         ></pi-select
       ></form-input>
-      <div id="menu" popover @click=${this.select}>
-        ${this?.result?.map((el, idx) => {
-          return html`<div data-idx=${idx}>
-            ${unsafeHTML(el.body)}<br /><em>${el._type}</em>
-          </div>`;
-        })}
+      <div id="menu" @click=${this.select}>
+        ${this.result
+          ? this.result.map((el, idx) => {
+              return html`<div data-idx=${idx}>
+                ${unsafeHTML(el.body)}<br /><em>${el._type}</em>
+              </div>`;
+            })
+          : html`<div>loading</div>`}
       </div>
     </div>`;
   }
