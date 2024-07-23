@@ -74,17 +74,17 @@ export default class Search extends LitElement {
     https://stackoverflow.com/questions/37369960/determine-if-user-clicked-outside-shadow-dom
     */
     document.addEventListener("click", (event) => {
-      console.log(
-        "$search click outside check",
-        event.composedPath(),
-        event.path,
-        event.target,
-        event.currentTarget,
-        event.originalTarget
-      );
+      // console.log(
+      //   "$search click outside check",
+      //   event.composedPath(),
+      //   event.path,
+      //   event.target,
+      //   event.currentTarget,
+      //   event.originalTarget
+      // );
       // if (!this.contains(event.target)) {
       if (!event.composedPath().includes(this.shadowRoot)) {
-        console.log("$search click outside");
+        // console.log("$search click outside");
         this.isopen = false;
       }
     });

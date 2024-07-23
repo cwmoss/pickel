@@ -96,6 +96,7 @@ export default class Container extends LitElement {
         value[name] = val;
       }
     });
+    console.log("$container get updated data", this._name, value);
     return value;
   }
 

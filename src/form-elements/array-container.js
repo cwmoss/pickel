@@ -152,6 +152,10 @@ export default class ArrayContainer extends Container {
   }
   rearrange(from, to) {}
 
+  get_updated_data() {
+    console.log("$array get updated data");
+    return super.get_updated_data();
+  }
   build() {
     this.new_array_item_edit();
     this.editmode = true;
@@ -231,8 +235,11 @@ export default class ArrayContainer extends Container {
               ${el}
             </div>
             <div class="el-actions">
-              <pi-btn flat @click=${() => this.item_remove(idx, el)}
-                ><sl-icon name="x"></sl-icon
+              <pi-btn
+                title="remove"
+                flat
+                @click=${() => this.item_remove(idx, el)}
+                ><sl-icon name="trash" label="remove"></sl-icon
               ></pi-btn>
             </div>
           </div> `;
