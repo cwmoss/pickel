@@ -35,6 +35,7 @@ export const get_component = (name) => {
   if (!classes[classname]) {
     console.error("could not load component", name, classname);
   }
+  console.log("load component", name, classname);
   return new classes[classname]();
 };
 
@@ -50,7 +51,7 @@ export const resolve_components = async (types) => {
 export const load_component = async (classname) => {
   if (path == null) path = "./";
   let file = path + kebabize(classname) + ".js";
-  console.log("+++ load component ", classname);
+  console.log("+++ load component ", classname, file);
   if (/^Custom/.test(classname)) {
     file = "/src/custom/" + kebabize(classname.replace("Custom", "")) + ".js";
   }

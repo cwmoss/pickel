@@ -47,3 +47,18 @@ function createElementFromHTML(htmlString) {
    if (result.length === 1) return result[0];
    return result;
  }
+
+// schema
+ async xxload(schema, name) {
+  console.log("$$ set schema (load)", schema, name);
+  this.schema = schema;
+  this.name = name;
+  let previews = await import("../../schema/" + name + "/preview.js").catch(
+    (e) => {
+      console.warn("no previews for schema", name);
+      return { default: {} };
+    }
+  );
+  this.previews = previews.default;
+  console.log("previews", this.previews);
+}

@@ -7,25 +7,6 @@ import schema from "../lib/schema.js";
 import api from "../lib/slow-hand.js";
 
 export default class ObjectContainer extends Container {
-  get_types() {
-    let fields = this.schema.fields || [];
-    fields = fields.map((f) => {
-      if (f.component) {
-        return f.component;
-      }
-      if (schema.is_reference(f.type)) {
-        return "reference";
-      }
-      if (schema.is_object(f.type)) {
-        return "object";
-      }
-      if (schema.is_image(f.type)) {
-        return "imageobject";
-      }
-      return f.type;
-    });
-    return fields;
-  }
   get value() {
     console.log("$$$ GETTER FOR VALUE");
     return this._value;
@@ -60,7 +41,7 @@ export default class ObjectContainer extends Container {
     );
     let data = {};
     Object.assign(data, this._value, this._preview_data);
-    // console.log("++getpreview", from, this.refs?.person);
+    console.log("++getpreview", from, this.refs?.person);
     // let title = this.schema?.preview?.title;
     let p = new ObjectPreview();
 

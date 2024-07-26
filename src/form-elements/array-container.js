@@ -32,24 +32,6 @@ export default class ArrayContainer extends Container {
     this._value = v;
   }
 
-  get_types() {
-    let types = this.of || [];
-    types = types.map((f) => {
-      if (schema.is_reference(f.type)) {
-        return "reference";
-      }
-      if (schema.is_object(f.type)) {
-        return "object";
-      }
-      if (schema.is_image(f.type)) {
-        return "imageobject";
-      }
-      return f.type;
-    });
-    console.log("$ get types for array", this._name, this.of[0].type, types);
-    return types;
-  }
-
   after_init() {
     console.log("$$$ array type", this.of[0].type);
     this.has_image = false;

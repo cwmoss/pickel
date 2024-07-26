@@ -50,12 +50,6 @@ export default class ImageContainer extends ObjectContainer {
     return value;
   }
 
-  get_types() {
-    let types = super.get_types();
-    types.push("imageupload");
-    return types;
-  }
-
   async after_init() {
     console.log("$$$$ after init start0", JSON.stringify(this.value));
     if (this.value.asset?._ref) {

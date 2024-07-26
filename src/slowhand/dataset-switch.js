@@ -4,6 +4,7 @@ import dataset from "../lib/datasets.js";
 import api from "../lib/slow-hand.js";
 
 export default class DatasetSwitch extends LitElement {
+  loaded = false;
   static properties = {
     current: {},
     datasets: { type: Array },
@@ -11,6 +12,9 @@ export default class DatasetSwitch extends LitElement {
 
   async connectedCallback() {
     super.connectedCallback();
+    if (this.loaded) return;
+    this.loaded = true;
+
     // this.current = dataset.current;
     let schema = await api.current_schema();
     this.current = schema.name;

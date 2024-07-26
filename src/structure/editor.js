@@ -46,6 +46,8 @@ export default class Editor extends Panel {
     this.schema = schema.get_type(this.type);
 
     this.container = new ObjectContainer();
+    console.log("$$$ set_schema in objectc");
+    this.container.set_schema(this.schema);
     this.container.editmode = true;
 
     this.container.value = this.document;
@@ -53,7 +55,6 @@ export default class Editor extends Panel {
     this.container.prefix = "";
     this.container.schemaid = this._id;
     this.container.level = 0;
-    this.container.type = this.type;
     //this.container = "";
     return;
   }

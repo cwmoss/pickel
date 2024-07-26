@@ -10,11 +10,18 @@ export default class Reference extends Face {
     ...Face.properties,
     preview: { type: Object },
     schema: { type: Object },
+    prefix: {},
   };
 
   async connectedCallback() {
     super.connectedCallback();
     await this.init();
+  }
+
+  set_schema(schema) {
+    this.schema = schema;
+    this.type = schema.type;
+    this.supertype = schema.supertype;
   }
 
   async init() {
@@ -46,7 +53,7 @@ export default class Reference extends Face {
   async select(e) {
     e.stopPropagation();
     this.value = {
-      _type: "reference",
+      _type: this.type,
       _ref: e.detail.id,
     };
     await this.init();

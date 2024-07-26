@@ -78,6 +78,7 @@ export const kebabize = (str) =>
  */
 export const resolve_path = (obj, path, def) => {
   if (!path) return obj;
+  console.error("$path resolve", path);
   var i, len;
 
   for (i = 0, path = path.split("."), len = path.length; i < len; i++) {
@@ -123,4 +124,31 @@ export const to_json = (fdata) => {
     return { ...o, [n]: a };
   }, {});
   return obj;
+};
+
+export const is_empty = (value) => {
+  //if (typeof value !== 'object') {
+  // boolean, number, string, function, etc.
+  //  return false;
+  //}
+
+  // console.error("empty array?", this._name, value);
+  if (Array.isArray(value)) {
+    return value.length == 0;
+  }
+
+  const proto = Object.getPrototypeOf(value);
+
+  // consider `Object.create(null)`, commonly used as a safe map
+  // before `Map` support, an empty object as well as `{}`
+  if (proto !== null && proto !== Object.prototype) {
+    return false;
+  }
+
+  for (const prop in value) {
+    if (Object.hasOwn(value, prop)) {
+      return false;
+    }
+  }
+  return true;
 };

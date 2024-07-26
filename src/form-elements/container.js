@@ -1,12 +1,16 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import schema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
+import { is_empty } from "../lib/util.js";
+
 import api from "../lib/slow-hand.js";
 
 export default class Container extends LitElement {
   static properties = {
-    schema: { attribute: false },
+    // schema of this field
+    schema: { attribute: false, type: Object },
     type: { type: String },
+    supertype: { type: String },
     of: { type: Array },
     level: { type: Number, reflect: true },
     array: { type: Boolean, reflect: true },
@@ -56,41 +60,14 @@ export default class Container extends LitElement {
     this._value = v;
   }
   // https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
-  is_empty() {
-    let value = this.value;
 
-    //if (typeof value !== 'object') {
-    // boolean, number, string, function, etc.
-    //  return false;
-    //}
-
-    // console.error("empty array?", this._name, value);
-    if (Array.isArray(value)) {
-      return value.length == 0;
-    }
-
-    const proto = Object.getPrototypeOf(value);
-
-    // consider `Object.create(null)`, commonly used as a safe map
-    // before `Map` support, an empty object as well as `{}`
-    if (proto !== null && proto !== Object.prototype) {
-      return false;
-    }
-
-    for (const prop in value) {
-      if (Object.hasOwn(value, prop)) {
-        return false;
-      }
-    }
-    return true;
-  }
   get_updated_data() {
     let value = this._value || {};
     this.els.forEach((el) => {
       const val = el.get_updated_data();
 
       let name = el._name;
-      if (el.is_empty()) {
+      if (is_empty(el.value)) {
         delete value[name];
       } else {
         value[name] = val;
@@ -102,11 +79,16 @@ export default class Container extends LitElement {
 
   async after_init() {}
 
+  // sets the fieldschema
+  set_schema(schema) {
+    this.schema = schema;
+    this.type = schema.type;
+    this.supertype = schema.supertype;
+  }
   async init() {
-    this.schema = schema.get_type(this.type);
-    let types = this.get_types();
+    let types = schema.get_all_components_for(this.schema);
 
-    console.log("$ resolve (C) for", this._name, this.type);
+    console.log("$ resolve (C) for", this._name, this.type, this.schema, types);
     await resolve_components([...new Set(types)]);
 
     this.build();
@@ -115,6 +97,42 @@ export default class Container extends LitElement {
   }
 
   new_input(field, name, value) {
+    let fieldschema = schema.get_field_schema(field);
+    let comp = schema.get_component_for_field(fieldschema);
+    let f = get_component(comp);
+    // let is_container = schema.is_container(field);
+
+    if (typeof f["set_schema"] === "function") {
+      f.set_schema(fieldschema);
+      f.prefix = name;
+      f.level = (this.level ?? 0) + 1;
+    } else {
+      f.originalType = field.type;
+    }
+    switch (f.supertype) {
+      case "image":
+        f.value = value ?? { asset: null };
+        break;
+      case "array":
+        f.of = fieldschema.of;
+        f.options = fieldschema.opts || {};
+        f.value = value ?? [];
+        break;
+      case "object":
+        f.value = value ?? {};
+        break;
+      case "reference":
+        f.value = value ?? {};
+        break;
+      default:
+        f.value = value;
+    }
+    f.label = field.title;
+    f._name = field.name;
+    return f;
+  }
+
+  xxnew_input(field, name, value) {
     let f;
     let type = field.type;
     let subtype = "";
