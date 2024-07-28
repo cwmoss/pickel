@@ -97,20 +97,20 @@ class SlowHand {
     if (schema.name == datasets.current) {
       return schema;
     }
-    if (!this.loading) {
-      this.loading = true;
-      console.error("await schema");
-      let all = await this.schema_all();
-      console.log("$schemaswitch all", all);
-      datasets.datasets = all;
-      this.datasets = all;
-      await schema.load(
-        datasets.current,
-        `${this.endpoint}/data/schema/${datasets.current}?js=1`
-      );
-      this.loading = false;
-      return schema;
-    }
+    //if (!this.loading) {
+    this.loading = true;
+    console.error("await schema");
+    let all = await this.schema_all();
+    console.log("$schemaswitch all", all);
+    datasets.datasets = all;
+    this.datasets = all;
+    await schema.load(
+      datasets.current,
+      `${this.endpoint}/data/schema/${datasets.current}?js=1`
+    );
+    this.loading = false;
+    return schema;
+    //}
   }
 
   async xxxcurrent_schema() {

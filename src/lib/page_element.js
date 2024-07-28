@@ -1,9 +1,9 @@
-let templates = {};
+import { load_template } from "./template.js";
 
 class PageElement extends HTMLElement {
   constructor() {
     super();
-    this.loading = this.load_template();
+    this.loading = load_template(this); //this.load_template();
     // console.log("^^title?", this.title, this.constructor);
     if (this.title) {
       window.document.title = this.title;
@@ -22,7 +22,7 @@ class PageElement extends HTMLElement {
     const clone = template[0].content.cloneNode(true);
     this.appendChild(clone);
   }
-  async load_template() {
+  async xxxload_template() {
     let klas = this.constructor.name;
     console.log("++ page", klas);
     if (!templates[klas]) {

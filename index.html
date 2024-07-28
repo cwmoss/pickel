@@ -99,38 +99,16 @@
   --></head>
 
   <body>
-    <pi-app id="body">
-      <header>
-        <h1>slowhand</h1>
-        <pi-navigation>
-          <nav>
-            <ul>
-              <li class="ds-switch"><pi-search></pi-search></li>
-              <li>
-                <a href="/">Dashboard</a>
-              </li>
-
-              <li><a href="/desk">Desk</a></li>
-              <li><a href="/media">Media</a></li>
-              <li><a href="/admin">Admin</a></li>
-              <li><a href="/about">About</a></li>
-              <li class="ds-switch"><dataset-switch></dataset-switch></li>
-            </ul>
-          </nav>
-        </pi-navigation>
-      </header>
-      <main></main>
-      <footer>
-        made <span class="fa-italic"></span> with pickel
-        <button type="button">Toast</button>
-      </footer>
-    </pi-app>
+    <pi-app id="body"></pi-app>
     <script type="module">
       import { toast_alert } from "./src/basic/toast.js";
-
-      document
-        .querySelector("button")
-        .addEventListener("click", () => toast_alert("heho bumm"));
+      setTimeout(
+        () =>
+          document
+            .querySelector("button")
+            .addEventListener("click", () => toast_alert("heho bumm")),
+        1000
+      );
     </script>
   </body>
 </html>

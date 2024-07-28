@@ -1,6 +1,7 @@
 import router from "../vendor/page.m.js";
 import routes from "./routes.js";
-
+import api from "./lib/slow-hand.js";
+import { load_template } from "./lib/template.js";
 // let router = window.page;
 router.configure({ window: window });
 // router.base("/studio");
@@ -13,7 +14,11 @@ class App extends HTMLElement {
     this.addEventListener("open-doc", this.opendoc);
   }
 
-  connectedCallback() {
+  async connectedCallback() {
+    await api.current_schema();
+    let template = await load_template("_layout");
+    const clone = template[0].content.cloneNode(true);
+    this.appendChild(clone);
     console.log("+++ app connected");
     window.setTimeout(() => {
       this.content = this.querySelector("main");
