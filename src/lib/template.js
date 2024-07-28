@@ -1,7 +1,10 @@
 let templates = {};
 
-export const load_template = async (name) => {
-  let tname = typeof name === "string" ? name : name.constructor.name;
+export const load_template = async (name_or_class) => {
+  let tname =
+    typeof name_or_class === "string"
+      ? name_or_class
+      : name_or_class.constructor.name;
   console.log("++ page", tname);
   if (!templates[tname]) {
     console.log("++loading template", tname);
