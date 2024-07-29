@@ -17,6 +17,7 @@ export default class Face extends LitElement {
     id: {},
     placeholder: {},
     originalType: {},
+    options: { type: Object, attribute: false },
     // opts: { attribute: false },
   };
 
@@ -58,9 +59,14 @@ export default class Face extends LitElement {
         border-bottom-left-radius: 0;
         border-left: 0;
       }
-      label {
+      label,
+      div.form-label {
         font-weight: 600;
       }
+      label.form-check-label {
+        font-weight: normal;
+      }
+
       .input-group {
         /*gap: 0.5rem;*/
       }
@@ -133,10 +139,16 @@ export default class Face extends LitElement {
   get_input_value(e) {
     return e.target.value;
   }
+  /*
+  TODO: clarify opts vs options
+  */
   set opts(o) {
     Object.assign(this, o);
+    if (o.title) this.label = o.title;
   }
-
+  set_options(o) {
+    this.options = o ? o : {};
+  }
   wrap(h) {
     return html`<div class="fgroup">${h}</div>`;
   }

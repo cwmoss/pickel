@@ -2,6 +2,9 @@ import { kebabize } from "../lib/util.js";
 
 const map = {
   string: "Input",
+  select: "SelectSlow",
+  radio: "Radios",
+  tags: "Tags",
   boolean: "Switch",
   switch: "Switch",
   reference: "Reference",

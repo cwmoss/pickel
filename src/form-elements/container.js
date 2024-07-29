@@ -65,6 +65,12 @@ export default class Container extends LitElement {
     let value = this._value || {};
     this.els.forEach((el) => {
       const val = el.get_updated_data();
+      console.log(
+        "$container-element get updated data",
+        el._name,
+        el.constructor.name,
+        val
+      );
 
       let name = el._name;
       if (is_empty(el.value)) {
@@ -115,7 +121,7 @@ export default class Container extends LitElement {
         break;
       case "array":
         f.of = fieldschema.of;
-        f.options = fieldschema.opts || {};
+        f.options = fieldschema.options || {};
         f.value = value ?? [];
         break;
       case "object":
@@ -126,6 +132,10 @@ export default class Container extends LitElement {
         break;
       default:
         f.value = value;
+    }
+    if (field.options && typeof f["set_options"] === "function") {
+      f.set_options(field.options);
+      console.warn("setting options", field.options, f);
     }
     f.label = field.title;
     f._name = field.name;

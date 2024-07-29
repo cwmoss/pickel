@@ -51,8 +51,14 @@ class schema {
     if (field.component) {
       return field.component;
     }
-    if (field.supertype) return field.supertype;
-    return field.type;
+    let type = field.supertype ?? field.type;
+    if (type == "string") {
+      console.log("$ get types for STRING", field);
+      if (field?.options?.list) {
+        return field.options.layout;
+      }
+    }
+    return type;
 
     if (this.is_reference(field.type)) {
       return "reference";

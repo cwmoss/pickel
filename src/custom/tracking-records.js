@@ -9,9 +9,9 @@ export default class CustomTrackingRecords extends ArrayContainer {
 
   static styles = [];
 
-  get_updated_data() {
-    return this.value;
-  }
+  //get_updated_data() {
+  //  return this.value;
+  //}
 
   item_new_save(e) {
     console.log(
