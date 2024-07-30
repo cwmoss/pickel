@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 import Panel from "./panel.js";
 import Preview from "../slowhand/preview.js";
 import Search from "../slowhand/search.js";

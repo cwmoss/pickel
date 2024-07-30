@@ -3,7 +3,6 @@ import Panel from "./panel.js";
 
 //import Preview from "./preview.js";
 
-import api from "../lib/slow-hand.js";
 const template = document.createElement("template");
 /*
 

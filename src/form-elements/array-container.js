@@ -2,7 +2,7 @@ import { html } from "../../vendor/lit-core.min.js";
 import Container from "./container.js";
 import schema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 import { hashID } from "../lib/util.js";
 import MultiUpload from "../upload/multi-upload.js";
 // import Sortable from "../../vendor/sortable.complete.esm.js";

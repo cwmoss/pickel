@@ -1,5 +1,5 @@
 import { LitElement, css, html, classMap } from "../../vendor/lit-all.min.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 import Preview from "../slowhand/preview.js";
 
 const style = css`

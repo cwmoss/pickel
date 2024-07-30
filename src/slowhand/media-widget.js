@@ -1,6 +1,6 @@
 import { LitElement, css, html } from "../../vendor/lit-all.min.js";
 // import Pager from "./pager.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 import urlStore from "../lib/url-store.js";
 import FocusPicker from "../misc/focus-picker.js";
 //import cssvars from "./variables.css.js";

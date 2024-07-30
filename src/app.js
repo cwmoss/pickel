@@ -1,6 +1,6 @@
 import router from "../vendor/page.m.js";
 import routes from "./routes.js";
-import api from "./lib/slow-hand.js";
+import api from "./lib/api.js";
 import { load_template } from "./lib/template.js";
 // let router = window.page;
 router.configure({ window: window });

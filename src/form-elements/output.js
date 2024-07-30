@@ -1,6 +1,6 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import Face from "./face.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 
 export default class Output extends Face {
   static properties = { ...Face.properties, prefix: {}, suffix: {} };

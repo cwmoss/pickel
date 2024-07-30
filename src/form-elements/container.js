@@ -3,7 +3,7 @@ import schema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import { is_empty } from "../lib/util.js";
 
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 
 export default class Container extends LitElement {
   static properties = {

@@ -1,7 +1,7 @@
 import datasets from "./datasets.js";
 import schema from "./schema.js";
 
-class SlowHand {
+class Api {
   loading = false;
 
   constructor() {
@@ -304,4 +304,4 @@ class SlowHand {
   }
 }
 
-export default new SlowHand();
+export default new Api();

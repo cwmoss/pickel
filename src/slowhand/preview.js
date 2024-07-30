@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 import schema from "../lib/schema.js";
 
 let style = css`

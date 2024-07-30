@@ -7,7 +7,6 @@ import { slugify_simple } from "../lib/util.js";
 import urlStore from "../lib/url-store.js";
 //import Preview from "./preview.js";
 
-import api from "../lib/slow-hand.js";
 const template = document.createElement("template");
 /*
 

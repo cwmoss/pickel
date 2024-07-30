@@ -1,7 +1,7 @@
 import { LitElement, css, html, unsafeHTML } from "../../vendor/lit-all.min.js";
 import FormInput from "../form-elements/input.js";
 import Select from "../form-elements/select.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 
 let style = css`
   #rel {

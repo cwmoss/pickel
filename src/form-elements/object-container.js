@@ -4,7 +4,7 @@ import { get_component, resolve_components } from "./component-loader.js";
 import Container from "./container.js";
 import ObjectPreview from "./object-preview.js";
 import schema from "../lib/schema.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 
 export default class ObjectContainer extends Container {
   get value() {

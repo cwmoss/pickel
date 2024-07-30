@@ -1,7 +1,7 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 
 import dataset from "../lib/datasets.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 
 export default class DatasetSwitch extends LitElement {
   loaded = false;

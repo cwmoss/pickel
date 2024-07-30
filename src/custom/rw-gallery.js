@@ -1,6 +1,6 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import ArrayContainer from "../form-elements/array-container.js";
-import api from "../lib/slow-hand.js";
+import api from "../lib/api.js";
 
 export default class CustomRwGallery extends ArrayContainer {
   static properties = {
