@@ -61,10 +61,10 @@ export default class Face extends LitElement {
       }
       label,
       div.form-label {
-        font-weight: 600;
+        /* font-weight: 600; */
       }
       label.form-check-label {
-        font-weight: normal;
+        /* font-weight: normal; */
       }
 
       .input-group {

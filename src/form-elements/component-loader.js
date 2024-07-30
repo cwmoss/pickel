@@ -4,6 +4,7 @@ const map = {
   string: "Input",
   select: "SelectSlow",
   radio: "Radios",
+  check: "Checks",
   tags: "Tags",
   boolean: "Switch",
   switch: "Switch",

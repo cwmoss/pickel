@@ -58,6 +58,14 @@ class schema {
         return field.options.layout;
       }
     }
+    if (type == "array") {
+      if (field?.options?.layout) {
+        return field.options.layout;
+      }
+      if (field?.options?.list) {
+        return "check";
+      }
+    }
     return type;
 
     if (this.is_reference(field.type)) {
@@ -98,16 +106,14 @@ class schema {
     this.schema = data;
     this.set_supertypes();
     // console.error("$schema", this.schema);
-    let { default: studiopreviews } = await import(
-      "../../schema/" + name + "/preview.js"
-    ).catch((e) => {
-      console.warn("no previews for schema", name);
-      return { default: {} };
-    });
-    this.previews = Object.assign({}, previews, studiopreviews);
+    this.previews = previews;
     console.log("previews", this.previews, this.schema);
   }
-
+  // coming from project
+  set_previews(studiopreviews) {
+    this.previews = Object.assign({}, this.previews, studiopreviews);
+    console.log("Updated studiopreviews", this.previews);
+  }
   get_supertype(type) {
     if (this.is_object(type)) {
       return "object";

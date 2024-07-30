@@ -1,6 +1,6 @@
 import router from "../vendor/page.m.js";
 import routes from "./routes.js";
-import api from "./lib/api.js";
+import project from "./lib/project.js";
 import { load_template } from "./lib/template.js";
 // let router = window.page;
 router.configure({ window: window });
@@ -15,7 +15,7 @@ class App extends HTMLElement {
   }
 
   async connectedCallback() {
-    await api.current_schema();
+    await project.load_current_project();
     let template = await load_template("_layout");
     const clone = template[0].content.cloneNode(true);
     this.appendChild(clone);

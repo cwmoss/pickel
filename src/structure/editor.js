@@ -31,7 +31,6 @@ export default class Editor extends Panel {
     }
     this.content = content;
     */
-    await api.current_schema();
     this.id = this.doc_id;
     if (this.doc_create) {
       this.document = this.doc_create;

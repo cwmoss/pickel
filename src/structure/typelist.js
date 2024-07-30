@@ -1,12 +1,12 @@
 import { LitElement, css, html, classMap } from "../../vendor/lit-all.min.js";
-import api from "../lib/api.js";
+import project from "../lib/project.js";
 import Panel from "./panel.js";
 import Preview from "../slowhand/preview.js";
 
 export default class Typelist extends Panel {
   async fetch_content() {
     let content = [];
-    let schema = await api.current_schema();
+    let schema = project.schema();
     console.log("+panel=>schema", this.index, schema);
 
     schema.documents.forEach((item) => {

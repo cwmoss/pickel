@@ -1,5 +1,6 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import api from "../lib/api.js";
+import project from "../lib/project.js";
 import Panel from "./panel.js";
 import Preview from "../slowhand/preview.js";
 import Search from "../slowhand/search.js";
@@ -7,7 +8,7 @@ import Search from "../slowhand/search.js";
 export default class Doclist extends Panel {
   async fetch_content(fts) {
     let content = [];
-    let schema = await api.current_schema();
+    let schema = project.schema();
     console.log("+panel=>schema", this.index, schema);
     let docs = [];
     if (fts) {

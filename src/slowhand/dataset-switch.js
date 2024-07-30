@@ -1,7 +1,7 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 
 import dataset from "../lib/datasets.js";
-import api from "../lib/api.js";
+import project from "../lib/project.js";
 
 export default class DatasetSwitch extends LitElement {
   loaded = false;
@@ -16,9 +16,9 @@ export default class DatasetSwitch extends LitElement {
     this.loaded = true;
 
     // this.current = dataset.current;
-    let schema = await api.current_schema();
+    let schema = project.schema();
     this.current = schema.name;
-    this.datasets = api.datasets;
+    this.datasets = project.datasets();
     console.log("$schemaswitch all datasets", this.current, this.datasets);
   }
 

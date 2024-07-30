@@ -2,6 +2,7 @@ import { LitElement, css, html, unsafeHTML } from "../../vendor/lit-all.min.js";
 import FormInput from "../form-elements/input.js";
 import Select from "../form-elements/select.js";
 import api from "../lib/api.js";
+import project from "../lib/project.js";
 
 let style = css`
   #rel {
@@ -65,7 +66,7 @@ export default class Search extends LitElement {
   static styles = [style];
   async connectedCallback() {
     super.connectedCallback();
-    let schema = await api.current_schema();
+    let schema = project.schema();
     this.types = schema.document_types;
     this.isopen = false;
 

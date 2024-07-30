@@ -1,5 +1,6 @@
 import { LitElement, css, html, classMap } from "../../vendor/lit-all.min.js";
 import api from "../lib/api.js";
+import project from "../lib/project.js";
 import Preview from "../slowhand/preview.js";
 
 const style = css`
@@ -159,7 +160,7 @@ export default class Panel extends LitElement {
 
   async xxxfetch_content() {
     let content = [];
-    let schema = await api.current_schema();
+    let schema = project.schema();
     console.log("+panel=>schema", this.index, schema);
     if (this.index == 0) {
       schema.documents.forEach((item) => {

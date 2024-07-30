@@ -93,7 +93,7 @@ class Api {
     return this.get(`/data/info/${datasets.current}`);
   }
 
-  async current_schema() {
+  async yycurrent_schema() {
     if (schema.name == datasets.current) {
       return schema;
     }
