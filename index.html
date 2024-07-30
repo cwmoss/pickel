@@ -77,6 +77,9 @@
       .fa-italic:before {
         content: "\e801";
       }
+      .app-loading {
+        font-size: 96px;
+      }
     </style>
     <!--
   body.dragging::before {
@@ -99,7 +102,9 @@
   --></head>
 
   <body>
+    <!--div class="app-loading">LOADING</div-->
     <pi-app id="body"></pi-app>
+
     <script type="module">
       import { toast_alert } from "./src/basic/toast.js";
       setTimeout(
