@@ -137,6 +137,10 @@ export default class Container extends LitElement {
       f.set_options(field.options);
       console.warn("setting options", field.options, f);
     }
+    if (field.validation && typeof f["set_validation"] === "function") {
+      f.set_validation(field.validation);
+      console.warn("setting validations", field.validation, f);
+    }
     f.label = field.title;
     f._name = field.name;
     return f;
@@ -278,7 +282,9 @@ export default class Container extends LitElement {
 
     // if (preview) return this.render_preview();
     return html`<div @preview-data=${this.new_previewdata}>
-      ${this.noLabel ? "" : html`<h4 title=${this.type}>${this.label}</h4>`}
+      ${this.noLabel
+        ? ""
+        : html`<label title=${this.type}>${this.label}</label>`}
       <div ?hidden=${!preview} class="preview">${this.render_preview()}</div>
       <div ?hidden=${preview} class="edit">
         ${this.dialog_button

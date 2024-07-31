@@ -1,7 +1,7 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import cssvars from "./variables.css.js";
 import { bootstrapform } from "./bs-only-form.css.js";
-
+import FieldValidator from "../st.bernard/field-validator.js";
 // console.log("bootstrap import", cssvars);
 
 export default class Face extends LitElement {
@@ -18,6 +18,10 @@ export default class Face extends LitElement {
     placeholder: {},
     originalType: {},
     options: { type: Object, attribute: false },
+    is_fresh: { type: Boolean, state: true },
+    is_valid: { type: Boolean, state: true },
+    error_message: {},
+    // rules: { type: Array },
     // opts: { attribute: false },
   };
 
@@ -93,11 +97,19 @@ export default class Face extends LitElement {
         width: 100px;
         min-width: 0;
       }
+      .invalid-feedback {
+        display: block;
+      }
+      .invalid-feedback:empty {
+        display: none;
+      }
     `,
   ];
 
   constructor() {
     super();
+    this.is_fresh = true;
+    this.is_valid = true;
     this.internals = this.attachInternals();
     this.value = this.get_default_value();
     this.internals.setFormValue(this.value);
@@ -127,6 +139,7 @@ export default class Face extends LitElement {
     }
   }
   input_event(e) {
+    this.is_fresh = false;
     this.value = this.get_input_value(e);
     //e.stopPropagation();
     const evt = new CustomEvent("pi-input", {
@@ -148,6 +161,25 @@ export default class Face extends LitElement {
   }
   set_options(o) {
     this.options = o ? o : {};
+  }
+  set_validation(rules) {
+    this.validator = new FieldValidator(rules);
+  }
+  async validate_event() {
+    if (this.is_fresh) {
+      return true;
+    }
+    if (!this.validator) return true;
+    let val = this.get_updated_data();
+    let ok = await this.validator.validate(val);
+    if (ok === true) {
+      this.is_valid = true;
+      this.error_message = "";
+    } else {
+      this.is_valid = false;
+      this.error_message = ok;
+    }
+    console.log("validation result", ok);
   }
   wrap(h) {
     return html`<div class="fgroup">${h}</div>`;

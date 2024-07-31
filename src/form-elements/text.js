@@ -13,7 +13,7 @@ https://github.com/Ionaru/easy-markdown-editor?tab=readme-ov-file#toolbar-icons
 */
 let style = css`
   label {
-    font-weight: 600;
+    /* font-weight: 600;*/
     margin-bottom: 0.5rem;
     display: inline-block;
   }

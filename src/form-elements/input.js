@@ -22,6 +22,7 @@ export default class Input extends Face {
   render_input() {
     return html`<input
       @input=${(e) => this.input_event(e)}
+      @focusout=${this.validate_event}
       .value=${this.value}
       id="input"
       type="${this.native_type}"
@@ -50,7 +51,7 @@ export default class Input extends Face {
         ${this.hasButtonSuffix ? html`<slot name="suffix-button"></slot>` : ""}
       </div>
       <slot name="footer"></slot>
-      <div class="invalid-feedback"></div>
+      <div class="invalid-feedback">${this.error_message}</div>
     `;
     return this.plain ? outp : this.wrap(outp);
   }

@@ -1,26 +1,44 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import Tagify from "../../vendor/tagify.m.js";
 import ArrayContainer from "./array-container.js";
+import Face from "./face.js";
 import { tagstyles } from "./tagify.css.js";
-export default class Tags extends ArrayContainer {
-  static styles = [tagstyles];
-  after_init() {
-    let inp = this.shadowRoot.querySelector("#tags");
-    let taginput = new Tagify(inp);
+
+let styles = css`
+  .custom {
+    --tags-border-color: var(--bs-border-color);
   }
-  render_actions() {
-    return "";
+  .tagify {
+    border-width: var(--bs-border-width);
+    border-radius: var(--bs-border-radius);
   }
-  render_els() {
-    return html`<input
-      type="text"
-      name="tags"
-      id="tags"
-      value="zwo,drei, vier"
-    />`;
+`;
+
+export default class Tags extends Face {
+  static styles = [...Face.styles, tagstyles, styles];
+
+  get_input_value(e) {
+    console.log("get select value", this.value, e.target.value);
+    return this.tagify.value.map((item) => item.value);
   }
 
-  createRenderRoot() {
+  firstUpdated() {
+    let inp = this.shadowRoot.querySelector("#tags");
+    this.tagify = new Tagify(inp);
+    //tagify.addTags(this.value);
+  }
+  render() {
+    return html`${this.render_label()}<input
+        type="text"
+        class="form-control custom"
+        name="tags"
+        id="tags"
+        .value=${this.value}
+        @change=${this.input_event}
+      />`;
+  }
+
+  xxxcreateRenderRoot() {
     return LitElement.prototype.createRenderRoot.call(this);
   }
 }
