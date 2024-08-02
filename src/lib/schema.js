@@ -67,17 +67,6 @@ class schema {
       }
     }
     return type;
-
-    if (this.is_reference(field.type)) {
-      return "reference";
-    }
-    if (this.is_object(field.type)) {
-      return "object";
-    }
-    if (this.is_image(field.type)) {
-      return "imageobject";
-    }
-    return field.type;
   }
 
   get_field_schema(field) {
@@ -128,6 +117,35 @@ class schema {
       return "document";
     }
     return type;
+  }
+
+  set_definition(data) {
+    // data might contain only one single document type
+    if (data.fields) {
+      (data.type = "document"),
+        (data = {
+          types: [data],
+        });
+    }
+    data = Object.assign(
+      {
+        object_types: [],
+        image_types: [],
+        reference_types: [],
+        types: [],
+      },
+      data
+    );
+    data.document_types = data.types
+      .filter((el) => el.type == "document")
+      .map((d) => d.name);
+    data.types = data.types.reduce(
+      (obj, item) => ((obj[item.name] = item), obj),
+      {}
+    );
+    this.schema = data;
+    this.set_supertypes();
+    this.previews = {};
   }
 
   set_supertypes() {
@@ -196,3 +214,10 @@ class schema {
 }
 
 export default new schema();
+
+export const schema_build = (definition) => {
+  let s = new schema();
+  if (typeof definition === "string") definition = JSON.parse(definition);
+  s.set_definition(definition);
+  return s;
+};

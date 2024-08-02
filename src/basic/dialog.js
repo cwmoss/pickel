@@ -38,6 +38,8 @@ export default class Dialog extends LitElement {
     trigger_title: {},
     nobutton: { type: Boolean },
     content: { type: Object },
+    open: { type: Boolean },
+    isopen: { type: Boolean, state: true },
   };
   static styles = styles;
 
@@ -45,8 +47,21 @@ export default class Dialog extends LitElement {
     return this.renderRoot?.querySelector("dialog") ?? null;
   }
 
-  open() {
+  /*
+    automatically open the dialog, when open attribute is present
+  */
+  firstUpdated() {
+    if (this.open) {
+      this.isopen = true;
+      this.dialog.showModal();
+    }
+  }
+  open_dialog() {
+    this.isopen = true;
     this.dialog.showModal();
+  }
+  close_dialog() {
+    this.dialog.close();
   }
   maybe_close(e) {
     if (e.target.hasAttribute("close")) {
@@ -60,7 +75,7 @@ export default class Dialog extends LitElement {
   // <button close type="button" @click=${this.close}></button>
   render() {
     console.log("render dialog", this.content);
-    return html`<slot name="button" @click=${this.open}
+    return html`<slot name="button" @click=${this.open_dialog}
         >${this.nobutton
           ? ""
           : html`<pi-btn

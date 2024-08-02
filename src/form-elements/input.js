@@ -27,6 +27,7 @@ export default class Input extends Face {
       id="input"
       type="${this.native_type}"
       class="form-control"
+      name="${this._name}"
     />`;
   }
 
