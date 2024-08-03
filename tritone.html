@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tritone test</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: content-box;
+      }
+      :root {
+        --clr1: #f0d347;
+        --clr2: #0e28d1;
+        --clr3: #ce371f;
+      }
+      body {
+        font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+          sans-serif;
+        background-color: var(--clr1);
+        color: var(--clr2);
+        font-size: 1.8rem;
+      }
+
+      form {
+        width: 500px;
+        gap: 1rem;
+        margin: 1rem auto;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        width: 500px;
+        margin: 2rem auto;
+      }
+      nav {
+        display: flex;
+        gap: 2rem;
+        margin: 2rem 0;
+      }
+      p {
+        margin-bottom: 1rem;
+        color: black;
+      }
+      h1 {
+        color: var(--clr3);
+        --fborder: 3px;
+        font-size: 6rem;
+        margin: 3rem 0;
+        /* -webkit-text-stroke: 3px black; */
+        /* text-shadow: -3px 0 black, 0 3px black, 3px 0 black, 0 -3px black; */
+        text-shadow: 1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000,
+          -1px -1px 0 #000, 0px 1px 0 #000, 0px -1px 0 #000, -1px 0px 0 #000,
+          1px 0px 0 #000, 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000,
+          -2px -2px 0 #000, 0px 2px 0 #000, 0px -2px 0 #000, -2px 0px 0 #000,
+          2px 0px 0 #000, 1px 2px 0 #000, -1px 2px 0 #000, 1px -2px 0 #000,
+          -1px -2px 0 #000, 2px 1px 0 #000, -2px 1px 0 #000, 2px -1px 0 #000,
+          -2px -1px 0 #000;
+      }
+      nav a {
+        color: var(--clr1);
+        background-color: var(--clr3);
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 2rem;
+        padding: 0.6rem;
+        border: 3px solid black;
+        border-radius: 0.5rem;
+        text-transform: uppercase;
+      }
+      nav a:hover {
+        color: var(--clr2);
+      }
+      nav a.active {
+        color: var(--clr1);
+        background-color: var(--clr2);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <input type="color" name="farbe" id="farbe" /> <span id="farbeval"></span>
+
+      <h1>We Are Big</h1>
+
+      <nav>
+        <a href="produkte">Produkte</a>
+        <a href="produkte">Blog</a>
+        <a href="produkte" class="active">Kontakt</a>
+      </nav>
+      <p>
+        Diving into the world of tritone logo design is like embarking on an
+        adventure where color theory meets creativity. It's where designers play
+        with a triad of colors to craft logos that are not just visually
+        appealing but also emotionally resonant. This journey is not for the
+        faint-hearted; it requires a bold spirit to experiment and a keen eye to
+        blend colors that can communicate a brand’s essence at a glance.
+      </p>
+
+      <p>
+        As we explore some of the most captivating tritone logo design ideas,
+        prepare to be inspired. From the subtle interplay of shades to the bold
+        contrasts that demand attention, each design idea we showcase is a
+        testament to the power of three. Whether you’re a brand looking to make
+        a statement or a designer seeking inspiration, this guide is your
+        gateway to understanding how tritone logos can transform the ordinary
+        into the extraordinary. Let’s dive into this fun and unique exploration
+        of colors, where each hue tells a story, and every design opens a window
+        to endless possibilities.
+      </p>
+    </div>
+    <script defer>
+      var input = document.getElementById("farbe");
+      // var datepicker = new HotelDatepicker(input);
+      input.addEventListener(
+        "change",
+        () => (farbeval.innerHTML = input.value)
+      );
+    </script>
+  </body>
+</html>
