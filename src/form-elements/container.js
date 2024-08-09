@@ -1,9 +1,10 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import schema from "../lib/schema.js";
+import globalschema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import { is_empty } from "../lib/util.js";
-
 import api from "../lib/api.js";
+
+let schema = globalschema;
 
 export default class Container extends LitElement {
   static properties = {
@@ -86,12 +87,14 @@ export default class Container extends LitElement {
   async after_init() {}
 
   // sets the fieldschema
-  set_schema(schema) {
-    this.schema = schema;
-    this.type = schema.type;
-    this.supertype = schema.supertype;
+  set_schema(fiedschema, gschema) {
+    this.schema = fiedschema;
+    this.type = fiedschema.type;
+    this.supertype = fiedschema.supertype;
+    if (gschema) schema = gschema;
   }
   async init() {
+    console.log("$$$ container init", schema, this.schema);
     let types = schema.get_all_components_for(this.schema);
 
     console.log("$ resolve (C) for", this._name, this.type, this.schema, types);
@@ -109,7 +112,7 @@ export default class Container extends LitElement {
     // let is_container = schema.is_container(field);
 
     if (typeof f["set_schema"] === "function") {
-      f.set_schema(fieldschema);
+      f.set_schema(fieldschema, schema);
       f.prefix = name;
       f.level = (this.level ?? 0) + 1;
     } else {

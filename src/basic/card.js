@@ -19,9 +19,18 @@ export default class Card extends LitElement {
         display: block;
         border-left: 2px solid black;
         background: white;
+        height: 100%;
+      }
+      * {
+        box-sizing: border-box;
       }
       json-viewer {
         --background-color: white;
+      }
+      article {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
       }
       article > div {
         padding: 1rem;
@@ -40,6 +49,9 @@ export default class Card extends LitElement {
       footer {
         font-size: 0.75rem;
         padding: 0.5rem;
+        margin-top: auto;
+        background-color: #fafafa;
+        height: 3rem;
         /* border-bottom: 2px solid black; */
       }
     `,
