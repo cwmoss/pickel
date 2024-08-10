@@ -1,11 +1,14 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import { schema_build } from "../lib/schema.js";
-import ObjectContainer from "../form-elements/object-container.js";
+import ObjectContainer from "./object-container.js";
 import Button from "./button.js";
 
 export default class FormBuilder extends LitElement {
   static properties = {
+    // property to change schema definition
     schema: { attribute: false },
+    // the real schema
+    _schema: { state: true, type: Object },
     document_type: {},
     value: { type: Object },
     container: { type: Object, attribute: false },
@@ -18,17 +21,22 @@ export default class FormBuilder extends LitElement {
     //this.form = this.parentElement;
     //this.form.addEventListener("submit", (e) => this.submit(e));
     let text = this.innerText.trim();
-    console.log("form-builder connected");
+    console.log("$$$ form-builder connected", this.schema);
     if (text) {
-      this.schema = schema_build(text);
+      this._schema = schema_build(text);
       this.innerText = "";
-      this.document_type = this.schema.get_schema_first_document();
+      this.document_type = this._schema.get_schema_first_document();
     } else {
-      console.warn("no schema for form-builder");
+      if (this.schema) {
+        this._schema = schema_build(this.schema);
+        this.document_type = this._schema.get_schema_first_document();
+      } else {
+        console.warn("no schema for form-builder");
+      }
     }
     console.log(
       "+++ connected form-builder",
-      this.schema,
+      this._schema,
       this._id,
       this.innerText,
       this.value
@@ -36,20 +44,31 @@ export default class FormBuilder extends LitElement {
     this.build();
   }
 
+  updated(changedProperties) {
+    if (changedProperties.has("schema")) {
+      //schema_build(this.schema);
+      //this.document_type = this.schema.get_schema_first_document();
+      //this.build();
+      //this.requestUpdate();
+    }
+  }
+
   build() {
     if (!this.document_type) return;
+    this.document_schema = this._schema.get_type(this.document_type);
+
     console.log(
       "$$$ form-builder build container",
       this.document_type,
+      this.document_schema,
+      this._schema,
       this._id,
       this.value
     );
 
-    this.document_schema = this.schema.get_type(this.document_type);
-
     this.container = new ObjectContainer();
     console.log("$$$ form-builder set_schema in objectc");
-    this.container.set_schema(this.document_schema);
+    this.container.set_schema(this.document_schema, this._schema);
     this.container.editmode = true;
 
     this.container.value = this.value;
@@ -84,7 +103,7 @@ export default class FormBuilder extends LitElement {
     return html`<form id="editor" @submit=${this.save}>
       <div ?hidden=${this.fullscreen} class="actions"></div>
       <section
-        style="padding:1rem;"
+        style="margin-bottom:1rem;"
         @get-document=${this.send_document}
         @toggle-fullscreen="${this.go_fullscreen}"
       >
@@ -96,4 +115,4 @@ export default class FormBuilder extends LitElement {
   }
 }
 
-customElements.define("form-builder", FormBuilder);
+customElements.define("pi-form-builder", FormBuilder);
