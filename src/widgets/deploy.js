@@ -69,7 +69,7 @@ export default class DeployWidget extends LitElement {
           <pi-dialog xopen xnobutton>
             <pi-btn slot="button">Preferences</pi-btn>
 
-            <form-builder
+            <pi-form-builder
               .value=${this.preferences}
               @pi-submit=${this.save_preferences}
             >
@@ -87,11 +87,17 @@ export default class DeployWidget extends LitElement {
                       "type": "string",
                       "title": "Api-Key",
                       "name": "apikey"
+                    },
+                    {
+                      "type": "number",
+                      "title": "Rating",
+                      "name": "rating",
+                      "component": "Rating"
                     }
                   ]
                 }
               </script>
-            </form-builder>
+            </pi-form-builder>
           </pi-dialog>
         </div>
       </pi-card>

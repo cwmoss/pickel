@@ -21,7 +21,7 @@ export default class FormBuilder extends LitElement {
     //this.form = this.parentElement;
     //this.form.addEventListener("submit", (e) => this.submit(e));
     let text = this.innerText.trim();
-    console.log("$$$ form-builder connected", this.schema);
+    console.log("$$$ form-builder connected", text, this.schema);
     if (text) {
       this._schema = schema_build(text);
       this.innerText = "";

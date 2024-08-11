@@ -13,6 +13,7 @@ const map = {
   datetime: "Datetime",
   date: "Date",
   number: "Number",
+  rating: "Rating",
   imageupload: "ImageUpload",
   text: "Text",
   geopoint: "Geo",
