@@ -221,3 +221,37 @@ export const schema_build = (definition) => {
   s.set_definition(definition);
   return s;
 };
+
+const normalize_field = (f, name) => {
+  if (!f) f = { type: "string" };
+  if (typeof f === "string") {
+    f = { type: "string", title: f };
+  }
+  f.name = name;
+  if (!f.type) f.type = "string";
+  return f;
+};
+/*
+  yaml is the *parsed* yaml content
+*/
+export const schema_build_from_yaml = (yaml) => {
+  let types = yaml.doc;
+  let docs = Object.entries(types).map(([k, v]) => {
+    v.name = k;
+    v.type = "document";
+    let fields = Object.entries(v.fields).map(([fname, f]) =>
+      normalize_field(f, fname)
+    );
+    v.fields = fields;
+    return v;
+  });
+  docs.forEach((d) => {
+    if (d.extend) {
+      let fields = docs.find((xd) => xd.name == d.extend).fields;
+      d.fields = [...fields, ...d.fields];
+    }
+  });
+  let s = new schema();
+  s.set_definition({ types: docs });
+  return s;
+};

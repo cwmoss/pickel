@@ -1,17 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>load test</title>
-    <script type="module" src="src/index.js"></script>
-</head>
+    <script type="module" src="src/basic/index.js"></script>
+  </head>
 
-<body>
-    test
-
+  <body>
     <pi-close></pi-close>
-</body>
 
+    <script type="module">
+      import Yaml from "./vendor/yamljs.js";
+      import { schema_build_from_yaml } from "./src/lib/schema.js";
+      let y = `
+# yaml-language-server: $schema=../slowhand-schema.json
+
+doc:
+  asset:
+    fields:
+      title: 
+        type: string
+        title: Titel
+      zzzz:
+        type: array
+        layout: tags
+      rating:
+        type: number
+        component: rating
+
+  collection:
+    fields:
+      title: 
+        type: string
+        title: Titel
+      description:
+          title: Beschreibung 
+
+  image:
+    extend: asset
+    fields:
+      description:
+        title: Beschreibung
+      recorded_at:
+        type: date
+        title: Aufgenommen am
+
+  video:
+    extend: asset
+    fields:
+      description:
+        title: Beschreibung
+      recorded_at:
+        type: date
+        title: Aufgenommen am
+
+  collection_item:
+    fields:
+      test:  
+  
+              `;
+      let p = Yaml.parse(y);
+      let arr = Object.entries(p.doc).map(([k, v]) => {
+        v.name = k;
+        return v;
+      });
+      let schema = schema_build_from_yaml(p);
+      console.log("parsing", schema, arr, p);
+    </script>
+  </body>
 </html>
