@@ -4,7 +4,7 @@ import globalschema from "../lib/schema.js";
 import { get_component, resolve_components } from "./component-loader.js";
 import api from "../lib/api.js";
 import { hashID } from "../lib/util.js";
-import MultiUpload from "../upload/multi-upload.js";
+// import MultiUpload from "../upload/multi-upload.js";
 // import Sortable from "../../vendor/sortable.complete.esm.js";
 import { LitSortable } from "../../vendor/lit-sortable.js";
 
@@ -34,6 +34,13 @@ export default class ArrayContainer extends Container {
     this._value = v;
   }
 
+  additional_components() {
+    if (schema.is_image(this.of[0].type)) {
+      //  this.has_image = true;
+      return ["multiimageupload"];
+    }
+    return [];
+  }
   after_init() {
     console.log("$$$ array type", this.of[0].type);
     this.has_image = false;

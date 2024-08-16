@@ -127,6 +127,10 @@ export const to_json = (fdata) => {
 };
 
 export const is_empty = (value) => {
+  if (value === undefined) return true;
+  if (typeof value === "string") {
+    return value ? false : true;
+  }
   //if (typeof value !== 'object') {
   // boolean, number, string, function, etc.
   //  return false;

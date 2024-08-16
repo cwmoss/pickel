@@ -95,7 +95,8 @@ export default class Editor extends Panel {
     //);
     // this.shadowRoot.querySelector("json-viewer").requestUpdate();
     // console.log("$ doc", this.document);
-    this.shadowRoot.querySelector("#editor-json-view").open();
+
+    this.shadowRoot.querySelector("#editor-json-view").open_dialog();
   }
   async save(e) {
     let doc = this.container.get_updated_data();

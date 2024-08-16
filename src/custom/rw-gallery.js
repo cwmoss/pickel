@@ -2,7 +2,7 @@ import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import ArrayContainer from "../form-elements/array-container.js";
 import api from "../lib/api.js";
 
-export default class CustomRwGallery extends ArrayContainer {
+export default class RwGallery extends ArrayContainer {
   static properties = {
     value: { type: Object },
     pad_edit: { type: Object },
@@ -146,4 +146,4 @@ export default class CustomRwGallery extends ArrayContainer {
   }
 }
 
-window.customElements.define("custom-rwgallery", CustomRwGallery);
+window.customElements.define("custom-rwgallery", RwGallery);

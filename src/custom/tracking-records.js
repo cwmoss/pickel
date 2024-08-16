@@ -2,7 +2,7 @@ import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import ArrayContainer from "../form-elements/array-container.js";
 import api from "../lib/api.js";
 
-export default class CustomTrackingRecords extends ArrayContainer {
+export default class TrackingRecords extends ArrayContainer {
   static properties = {
     // value: { type: Object },
   };
@@ -82,4 +82,4 @@ export default class CustomTrackingRecords extends ArrayContainer {
   }
 }
 
-window.customElements.define("custom-tracking-records", CustomTrackingRecords);
+window.customElements.define("custom-tracking-records", TrackingRecords);

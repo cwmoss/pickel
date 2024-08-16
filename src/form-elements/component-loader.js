@@ -1,6 +1,12 @@
 import { kebabize } from "../lib/util.js";
 
-const map = {
+let paths = {
+  "": "./",
+  custom: "../custom/",
+  upload: "../upload/",
+};
+
+let map = {
   string: "Input",
   select: "SelectSlow",
   radio: "Radios",
@@ -15,6 +21,7 @@ const map = {
   number: "Number",
   rating: "Rating",
   imageupload: "ImageUpload",
+  multiimageupload: "upload.MultiUpload",
   text: "Text",
   geopoint: "Geo",
   array: "ArrayContainer",
@@ -27,7 +34,7 @@ let default_comp = "Output";
 let classes = {};
 
 export const get_classname = (name) => {
-  if (/^[A-Z]/.test(name)) {
+  if (/[.]/.test(name)) {
     console.log("(L)", name);
     return name;
   }
@@ -53,13 +60,25 @@ export const resolve_components = async (types) => {
   return Promise.all(types.map((t) => load_component(t)));
 };
 
-export const load_component = async (classname) => {
-  if (path == null) path = "./";
-  let file = path + kebabize(classname) + ".js";
-  console.log("+++ load component ", classname, file);
-  if (/^Custom/.test(classname)) {
-    file = "/src/custom/" + kebabize(classname.replace("Custom", "")) + ".js";
+const file_for_classname = (classname) => {
+  let prefix = paths[""];
+  let parts = classname.split(".");
+  let file = parts.pop();
+  if (parts.length) {
+    prefix = paths[parts.shift()];
   }
+  let path = parts.join("/") ?? "/";
+  return prefix + path + kebabize(file) + ".js";
+};
+export const load_component = async (classname) => {
+  //if (path == null) path = "./";
+  //let file = path + kebabize(classname) + ".js";
+  let file = file_for_classname(classname);
+  console.log("+++ load component ", classname, file);
+
+  //if (/^Custom/.test(classname)) {
+  //  file = "/src/custom/" + kebabize(classname.replace("Custom", "")) + ".js";
+  //}
 
   // console.log("++ load_component import as", classname, file);
   const { default: Component } = await import(file);
