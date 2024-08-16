@@ -38,6 +38,7 @@ export const get_classname = (name) => {
     console.log("(L)", name);
     return name;
   }
+  name = name.toLowerCase();
   console.log("(L) map", name);
   return map[name] || default_comp;
 };
