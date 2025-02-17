@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import { schema_build } from "../lib/schema.js";
+import { schema_build, schema_build_from_yaml } from "../lib/schema.js";
 import ObjectContainer from "./object-container.js";
 import Button from "./button.js";
 
@@ -7,6 +7,8 @@ export default class FormBuilder extends LitElement {
   static properties = {
     // property to change schema definition
     schema: { attribute: false },
+    // property to change shortened yaml schema definition
+    yaml_schema: { attribute: false },
     // the real schema
     _schema: { state: true, type: Object },
     document_type: {},
@@ -20,20 +22,7 @@ export default class FormBuilder extends LitElement {
     super.connectedCallback();
     //this.form = this.parentElement;
     //this.form.addEventListener("submit", (e) => this.submit(e));
-    let text = this.innerText.trim();
-    console.log("$$$ form-builder connected", text, this.schema);
-    if (text) {
-      this._schema = schema_build(text);
-      this.innerText = "";
-      this.document_type = this._schema.get_schema_first_document();
-    } else {
-      if (this.schema) {
-        this._schema = schema_build(this.schema);
-        this.document_type = this._schema.get_schema_first_document();
-      } else {
-        console.warn("no schema for form-builder");
-      }
-    }
+    this.load_schema();
     console.log(
       "+++ connected form-builder",
       this._schema,
@@ -41,11 +30,47 @@ export default class FormBuilder extends LitElement {
       this.innerText,
       this.value
     );
-    this.build();
   }
 
+  load_schema() {
+    let text = this.innerText.trim();
+    console.log(
+      "$$$ form-builder try innerText, schema, yaml_schema",
+      text,
+      this.schema,
+      this.yaml_schema
+    );
+
+    if (!this._schema) {
+      console.log("$$$ form-builder connected schema-build YES", this._schema);
+      if (text) {
+        this._schema = schema_build(text);
+        this.innerText = "";
+      } else {
+        if (this.schema) {
+          this._schema = schema_build(this.schema);
+        } else {
+          if (this.yaml_schema) {
+            console.log("build schema from yaml structure");
+            this._schema = schema_build_from_yaml(this.yaml_schema);
+          } else {
+            console.warn("no schema for form-builder");
+          }
+        }
+      }
+    }
+    if (!this.document_type)
+      this.document_type = this._schema.get_schema_first_document();
+    console.log("+schema", this._schema);
+    this.build();
+  }
   updated(changedProperties) {
-    if (changedProperties.has("schema")) {
+    if (
+      changedProperties.has("schema") ||
+      changedProperties.has("yaml_schema")
+    ) {
+      console.log("prop update");
+      this.load_schema();
       //schema_build(this.schema);
       //this.document_type = this.schema.get_schema_first_document();
       //this.build();
@@ -55,6 +80,7 @@ export default class FormBuilder extends LitElement {
 
   build() {
     if (!this.document_type) return;
+    if (!this._schema) return;
     this.document_schema = this._schema.get_type(this.document_type);
 
     console.log(
@@ -84,10 +110,15 @@ export default class FormBuilder extends LitElement {
     }
   }
 
-  save(e) {
+  async save(e) {
     // let data = new FormData(this.form);
     e.preventDefault();
-    console.log("+++ save", this.container.get_updated_data(), this.form);
+    console.log(
+      "+++ save",
+      await this.container.validate(),
+      this.container.get_updated_data(),
+      this.form
+    );
     const evt = new CustomEvent("pi-submit", {
       detail: this.container.get_updated_data(),
       bubbles: false,
@@ -99,7 +130,8 @@ export default class FormBuilder extends LitElement {
 
   // ${this.container}
   render() {
-    console.log("render form-builder", this.value, this.container);
+    console.log("$$$ render form-builder", this.value, this.container);
+    // if (!this.container) return "";
     return html`<form id="editor" @submit=${this.save}>
       <div ?hidden=${this.fullscreen} class="actions"></div>
       <section

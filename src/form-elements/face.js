@@ -165,10 +165,7 @@ export default class Face extends LitElement {
   set_validation(rules) {
     this.validator = new FieldValidator(rules);
   }
-  async validate_event() {
-    if (this.is_fresh) {
-      return true;
-    }
+  async validate() {
     if (!this.validator) return true;
     let val = this.get_updated_data();
     let ok = await this.validator.validate(val);
@@ -180,6 +177,13 @@ export default class Face extends LitElement {
       this.error_message = ok;
     }
     console.log("validation result", ok);
+    return ok;
+  }
+  async validate_event() {
+    if (this.is_fresh) {
+      return true;
+    }
+    return await this.validate();
   }
   wrap(h) {
     return html`<div class="fgroup">${h}</div>`;

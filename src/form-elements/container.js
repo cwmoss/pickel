@@ -62,6 +62,21 @@ export default class Container extends LitElement {
   }
   // https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
 
+  // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
+  async validate() {
+    let all_true = true;
+    for (const el of this.els) {
+      console.log("validate-element", el);
+      // this.els.forEach(async (el) => {
+      if (typeof el["validate"] === "function") {
+        console.log("validate-element");
+        let ok = await el.validate();
+        if (ok !== true) all_true = false;
+      }
+    }
+    return all_true;
+  }
+
   get_updated_data() {
     let value = this._value || {};
     this.els.forEach((el) => {

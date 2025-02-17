@@ -23,6 +23,7 @@ let map = {
   imageupload: "ImageUpload",
   multiimageupload: "upload.MultiUpload",
   text: "Text",
+  textarea: "Textarea",
   geopoint: "Geo",
   array: "ArrayContainer",
   object: "ObjectContainer",
