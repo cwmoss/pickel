@@ -3,6 +3,8 @@ import { schema_build, schema_build_from_yaml } from "../lib/schema.js";
 import ObjectContainer from "./object-container.js";
 import Button from "./button.js";
 
+let yamlparser = null;
+
 export default class FormBuilder extends LitElement {
   static properties = {
     // property to change schema definition
@@ -32,7 +34,7 @@ export default class FormBuilder extends LitElement {
     );
   }
 
-  load_schema() {
+  async load_schema() {
     let text = this.innerText.trim();
     console.log(
       "$$$ form-builder try innerText, schema, yaml_schema",
@@ -52,6 +54,20 @@ export default class FormBuilder extends LitElement {
         } else {
           if (this.yaml_schema) {
             console.log("build schema from yaml structure");
+            if (
+              typeof this.yaml_schema === "string" ||
+              this.yaml_schema instanceof String
+            ) {
+              if (!yamlparser) {
+                const { default: YAML } = await import(
+                  "../../vendor/yamlparser.min.js"
+                );
+                console.log("yamlparser loaded", YAML);
+                yamlparser = YAML;
+              }
+              console.log("yamlparser loaded2", yamlparser);
+              this.yaml_schema = yamlparser.parse(this.yaml_schema);
+            }
             this._schema = schema_build_from_yaml(this.yaml_schema);
           } else {
             console.warn("no schema for form-builder");
@@ -110,21 +126,19 @@ export default class FormBuilder extends LitElement {
     }
   }
 
-  async save(e) {
+  save(e) {
     // let data = new FormData(this.form);
     e.preventDefault();
-    console.log(
-      "+++ save",
-      await this.container.validate(),
-      this.container.get_updated_data(),
-      this.form
-    );
-    const evt = new CustomEvent("pi-submit", {
-      detail: this.container.get_updated_data(),
-      bubbles: false,
-      // composed: true,
-    });
-    this.dispatchEvent(evt);
+    let ok = this.container.validate_sync();
+    console.log("+++ save", ok, this.container.get_updated_data(), this.form);
+    if (ok) {
+      const evt = new CustomEvent("pi-submit", {
+        detail: this.container.get_updated_data(),
+        bubbles: false,
+        // composed: true,
+      });
+      this.dispatchEvent(evt);
+    }
     return false;
   }
 

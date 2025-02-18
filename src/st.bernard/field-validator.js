@@ -1,4 +1,8 @@
-// name: st.bernard
+/*
+
+validator for formbuilder custom elements
+
+*/
 import {
   format,
   is_visible,
@@ -39,6 +43,36 @@ export default class FieldValidator {
     return false;
   }
 
+  validate_sync(val, el) {
+    console.log("rules...", this.rules);
+    let msg = [];
+    for (let rule of this.rules) {
+      // console.log("v", rule);
+      let m = methods[rule.name];
+      // console.log("m", m);
+      if (m) {
+        if (m.constructor.name == "AsyncFunction") {
+          console.log("skip async validation", m);
+          continue;
+        }
+
+        let ok = m(val, el, rule.opts);
+        console.log("validation result", rule, ok);
+        let rsp_msg = this.is_error_msg(ok);
+        // TODO: el.name
+        if (rsp_msg) msg.push(this.message(el._name, rule, rsp_msg));
+      } else {
+        console.log("missing method:", rule);
+      }
+    }
+    console.log("+++ adding errors", msg);
+    if (msg.length) {
+      return msg.join("<p>");
+    } else {
+      return true;
+    }
+  }
+
   async validate(val, el) {
     console.log("rules...", this.rules);
     let msg = [];
@@ -55,7 +89,8 @@ export default class FieldValidator {
         let promise = Promise.resolve(m(val, el, rule.opts)).then((ok) => {
           console.log("validation result", rule, ok);
           let rsp_msg = this.is_error_msg(ok);
-          if (rsp_msg) msg.push(this.ssage(name, rule, rsp_msg));
+          // TODO: el.name
+          if (rsp_msg) msg.push(this.message(el._name, rule, rsp_msg));
         });
         let r = await promise;
       } else {
@@ -138,7 +173,7 @@ export default class FieldValidator {
     }
   }
 
-  ssage(name, rule, rmsg) {
+  message(name, rule, rmsg) {
     let msg = "";
     if (this.messages[name] && this.messages[name][rule.name])
       msg = this.messages[name][rule.name];

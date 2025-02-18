@@ -77,6 +77,19 @@ export default class Container extends LitElement {
     return all_true;
   }
 
+  validate_sync() {
+    let all_true = true;
+    for (const el of this.els) {
+      console.log("validate-element", el);
+      // this.els.forEach(async (el) => {
+      if (typeof el["validate_sync"] === "function") {
+        console.log("validate-element");
+        let ok = el.validate_sync();
+        if (ok !== true) all_true = false;
+      }
+    }
+    return all_true;
+  }
   get_updated_data() {
     let value = this._value || {};
     this.els.forEach((el) => {

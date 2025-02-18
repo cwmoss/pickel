@@ -2,22 +2,24 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>load test</title>
-    <script type="module" src="src/basic/index.js"></script>
-    <script
-        src="src/form-elements/form-builder.js"
-        type="module"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>load test</title>
+  <script type="module" src="src/basic/index.js"></script>
+  <link rel="stylesheet" href="src/form-elements/variables.css">
+  <script
+    src="src/form-elements/form-builder.js"
+    type="module"></script>
+
 </head>
 
 <body>
-    <pi-form-builder document_type="asset" id="fb1"></pi-form-builder>
+  <pi-form-builder document_type="asset" id="fb1"></pi-form-builder>
 
-    <script type="module">
-        import Yaml from "./vendor/yamlparser.min.js";
+  <script type="module">
+    import Yaml from "./vendor/yamlparser.min.js";
 
-        let y = `
+    let y = `
 # yaml-language-server: $schema=../slowhand-schema.json
 
 doc:
@@ -63,11 +65,15 @@ doc:
       test:  
   
               `;
-        let p = Yaml.parse(y);
+    let p = Yaml.parse(y);
 
-        console.log("parsing", y, p);
-        fb1.yaml_schema = p
-    </script>
+    console.log("parsing", y, p);
+    fb1.yaml_schema = y
+
+    const test_a = async () => "huhu"
+    const test_b = () => "ok sync"
+    console.log("async?", test_a.constructor.name == "AsyncFunction", test_b.constructor.name == "AsyncFunction")
+  </script>
 </body>
 
 </html>

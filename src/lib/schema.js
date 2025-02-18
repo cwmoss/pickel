@@ -235,20 +235,22 @@ const normalize_field = (f, name) => {
   yaml is the *parsed* yaml content
 */
 export const schema_build_from_yaml = (yaml) => {
+  console.log("+++ YAML", JSON.stringify(yaml));
   let types = yaml.doc;
   let docs = Object.entries(types).map(([k, v]) => {
-    v.name = k;
-    v.type = "document";
-    let fields = Object.entries(v.fields).map(([fname, f]) =>
-      normalize_field(f, fname)
-    );
-    v.fields = fields;
-    return v;
+    return {
+      name: k,
+      type: "document",
+      fields: Object.entries(v.fields).map(([fname, f]) =>
+        normalize_field(f, fname)
+      ),
+    };
   });
   docs.forEach((d) => {
     if (d.extend) {
       let fields = docs.find((xd) => xd.name == d.extend).fields;
       d.fields = [...fields, ...d.fields];
+      d.extend = null;
     }
   });
   let s = new schema();

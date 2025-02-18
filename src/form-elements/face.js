@@ -26,7 +26,7 @@ export default class Face extends LitElement {
   };
 
   static styles = [
-    cssvars,
+    // cssvars,
     bootstrapform,
     css`
       :host {
@@ -165,10 +165,26 @@ export default class Face extends LitElement {
   set_validation(rules) {
     this.validator = new FieldValidator(rules);
   }
+
+  validate_sync() {
+    if (!this.validator) return true;
+    let val = this.get_updated_data();
+    let ok = this.validator.validate_sync(val, this);
+    if (ok === true) {
+      this.is_valid = true;
+      this.error_message = "";
+    } else {
+      this.is_valid = false;
+      this.error_message = ok;
+    }
+    console.log("validation result", ok);
+    return ok;
+  }
+
   async validate() {
     if (!this.validator) return true;
     let val = this.get_updated_data();
-    let ok = await this.validator.validate(val);
+    let ok = await this.validator.validate(val, this);
     if (ok === true) {
       this.is_valid = true;
       this.error_message = "";
