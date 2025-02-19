@@ -10,6 +10,7 @@ export default class Textarea extends Face {
       <label for="text" class="form-label">${this.label}</label>
       <textarea
         @input=${(e) => this.input_event(e)}
+        @focusout=${this.validate_event}
         class="form-control"
         placeholder="${this.placeholder ?? ""}"
         cols="${cols ?? 50}"
@@ -19,7 +20,7 @@ export default class Textarea extends Face {
 ${this.value}</textarea
       >
       <slot name="footer"></slot>
-      <div class="invalid-feedback"></div>
+      <div class="invalid-feedback">${this.error_message}</div>
     </div>`;
   }
 }

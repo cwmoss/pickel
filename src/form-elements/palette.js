@@ -2,11 +2,16 @@ import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import Face from "./face.js";
 
 let rstyles = css`
+  section {
+    background-color: #eee;
+    line-height: 0;
+    padding: 0.5rem;
+  }
   label {
     position: relative;
     color: grey;
     padding: 0 0.25rem;
-    transition: color 0.15s;
+    /* transition: color 0.15s; */
   }
 
   /* Position the invisible input on top of the label */
@@ -20,51 +25,55 @@ let rstyles = css`
     /* CSS reset */
     margin: 0;
   }
-
+  label span {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+  }
+  label:has(input) {
+    padding: 2px;
+    margin-right: 0.5rem;
+    line-height: 0;
+  }
+  label:has(input):last-child {
+    margin-right: 0;
+  }
   /* Add an outline when the input is focused via the keyboard */
   label:has(input:focus-visible) {
-    outline-offset: 1px;
     outline: black solid 2px;
   }
 
   /* Color Adjustments when the input is checked, hovered, or active */
   /* checked */
-  label:is(:has(> input:checked), :has(~ label > input:checked)) {
-    color: gold;
+  label:is(:has(input:checked)) {
+    outline: 2px solid black;
   }
 
   /* hover */
-  label:is(:has(> input:hover), :has(~ label > input:hover)) {
-    color: goldenrod;
+  label:is(:has(input:hover)) {
+    outline: 2px solid darkgoldenrod;
   }
 
   /* we need to duplicate the :active identifier, so that the specificity of the selector is higher than the ones from before */
-  label:has(input:active):has(input:active) {
-    color: darkgoldenrod;
+  label:has(input:active) {
+    outline: 2px solid darkgoldenrod;
   }
 `;
 
-export default class Rating extends Face {
+export default class Palette extends Face {
   static styles = [...Face.styles, rstyles];
-  max = 5;
+  colors = ["violet", "indigo", "blue", "green", "yellow", "orange", "red"];
   get xhtml_value() {
     return ("" + this.value).substring(0, 10);
   }
 
   static validate_on_input = true;
 
-  get_input_value(e) {
+  xget_input_value(e) {
     console.log("new value", e.target.value, parseFloat(e.target.value));
     return parseFloat(e.target.value);
   }
 
-  xxxget_updated_data() {
-    let val = "" + this.value;
-    val = val.replaceAll(/[^0-9,]/g, "").replace(",", ".");
-    console.log("+++ to_number", val);
-    return parseFloat(val);
-    //  return new Number(val);
-  }
   render_label() {
     return !this.noLabel && !this.plain
       ? html`<div class="form-label">${this.label}</div>`
@@ -73,21 +82,22 @@ export default class Rating extends Face {
   render() {
     return html`
       ${this.render_label()}
-      ${[...Array(this.max).keys()].map((val) => {
-        return html`<label>
-          <input
-            type="radio"
-            name="star-rating"
-            value=${val + 1}
-            @change=${this.input_event}
-            ?checked="${val + 1 == this.value}"
-          />
-          <span>★</span>
-        </label>`;
-      })}
+      <section>
+        ${this.colors.map((val) => {
+          return html`<label
+            ><input
+              type="radio"
+              name="palette-index"
+              value=${val}
+              @change=${this.input_event}
+              ?checked="${val == this.value}" />
+            <span style="background-color:${val};"></span
+          ></label>`;
+        })}
+      </section>
       <div class="invalid-feedback">${this.error_message}</div>
     `;
   }
 }
 
-customElements.define("pi-rating", Rating);
+customElements.define("pi-palette", Palette);

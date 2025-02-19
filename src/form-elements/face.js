@@ -1,5 +1,5 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
-import cssvars from "./variables.css.js";
+// import cssvars from "./variables.css.js";
 import { bootstrapform } from "./bs-only-form.css.js";
 import FieldValidator from "../st.bernard/field-validator.js";
 // console.log("bootstrap import", cssvars);
@@ -66,6 +66,10 @@ export default class Face extends LitElement {
       label,
       div.form-label {
         /* font-weight: 600; */
+      }
+      div.form-label:empty {
+        display: none;
+        margin-bottom: 0;
       }
       label.form-check-label {
         /* font-weight: normal; */
@@ -139,8 +143,12 @@ export default class Face extends LitElement {
     }
   }
   input_event(e) {
+    console.log("static fresh", this.constructor.validate_on_input);
     this.is_fresh = false;
     this.value = this.get_input_value(e);
+    if (this.constructor.validate_on_input) {
+      this.validate_event();
+    }
     //e.stopPropagation();
     const evt = new CustomEvent("pi-input", {
       detail: this.value,
@@ -168,6 +176,7 @@ export default class Face extends LitElement {
 
   validate_sync() {
     if (!this.validator) return true;
+    this.is_fresh = false;
     let val = this.get_updated_data();
     let ok = this.validator.validate_sync(val, this);
     if (ok === true) {

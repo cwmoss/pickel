@@ -1,3 +1,5 @@
+@import url("props.colors.css");
+
 :root {
   --font-size: 16px;
   --color-text: #222222;
@@ -11,6 +13,14 @@
   --panel-font-size: var(--font-size, 16px);
   --background-color: white;
 
+  --surface: white;
+  --inverted: black;
+  --surface-10: var(--gray-3);
+  --surface-hover: var(--gray-2);
+  --text: black;
+  --text-10: var(--gray-9);
+  --border-light: var(--gray-4);
+
   --shadow-linie-color: rgba(114, 120, 146, 0.3);
   --shadow-schatten-color: rgba(114, 120, 146, 0.1);
   --shadow-halbschatten-color: rgba(114, 120, 146, 0.07);
@@ -21,6 +31,17 @@
     0 0.75rem 1.0625rem 0.125rem var(--shadow-halbschatten-color),
     0 0.3125rem 1.375rem 0.25rem var(--shadow-umgebung-color);
 }
+
+html.dark {
+  --surface: black;
+  --surface-10: var(--gray-9);
+  --surface-hover: var(--gray-7);
+  --inverted: black;
+  --text: white;
+  --text-10: var(--gray-3);
+  --border-light: var(--gray-8);
+}
+
 /*
   @media (prefers-color-scheme: dark) {
     :root {

@@ -14,7 +14,9 @@ export const methods = {
     if (Array.isArray(value)) {
       return value.length > 0;
     }
-    return value !== undefined && value !== null && value.length > 0;
+    if (typeof value === "string")
+      return value !== undefined && value !== null && value.length > 0;
+    return value !== undefined && !isNaN(value) && value !== null;
   },
 
   // https://jqueryvalidation.org/email-method/

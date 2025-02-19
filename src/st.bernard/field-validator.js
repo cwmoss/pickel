@@ -44,7 +44,7 @@ export default class FieldValidator {
   }
 
   validate_sync(val, el) {
-    console.log("rules...", this.rules);
+    console.log("rules...", val, this.rules);
     let msg = [];
     for (let rule of this.rules) {
       // console.log("v", rule);
@@ -74,7 +74,7 @@ export default class FieldValidator {
   }
 
   async validate(val, el) {
-    console.log("rules...", this.rules);
+    console.log("rules...", val, this.rules);
     let msg = [];
     for (let rule of this.rules) {
       // console.log("v", rule);

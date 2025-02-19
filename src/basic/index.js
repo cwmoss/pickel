@@ -9,6 +9,7 @@ import Pager from "./pager.js";
 import Table from "./table.js";
 import Toast from "./toast.js";
 import Menu from "./menu.js";
+import ToggleTheme from "./toggle-theme.js";
 export {
   Button,
   Value,
@@ -21,4 +22,5 @@ export {
   Table,
   Menu,
   Toast,
+  ToggleTheme,
 };

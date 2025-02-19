@@ -18,6 +18,14 @@ export default class FormBuilder extends LitElement {
     container: { type: Object, attribute: false },
   };
 
+  static styles = [
+    css`
+      pi-objectcontainer .els > * {
+        margin-bottom: 1rem;
+      }
+    `,
+  ];
+
   _id = Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
 
   connectedCallback() {

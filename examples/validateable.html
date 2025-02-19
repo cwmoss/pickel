@@ -4,21 +4,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>load test</title>
-  <script type="module" src="src/basic/index.js"></script>
-  <link rel="stylesheet" href="src/form-elements/variables.css">
+  <title>Formbuilder Examples</title>
+  <script type="module" src="../src/basic/index.js"></script>
+  <script type="module" src="../src/form-elements/palette.js"></script>
+  <link rel="stylesheet" href="../src/form-elements/variables.css">
+  <link rel="stylesheet" href="../css/_styles.css">
+  <link rel="stylesheet" href="../css/examples.css">
   <script
-    src="src/form-elements/form-builder.js"
+    src="../src/form-elements/form-builder.js"
     type="module"></script>
 
 </head>
 
 <body>
+  <nav><toggle-theme></toggle-theme> <pi-palette id="palette"></pi-palette></nav>
   <pi-form-builder document_type="asset" id="fb1"></pi-form-builder>
 
   <script type="module">
-    import Yaml from "./vendor/yamlparser.min.js";
-
+    palette.addEventListener("pi-input", (e) => {
+      console.log("palette change", e.target.value)
+      var r = document.querySelector(':root');
+      r.style.setProperty('--accent', e.target.value);
+    })
     let y = `
 # yaml-language-server: $schema=../slowhand-schema.json
 
@@ -32,7 +39,10 @@ doc:
             - required
       rating:
         type: number
+        title: Rating
         component: rating
+        validation:
+          - required
 
   collection:
     fields:
@@ -40,7 +50,11 @@ doc:
         type: string
         title: Titel
       description:
-          title: Beschreibung 
+        title: Beschreibung 
+        type: text
+        component: Textarea
+        validation:
+          - required
 
   image:
     extend: asset
@@ -65,9 +79,7 @@ doc:
       test:  
   
               `;
-    let p = Yaml.parse(y);
 
-    console.log("parsing", y, p);
     fb1.yaml_schema = y
 
     const test_a = async () => "huhu"
