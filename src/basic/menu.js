@@ -1,3 +1,6 @@
+/*
+https://codesandbox.io/p/sandbox/floating-ui-dom-composed-offset-position-iscontainingblock-repro-case-qgfhnx?file=%2Fsrc%2Findex.js%3A96%2C37-96%2C60
+*/
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import { offsetParent } from "./composed-offset-position.js";
 export default class Menu extends LitElement {
@@ -114,21 +117,24 @@ export default class Menu extends LitElement {
           padding: 5,
         }),
       ],
+      /*
       platform: {
         ...window.FloatingUIDOM.platform,
         getOffsetParent: (element) =>
           window.FloatingUIDOM.platform.getOffsetParent(element, offsetParent),
       },
+      */
     }).then(({ x, y }) => {
       console.log("computed:", x, y);
 
       this.style.setProperty("--menu-pos-left", "" + x + "px");
       this.style.setProperty("--menu-pos-top", "" + y + "px");
-
+      /*
       Object.assign(menu.style, {
         left: `${x}px`,
         top: `${y}px`,
       });
+      */
       // menu.showPopover();
     });
   }
