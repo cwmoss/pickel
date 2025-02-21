@@ -1,15 +1,11 @@
 /*
 https://codesandbox.io/p/sandbox/floating-ui-dom-composed-offset-position-iscontainingblock-repro-case-qgfhnx?file=%2Fsrc%2Findex.js%3A96%2C37-96%2C60
 */
-import loaded from "./floating-ui/loader.js";
-
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import { offsetParent } from "./floating-ui/composed-offset-position.js";
-
+import { offsetParent } from "./composed-offset-position.js";
 export default class Menu extends LitElement {
   static properties = {
     items: { type: Array },
-    trigger: { type: Object },
   };
 
   static styles = [
@@ -108,36 +104,26 @@ export default class Menu extends LitElement {
     console.log("set pos", rel, toggle, menu); // querySelector("#toggle"));
     menu.showPopover();
   }
-  show() {
-    console.log(
-      "++ show ++",
-      this.trigger,
-      this.trigger.getBoundingClientRect()
-    );
-    let t = this.trigger;
-
-    let v = {
-      getBoundingClientRect() {
-        return t.getBoundingClientRect();
-      },
-    };
-
+  set_position() {
+    console.log(this);
+    let t = this.shadowRoot.querySelector("#toggle");
     let menu = this.shadowRoot.querySelector("#menu");
     // menu.style.display = "block";
     menu.showPopover();
-    window.FloatingUIDOM.computePosition(t, menu, {
+    window.FloatingUIDOM.computePosition(this, menu, {
       middleware: [
         window.FloatingUIDOM.flip(),
         window.FloatingUIDOM.shift({
           padding: 5,
         }),
       ],
-
-      /* platform: {
+      /*
+      platform: {
         ...window.FloatingUIDOM.platform,
         getOffsetParent: (element) =>
           window.FloatingUIDOM.platform.getOffsetParent(element, offsetParent),
-      }, */
+      },
+      */
     }).then(({ x, y }) => {
       console.log("computed:", x, y);
 
@@ -155,13 +141,17 @@ export default class Menu extends LitElement {
   active = false;
   toggle() {}
   render() {
-    return html`<div id="menu" popover @click=${this.select}>
-      <nav class="listcontainer">
-        ${this.items.map((it) => {
-          return html`<a href=${it.name}>${it.title}</a>`;
-        })}
-      </nav>
-    </div>`;
+    return html`<button @click=${this.set_position} id="toggle" class="actions">
+        Open
+      </button>
+
+      <div id="menu" popover @click=${this.select}>
+        <nav class="listcontainer">
+          ${this.items.map((it) => {
+            return html`<a href=${it.name}>${it.title}</a>`;
+          })}
+        </nav>
+      </div>`;
   }
   //createRenderRoot() {
   //  return this;

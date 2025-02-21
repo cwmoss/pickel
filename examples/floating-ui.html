@@ -5,9 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Menu test</title>
-    <script src="../vendor/floating-ui.utils.dom.js"></script>
-    <script src="../vendor/floating-ui.core.js"></script>
-    <script src="../vendor/floating-ui.dom.js"></script>
+
     <script type="module" src="../src/basic/index.js"></script>
     <script type="module" src="../src/form-elements/palette.js"></script>
     <link rel="stylesheet" href="../src/form-elements/variables.css">
@@ -52,7 +50,7 @@
             }
         }
 
-        #menu {
+        #xxxmenu {
             position: absolute;
             width: max-content;
             /*top: 0;
@@ -69,7 +67,7 @@
                 0 0.3125rem 1.375rem 0.25rem var(--shadow-umgebung-color);
         }
 
-        :popover-open {
+        :xxpopover-open {
             width: max-content;
             /* height: 200px; */
             position: absolute;
@@ -78,11 +76,16 @@
             left: var(--menu-pos-left);
             margin: 0;
         }
+
+        #trigger2 {
+            /* position: relative; */
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+
 
         <lorem-ipsum></lorem-ipsum>
 
@@ -99,10 +102,14 @@
 
         <lorem-ipsum></lorem-ipsum>
 
-        <pi-menu items='[{"name":"eins","title":"Eins"},{"name":"zwo","title":"Zwo"}]'>...</pi-menu>
+        <button id="trigger2">menu2</button>
+        <button id="trigger3">menu3</button>
+        <button id="trigger4">menu4</button>
+
 
         <lorem-ipsum></lorem-ipsum>
 
+        <pi-menu id="menu2" items='[{"name":"eins","title":"Eins"},{"name":"zwo","title":"Zwo is very long"}]'>...</pi-menu>
     </div>
 
     <script type="module">
@@ -138,6 +145,22 @@
                 mmenu,
                 updater,
             );
+        })
+
+        trigger2.addEventListener("click", (e) => {
+            console.log("menu2", this, e)
+            menu2.trigger = trigger2
+            menu2.show()
+        })
+        trigger3.addEventListener("click", (e) => {
+            console.log("menu2", this, e)
+            menu2.trigger = trigger3
+            menu2.show()
+        })
+        trigger4.addEventListener("click", (e) => {
+            console.log("menu2", this, e)
+            menu2.trigger = trigger4
+            menu2.show()
         })
     </script>
 </body>

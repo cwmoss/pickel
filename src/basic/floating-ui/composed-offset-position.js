@@ -1,5 +1,5 @@
 // import { isContainingBlock } from '@floating-ui/utils/dom';
-const isContainingBlock = window.FloatingUIUtilsDOM.isContainingBlock;
+let isContainingBlock = null;
 
 function offsetParent(element) {
   return offsetParentPolyfill(element);
@@ -72,5 +72,7 @@ function offsetTopLeftPolyfill(element, offsetTopOrLeft) {
   }
   return value;
 }
-
-export { offsetLeft, offsetParent, offsetTop };
+function setup() {
+  isContainingBlock = window.FloatingUIUtilsDOM.isContainingBlock;
+}
+export { offsetLeft, offsetParent, offsetTop, setup };
