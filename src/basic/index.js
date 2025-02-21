@@ -10,6 +10,7 @@ import Table from "./table.js";
 import Toast from "./toast.js";
 import Menu from "./menu.js";
 import ToggleTheme from "./toggle-theme.js";
+import LoremIpsum from "./lorem-ipsum.js";
 export {
   Button,
   Value,
@@ -23,4 +24,5 @@ export {
   Menu,
   Toast,
   ToggleTheme,
+  LoremIpsum,
 };
