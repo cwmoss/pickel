@@ -1,5 +1,8 @@
 import { LitElement, css, html } from "./../../vendor/lit-core.min.js";
 import Face from "./face.js";
+import teststring from "./test.html.js";
+
+console.log("+++ test???", teststring);
 
 let rstyles = css`
   section {
