@@ -82,6 +82,12 @@ class Api {
     }).then(() => document);
   }
 
+  async action(name, document) {
+    return this.post(`/data/custom_action/${datasets.current}`, {
+      name: name,
+      document: document,
+    }).then((action_result) => action_result);
+  }
   search(term, type, preview = false) {
     let q = `/data/search/${datasets.current}?q=${term}`;
     if (type) q += `&type=${type}`;

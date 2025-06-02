@@ -104,14 +104,29 @@ export default class Editor extends Panel {
     await api.mutate(doc);
     this.document = doc;
   }
+  async action(name) {
+    console.log("++ action", name);
+    let res = await api.action(name, this.container.get_updated_data());
+    console.log("++ action result", res);
+  }
   // <button type="button" @click=${this.inspect}>i</button>
   render_actions() {
+    if (!this.schema) return "";
     let json = JSON.stringify(this.document) || "{}";
     // console.log("JSON", json);
     let doc = JSON.parse(json);
+    console.log("+++ actions", this.schema.actions);
     return html`<pi-btn primary form="editor" @click=${this.save}>
         Save
       </pi-btn>
+      ${this.schema.actions.map((action) => {
+        return html`<pi-btn
+          form="editor"
+          @click=${() => this.action(action.name)}
+        >
+          ${action.title}
+        </pi-btn>`;
+      })}
       <pi-btn
         flat
         icon="info"

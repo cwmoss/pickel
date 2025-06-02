@@ -1,5 +1,5 @@
 @import url("props.colors.css");
-
+@import url("../src/form-elements/variables.css");
 :root {
   --font-size: 16px;
   --color-text: #222222;

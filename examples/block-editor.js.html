@@ -1,126 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <!--
+https://stackoverflow.com/questions/66970860/creating-pure-web-component-from-react-components
+https://github.com/bitovi/react-to-web-component
+-->
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Block test</title>
     <link rel="stylesheet" href="css/_styles.css" class="rel" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: content-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: content-box;
+      }
 
-        body {
-            font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont,
-                "Segoe UI", Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
-                sans-serif;
-        }
+      body {
+        font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", Oxygen, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+          sans-serif;
+      }
 
-        .container {
-            width: 500px;
-            margin: 1rem auto;
-        }
+      .container {
+        width: 500px;
+        margin: 1rem auto;
+      }
 
-        form {
-            gap: 1rem;
-            display: flex;
-            flex-direction: column;
-        }
+      form {
+        gap: 1rem;
+        display: flex;
+        flex-direction: column;
+      }
     </style>
     <script type="module" src="src/basic/index.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <h3>test block editor</h3>
-        <pi-btn id=_save>Save</pi-btn>
-        <div id="blockeditor"></div>
+      <h3>test block editor</h3>
+      <pi-btn id="_save">Save</pi-btn>
+      <div id="blockeditor"></div>
     </div>
     <script type="module">
-        import EditorJS from './vendor/editorjs.m.js';
-        import Header from 'https://cdn.jsdelivr.net/npm/@editorjs/header/+esm'
-        import List from "https://cdn.jsdelivr.net/npm/@editorjs/list/+esm"
+      import EditorJS from "./vendor/editorjs.m.js";
+      import Header from "https://cdn.jsdelivr.net/npm/@editorjs/header/+esm";
+      import List from "https://cdn.jsdelivr.net/npm/@editorjs/list/+esm";
 
-        const editor = new EditorJS({
-            /**
-             * Id of Element that should contain Editor instance
-             */
-            holder: 'blockeditor',
-            tools: {
-                header: Header,
-                list: List
+      const editor = new EditorJS({
+        /**
+         * Id of Element that should contain Editor instance
+         */
+        holder: "blockeditor",
+        tools: {
+          header: Header,
+          list: List,
+        },
+        onReady: () => {
+          console.log("Editor.js is ready to work!");
+        },
+        autofocus: true,
+        placeholder: "Let`s write an awesome story!",
+        data: {
+          time: 1550476186479,
+          blocks: [
+            {
+              id: "oUq2g_tl8y",
+              type: "header",
+              data: {
+                text: "Editor.js",
+                level: 2,
+              },
             },
-            onReady: () => {
-                console.log('Editor.js is ready to work!')
+            {
+              id: "zbGZFPM-iI",
+              type: "paragraph",
+              data: {
+                text: "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text. Source code of the page contains the example of connection and configuration.",
+              },
             },
-            autofocus: true,
-            placeholder: 'Let`s write an awesome story!',
-            data: {
-                "time": 1550476186479,
-                "blocks": [{
-                        "id": "oUq2g_tl8y",
-                        "type": "header",
-                        "data": {
-                            "text": "Editor.js",
-                            "level": 2
-                        }
-                    },
-                    {
-                        "id": "zbGZFPM-iI",
-                        "type": "paragraph",
-                        "data": {
-                            "text": "Hey. Meet the new Editor. On this page you can see it in action — try to edit this text. Source code of the page contains the example of connection and configuration."
-                        }
-                    },
-                    {
-                        "id": "qYIGsjS5rt",
-                        "type": "header",
-                        "data": {
-                            "text": "Key features",
-                            "level": 3
-                        }
-                    },
-                    {
-                        "id": "XV87kJS_H1",
-                        "type": "list",
-                        "data": {
-                            "style": "unordered",
-                            "items": [
-                                "It is a block-styled editor",
-                                "It returns clean data output in JSON",
-                                "Designed to be extendable and pluggable with a simple API"
-                            ]
-                        }
-                    },
-                    {
-                        "id": "AOulAjL8XM",
-                        "type": "header",
-                        "data": {
-                            "text": "What does it mean «block-styled editor»",
-                            "level": 3
-                        }
-                    },
-                    {
-                        "id": "cyZjplMOZ0",
-                        "type": "paragraph",
-                        "data": {
-                            "text": "Workspace in classic editors is made of a single contenteditable element, used to create different HTML markups. Editor.js <mark class=\"cdx-marker\">workspace consists of separate Blocks: paragraphs, headings, images, lists, quotes, etc</mark>. Each of them is an independent contenteditable element (or more complex structure) provided by Plugin and united by Editor's Core."
-                        }
-                    }
+            {
+              id: "qYIGsjS5rt",
+              type: "header",
+              data: {
+                text: "Key features",
+                level: 3,
+              },
+            },
+            {
+              id: "XV87kJS_H1",
+              type: "list",
+              data: {
+                style: "unordered",
+                items: [
+                  "It is a block-styled editor",
+                  "It returns clean data output in JSON",
+                  "Designed to be extendable and pluggable with a simple API",
                 ],
-                "version": "2.8.1"
+              },
             },
+            {
+              id: "AOulAjL8XM",
+              type: "header",
+              data: {
+                text: "What does it mean «block-styled editor»",
+                level: 3,
+              },
+            },
+            {
+              id: "cyZjplMOZ0",
+              type: "paragraph",
+              data: {
+                text: 'Workspace in classic editors is made of a single contenteditable element, used to create different HTML markups. Editor.js <mark class="cdx-marker">workspace consists of separate Blocks: paragraphs, headings, images, lists, quotes, etc</mark>. Each of them is an independent contenteditable element (or more complex structure) provided by Plugin and united by Editor\'s Core.',
+              },
+            },
+          ],
+          version: "2.8.1",
+        },
+      });
+
+      _save.addEventListener("click", () => {
+        editor.save().then((data) => {
+          console.log("SAVE", data);
         });
-
-        _save.addEventListener("click", () => {
-            editor.save().then((data) => {
-                console.log("SAVE", data)
-            })
-        })
+      });
     </script>
-</body>
-
+  </body>
 </html>
