@@ -4,7 +4,7 @@ import project from "./lib/project.js";
 import { load_template } from "./lib/template.js";
 // let router = window.page;
 router.configure({ window: window });
-// router.base("/studio");
+router.base("/studio");
 
 class App extends HTMLElement {
   constructor() {
