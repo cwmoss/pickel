@@ -1,7 +1,7 @@
 import api from "./api.js";
 import schema from "./schema.js";
 import datasets from "./datasets.js";
-
+import bus from "./bus.js";
 class Project {
   name = "";
   loading = false;
@@ -35,6 +35,7 @@ class Project {
     if (config.previews) {
       schema.set_previews(config.previews);
     }
+    bus.emit(bus.ev.project_loaded, this);
     this.loading = false;
     return;
   }

@@ -1,4 +1,5 @@
 import { load_template } from "./template.js";
+import bus from "./bus.js";
 
 class PageElement extends HTMLElement {
   constructor() {
@@ -6,7 +7,7 @@ class PageElement extends HTMLElement {
     this.loading = load_template(this); //this.load_template();
     // console.log("^^title?", this.title, this.constructor);
     if (this.title) {
-      window.document.title = this.title;
+      bus.emit(bus.ev.page_loaded, this.title);
     }
     this.style.display = "block";
   }
@@ -21,23 +22,6 @@ class PageElement extends HTMLElement {
     console.log("++render", template);
     const clone = template[0].content.cloneNode(true);
     this.appendChild(clone);
-  }
-  async xxxload_template() {
-    let klas = this.constructor.name;
-    console.log("++ page", klas);
-    if (!templates[klas]) {
-      console.log("++loading template", klas);
-      let tpl = await fetch(
-        `${import.meta.url}/../../pages/${klas.toLowerCase()}.html`
-      );
-      let text = await tpl.text();
-      let parser = new DOMParser();
-      let doc = parser.parseFromString(text, "text/html");
-      templates[klas] = doc.querySelectorAll("template");
-      console.log("++ loaded doc", doc.querySelectorAll("template"));
-    }
-
-    return templates[klas];
   }
 
   init() {}

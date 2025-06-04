@@ -1,17 +1,24 @@
 import router from "../vendor/page.m.js";
 import routes from "./routes.js";
 import project from "./lib/project.js";
+import bus from "./lib/bus.js";
+
 import { load_template } from "./lib/template.js";
 // let router = window.page;
 router.configure({ window: window });
 router.base("/studio");
 
 class App extends HTMLElement {
+  page = "";
+  projectname = "";
+
   constructor() {
     super();
     this.define_routes();
     // this.innerHTML = layout;
     this.addEventListener("open-doc", this.opendoc);
+    bus.subscribe(bus.ev.page_loaded, (ev) => this.title_change(ev));
+    bus.subscribe(bus.ev.project_loaded, (ev) => this.title_change(ev));
   }
 
   async connectedCallback() {
@@ -58,6 +65,13 @@ class App extends HTMLElement {
         this.load_page(props.class, ctx);
       });
     }
+  }
+
+  title_change(ev) {
+    if (ev.detail?.name) this.projectname = ev.detail?.name;
+    else this.page = ev.detail;
+
+    window.document.title = `${this.projectname} | ${this.page}`;
   }
 }
 
