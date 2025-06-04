@@ -38,7 +38,7 @@ class Datasets {
     if (this._datasets.includes(dataset)) {
       this._current = dataset;
       localStorage.setItem("dataset", dataset);
-      location.replace("/desk");
+      location.reload();
     }
   }
 
