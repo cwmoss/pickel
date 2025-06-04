@@ -28,6 +28,7 @@ let map = {
   array: "ArrayContainer",
   object: "ObjectContainer",
   image: "ImageContainer",
+  file: "FileContainer",
   imageobject: "ImageContainer",
 };
 let path = null;

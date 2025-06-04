@@ -151,6 +151,10 @@ class Api {
     return `${this.endpoint}/files`;
   }
 
+  download_file_url(id) {
+    return `${this.endpoint}/files/${datasets.current}/${id}`;
+  }
+
   dataset() {
     return datasets.current;
   }

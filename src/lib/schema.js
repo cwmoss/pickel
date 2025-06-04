@@ -110,6 +110,9 @@ class schema {
     if (this.is_image(type)) {
       return "image";
     }
+    if (this.is_file(type)) {
+      return "file";
+    }
     if (this.is_reference(type)) {
       return "reference";
     }
@@ -185,6 +188,9 @@ class schema {
   }
   is_image(name) {
     return this.schema.image_types.includes(name);
+  }
+  is_file(name) {
+    return this.schema.file_types.includes(name);
   }
   is_reference(name) {
     return this.schema.reference_types.includes(name);
