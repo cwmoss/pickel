@@ -51,7 +51,16 @@ export const get_component = (name) => {
     console.error("could not load component", name, classname);
   }
   console.log("load component", name, classname);
-  return new classes[classname]();
+  try {
+    return new classes[classname]();
+  } catch (error) {
+    console.log(
+      "~~~ could not construct component",
+      classname,
+      classes[classname],
+      classes
+    );
+  }
 };
 
 export const resolve_components = async (types) => {
@@ -68,7 +77,8 @@ const file_for_classname = (classname) => {
   let parts = classname.split(".");
   let file = parts.pop();
   if (parts.length) {
-    prefix = paths[parts.shift()];
+    let name_prefix = parts.shift();
+    prefix = paths[name_prefix] ?? `../--${name_prefix}/`;
   }
   let path = parts.join("/") ?? "/";
   return prefix + path + kebabize(file) + ".js";

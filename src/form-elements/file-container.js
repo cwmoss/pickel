@@ -13,6 +13,11 @@ export default class FileContainer extends ObjectContainer {
     asset: { type: Object },
     info: { type: Object },
   };
+
+  additional_components() {
+    return ["imageupload"];
+  }
+
   get value() {
     return this._value || {};
   }

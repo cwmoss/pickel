@@ -1,6 +1,6 @@
 import datasets from "./datasets.js";
 import schema from "./schema.js";
-
+import { toast_alert, toast_info } from "../basic/toast.js";
 class Api {
   loading = false;
 
@@ -83,10 +83,15 @@ class Api {
   }
 
   async action(name, document) {
-    return this.post(`/data/custom_action/${datasets.current}`, {
+    let result = await this.post(`/data/custom_action/${datasets.current}`, {
       name: name,
       document: document,
-    }).then((action_result) => action_result);
+    });
+    if (result.message ?? false) {
+      if (result.ok) toast_info(result.message);
+      else toast_alert(result.message);
+    }
+    return result;
   }
   search(term, type, preview = false) {
     let q = `/data/search/${datasets.current}?q=${term}`;

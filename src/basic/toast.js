@@ -95,3 +95,9 @@ export const toast_alert = (msg) => {
   t.setAttribute("msg", msg);
   document.body.appendChild(t);
 };
+
+export const toast_info = (msg) => {
+  let t = new Toast();
+  t.setAttribute("msg", msg);
+  document.body.appendChild(t);
+};
