@@ -146,6 +146,7 @@ class schema {
       {
         object_types: [],
         image_types: [],
+        file_types: [],
         reference_types: [],
         types: [],
       },

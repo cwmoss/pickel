@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+    <!--div class="app-loading">LOADING</div-->
+    <pi-start id="body"></pi-start>
+
+    <script type="module">
+        import {
+            LitElement,
+            css,
+            html
+        } from "./vendor/lit-core.min.js";
+
+        class Hello extends LitElement {
+            static properties = {
+                name: {},
+            };
+            connectedCallback() {
+                super.connectedCallback();
+            }
+            firstUpdated() {
+                this.greet = this.renderRoot.querySelector('pi-greet');
+                this.greet.gruss_name = "heinz"
+                console.log("heinz is set")
+            }
+            render() {
+                return html`<strong>hello <pi-greet></pi-greet></strong>`;
+            }
+        }
+
+        customElements.define("pi-start", Hello);
+
+
+
+
+
+        setTimeout(
+            () => {
+                class Greet extends LitElement {
+                    static properties = {
+                        gruss_name: {},
+                    };
+
+                    render() {
+                        return html`<em>${this.name??"world"}</em>`;
+                    }
+                }
+                customElements.define("pi-greet", Greet)
+                console.log("greet is upgraded")
+            },
+            5000
+        );
+    </script>
+</body>
+
+</html>

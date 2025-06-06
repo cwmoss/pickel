@@ -16,6 +16,7 @@ export default class MediaWidget extends LitElement {
     edit: { type: Boolean },
     picker: { type: Boolean, reflect: true },
     item: { type: Object },
+    mediatype: {},
   };
 
   static styles = [
@@ -99,9 +100,14 @@ export default class MediaWidget extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    if (!this.mediatype) this.mediatype = "image";
     this.fetch_data();
   }
-
+  change_type(ev) {
+    console.log("filter type ", ev.target.value);
+    this.mediatype = ev.target.value;
+    this.fetch_data();
+  }
   async fetch_data(page) {
     this.loading = true;
     this.assets = [];
@@ -110,7 +116,7 @@ export default class MediaWidget extends LitElement {
     if (page) this.page = page;
     if (!this.page) this.page = 1;
     let res, assets;
-    let type = "image";
+    let type = this.mediatype;
     let q = `q(_type=="${
       type == "image" ? "sh.image" : "sh.file"
     }")order(_createdAt desc)`;
@@ -133,7 +139,7 @@ export default class MediaWidget extends LitElement {
 
   start_edit(e) {
     console.log("++ dblclick", e);
-    if (!e.target.matches("img")) return;
+    if (!e.target.matches("img,sl-icon")) return;
     let id = e.target.getAttribute("id");
     this.item = this.assets.find((img) => img._id == id);
     if (this.picker) {
@@ -149,7 +155,7 @@ export default class MediaWidget extends LitElement {
       );
     } else {
       this.edit = true;
-      this.shadowRoot.querySelector("pi-dialog").open();
+      this.shadowRoot.querySelector("pi-dialog").open_dialog();
     }
   }
   render_body() {
@@ -174,6 +180,19 @@ export default class MediaWidget extends LitElement {
   files_dropped(e) {
     console.log("new files...", e.detail);
   }
+
+  render_item_preview(item) {
+    if (item._type == "sh.image")
+      return html`<img
+        id="${item._id}"
+        src="${api.images()}/${item.path}?size=150x150&mode=fit"
+      />`;
+    return html`<sl-icon
+      id="${item._id}"
+      name="file-pdf"
+      label="document"
+    ></sl-icon>`;
+  }
   /*
   <pi-pager
             limit="12"
@@ -188,6 +207,12 @@ export default class MediaWidget extends LitElement {
       <section>
         <header>
           <div>suche</div>
+          <div>
+            <pi-select
+              items="image,file"
+              @pi-input=${this.change_type}
+            ></pi-select>
+          </div>
           <pi-pager
             @move-page=${this.move_page}
             .limit=${this.limit}
@@ -198,10 +223,7 @@ export default class MediaWidget extends LitElement {
         <div class="body" ?loading=${this.loading} @dblclick=${this.start_edit}>
           ${this?.assets?.map((img) => {
             return html`<div class="item">
-              <img
-                id="${img._id}"
-                src="${api.images()}/${img.path}?size=150x150&mode=fit"
-              />
+              ${this.render_item_preview(img)}
             </div>`;
           })}
         </div>

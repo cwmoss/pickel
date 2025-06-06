@@ -3,6 +3,10 @@ import { add_style, once } from "../lib/util.js";
 
 let add_style_once = once(add_style);
 let styles = css`
+  * {
+    box-sizing: border-box;
+  }
+
   dialog {
     margin: 2rem auto;
     border: none !important;
@@ -12,10 +16,33 @@ let styles = css`
     width: 90%;
     height: 90%;
     overflow: auto;
+
+    transition: display 1s allow-discrete, overlay 1s allow-discrete;
+
+    animation: close 0.5s forwards;
+    &[open] {
+      animation: open 0.5s forwards;
+    }
   }
-  * {
-    box-sizing: border-box;
+
+  @keyframes open {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
+
+  @keyframes close {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
   ::backdrop {
     background-image: linear-gradient(
       45deg,
