@@ -90,6 +90,14 @@ export default class Container extends LitElement {
     }
     return all_true;
   }
+  update_value(val) {
+    this._value = val;
+    this.els.forEach((el) => {
+      let name = el._name;
+      el.value = val[name];
+    });
+  }
+
   get_updated_data() {
     let value = this._value || {};
     this.els.forEach((el) => {

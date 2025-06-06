@@ -110,6 +110,7 @@ export default class Editor extends Panel {
     console.log("++ action result", res);
     if (res.document) {
       this.document = res.document;
+      this.container.update_value(this.document);
     }
   }
   // <button type="button" @click=${this.inspect}>i</button>
