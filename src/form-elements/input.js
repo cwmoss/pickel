@@ -31,6 +31,10 @@ export default class Input extends Face {
     />`;
   }
 
+  render_extra() {
+    return "";
+  }
+
   render() {
     let outp = html`
       ${this.render_label()}
@@ -53,6 +57,7 @@ export default class Input extends Face {
       </div>
       <slot name="footer"></slot>
       <div class="invalid-feedback">${this.error_message}</div>
+      ${this.render_extra()}
     `;
     return this.plain ? outp : this.wrap(outp);
   }

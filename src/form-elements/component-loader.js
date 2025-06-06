@@ -19,6 +19,8 @@ let map = {
   datetime: "Datetime",
   date: "Date",
   number: "Number",
+  url: "Url",
+  email: "Email",
   rating: "Rating",
   imageupload: "ImageUpload",
   multiimageupload: "upload.MultiUpload",

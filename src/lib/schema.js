@@ -55,7 +55,13 @@ class schema {
     if (type == "string") {
       console.log("$ get types for STRING", field);
       if (field?.options?.list) {
-        return field.options.layout;
+        return field.options.layout ?? "select";
+      }
+    }
+    if (type == "number") {
+      console.log("$ get types for NUMBER", field);
+      if (field?.options?.list) {
+        return field.options.layout ?? "select";
       }
     }
     if (type == "array") {

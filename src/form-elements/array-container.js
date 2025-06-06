@@ -116,7 +116,7 @@ export default class ArrayContainer extends Container {
     // this.els.push(f);
     this.edit_item = item;
     // this.requestUpdate();
-    console.log(this.querySelector("pi-dialog"));
+    console.log(this.renderRoot.querySelector("pi-dialog"));
     // setTimeout(() => this.querySelector("pi-dialog").open(), 100);
   }
   /*
@@ -165,8 +165,11 @@ export default class ArrayContainer extends Container {
   }
 
   item_new() {
-    console.log("$ item new", this.querySelector("pi-dialog.new-item"));
-    this.querySelector("pi-dialog.new-item").open();
+    console.log(
+      "$ item new",
+      this.renderRoot.querySelector("pi-dialog.new-item")
+    );
+    this.renderRoot.querySelector("pi-dialog.new-item").open_dialog();
   }
   item_new_save(e) {
     console.log("$array item new save", e, this.edit_item.get_updated_data());
