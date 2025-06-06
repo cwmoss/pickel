@@ -125,7 +125,12 @@ export default class Container extends LitElement {
     console.log("$$$ container init", schema, this.schema);
     let types = schema.get_all_components_for(this.schema);
     if (typeof this["additional_components"] === "function") {
-      console.log("$$ additional components", this.additional_components());
+      console.log(
+        "$$ additional components",
+        this.additional_components(),
+        types,
+        this.schema
+      );
       types = [...types, ...this.additional_components()];
     }
     console.log("$ resolve (C) for", this._name, this.type, this.schema, types);

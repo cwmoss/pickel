@@ -27,6 +27,12 @@ class schema {
       types.push("imageupload");
       return types;
     }
+    if (this.is_file(fieldschema.type)) {
+      console.log("all comp $$ resolve FILE", fieldschema.type);
+      let types = this.get_all_components_for_object(fieldschema);
+      // types.push("imageupload");
+      return types;
+    }
   }
 
   get_all_components_for_array(schema) {

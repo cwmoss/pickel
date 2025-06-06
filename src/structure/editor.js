@@ -108,6 +108,9 @@ export default class Editor extends Panel {
     console.log("++ action", name);
     let res = await api.action(name, this.container.get_updated_data());
     console.log("++ action result", res);
+    if (res.document) {
+      this.document = res.document;
+    }
   }
   // <button type="button" @click=${this.inspect}>i</button>
   render_actions() {
