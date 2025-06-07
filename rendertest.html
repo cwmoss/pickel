@@ -1,62 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-</head>
+  </head>
 
-<body>
+  <body>
     <!--div class="app-loading">LOADING</div-->
     <pi-start id="body"></pi-start>
 
     <script type="module">
-        import {
-            LitElement,
-            css,
-            html
-        } from "./vendor/lit-core.min.js";
+      import { LitElement, css, html } from "./vendor/lit-core.min.js";
 
-        class Hello extends LitElement {
-            static properties = {
-                name: {},
-            };
-            connectedCallback() {
-                super.connectedCallback();
-            }
-            firstUpdated() {
-                this.greet = this.renderRoot.querySelector('pi-greet');
-                this.greet.gruss_name = "heinz"
-                console.log("heinz is set")
-            }
-            render() {
-                return html`<strong>hello <pi-greet></pi-greet></strong>`;
-            }
+      class Hello extends LitElement {
+        static properties = {
+          name: {},
+        };
+        connectedCallback() {
+          super.connectedCallback();
         }
+        firstUpdated() {
+          this.greet = this.renderRoot.querySelector("pi-greet");
+          this.greet.gname = "heinz";
+          console.log("heinz is set", this.greet);
+          setTimeout(() => {
+            console.log("erika is set", this.greet);
+            this.renderRoot.querySelector("pi-greet").gname = "erika";
+          }, 4000);
+        }
+        render() {
+          return html`<strong>hello <pi-greet></pi-greet></strong>`;
+        }
+      }
 
-        customElements.define("pi-start", Hello);
+      customElements.define("pi-start", Hello);
+      setTimeout(() => {
+        class Greet extends LitElement {
+          static properties = {
+            gname: {},
+          };
 
-
-
-
-
-        setTimeout(
-            () => {
-                class Greet extends LitElement {
-                    static properties = {
-                        gruss_name: {},
-                    };
-
-                    render() {
-                        return html`<em>${this.name??"world"}</em>`;
-                    }
-                }
-                customElements.define("pi-greet", Greet)
-                console.log("greet is upgraded")
-            },
-            5000
-        );
+          constructor() {
+            super();
+            this.gname = "world";
+          }
+          set gname(val) {
+            console.log("+++setting", val);
+            this._n = val;
+            //this.requestUpdate();
+            //this.gname = val;
+          }
+          get gname() {
+            return this._n;
+          }
+          render() {
+            console.log(Object.getOwnPropertyDescriptors(Greet.prototype));
+            return html`<em>${this.gname}</em>`;
+          }
+        }
+        customElements.define("pi-greet", Greet);
+        console.log("greet is upgraded");
+      }, 2000);
     </script>
-</body>
-
+  </body>
 </html>
