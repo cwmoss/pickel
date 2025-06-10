@@ -22,8 +22,8 @@ export default class ObjectContainer extends Container {
 
   build() {
     //this.editmode = false;
-    if (this._was_build) return;
-    this._was_build = true;
+    //if (this._was_build) return;
+    //this._was_build = true;
     console.log("+++ build ObjectContainer", this.value);
     let fields = this.schema.fields;
     this.els = this.fields_to_els(fields);
@@ -45,7 +45,7 @@ export default class ObjectContainer extends Container {
     );
     let data = {};
     Object.assign(data, this._value, this._preview_data);
-    console.log("++getpreview", from, this.refs?.person);
+    //console.log("++getpreview", from, this.refs?.person);
     // let title = this.schema?.preview?.title;
     let p = new ObjectPreview();
 

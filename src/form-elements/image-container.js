@@ -19,6 +19,7 @@ export default class ImageContainer extends ObjectContainer {
       v = {};
     }
     this._value = v;
+    this.fetch_asset();
   }
 
   // TODO: warum wird das so früh aufgerufen?
@@ -47,19 +48,18 @@ export default class ImageContainer extends ObjectContainer {
     return value;
   }
 
-  async after_init() {
-    console.log("$$$$ after init start0", JSON.stringify(this.value));
+  async fetch_asset() {
+    console.log("$IMG", JSON.stringify(this.value));
     if (this.value.asset?._ref) {
       console.log("$$$$ after init start");
       this.asset = await api.document(this.value.asset._ref);
-      console.log("$$$$ after init end");
+      this.uploader.set_image(this.image_url);
+      // console.log("$$$$ after init end");
     }
   }
 
   build() {
-    if (this._was_build) return;
-    this._was_build = true;
-    console.log("+++ build ImageContainer", this.value);
+    console.log("$IMG build ImageContainer", this.value);
     this.uploader = get_component_element("imageupload");
     this.uploader.value = api.imageurl_from_ref(this.value.asset); // this.value.asset;
     this.uploader.upload_url = api.upload_image_url();

@@ -72,7 +72,7 @@ export default class Container extends LitElement {
     this.type = fiedschema.type;
     this.supertype = fiedschema.supertype;
     // if (gschema) schema = gschema;
-    //this.build();
+    this.build();
   }
   get schema() {
     return this._schema;
