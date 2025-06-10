@@ -17,7 +17,7 @@ export default class Reference extends Face {
     super.connectedCallback();
     //await
     console.log("$REF connected", this._name, this.value);
-    this.fetch_preview();
+    // this.fetch_preview();
   }
 
   set schema(fiedschema) {
@@ -35,7 +35,7 @@ export default class Reference extends Face {
     console.log("$REF set val", val);
     // TODO: look at old value
     this._value = val;
-    this.fetch_preview();
+    if (this._value) this.fetch_preview();
   }
   get value() {
     return this._value;

@@ -1,81 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
+</head>
 
-  <body>
+<body>
     <!--div class="app-loading">LOADING</div-->
     <pi-start id="body"></pi-start>
 
     <script type="module">
-      import { LitElement, css, html } from "./vendor/lit-core.min.js";
+        import {
+            LitElement,
+            css,
+            html
+        } from "./vendor/lit-core.min.js";
 
-      class Hello extends LitElement {
-        static properties = {
-          name: {},
-        };
-        connectedCallback() {
-          super.connectedCallback();
+        // https://nolanlawson.com/2021/08/03/handling-properties-in-custom-element-upgrades/
+        function restore_setter(obj) {
+            console.log("van", Object.keys(obj.constructor.properties));
+
+            let props = Object.keys(obj.constructor.properties);
+            props.forEach(prop => {
+                if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                    const val = obj[prop]
+                    delete obj[prop]
+                    obj[prop] = val
+                }
+            })
         }
-        firstUpdated() {
-          this.greet = this.renderRoot.querySelector("pi-greet");
-          this.greet.gname = "heinz";
-          console.log("heinz is set", this.greet);
-          setTimeout(() => {
-            console.log("erika is set", this.greet);
-            this.renderRoot.querySelector("pi-greet").gname = "erika";
-          }, 4000);
+        class Vanilla extends LitElement {
+            static properties = {
+                gname: {
+                    noAccessor: true
+                }
+            }
+            xxconstructor() {
+                // super()
+                // restore_setter(this);
+                //this.gname = "vany 2"
+                console.log("vanilla constructed")
+            }
+            connectedCallback() {
+                super.connectedCallback();
+                //this.gname = "vany 3"
+                console.log("vanilla connected", this._name)
+            }
+
+            set gname(val) {
+                console.log("vanilla setting", val)
+                this._name = val
+            }
+            get gname() {
+                return this._name
+            }
         }
-        render() {
-          return html`<strong>hello <pi-greet></pi-greet></strong>`;
+
+
+
+        let va = document.createElement("pi-vanilla");
+        va.gname = "vany X";
+        customElements.define("pi-vanilla", Vanilla);
+
+
+        document.body.append(va);
+
+
+        let va2 = document.createElement("pi-vanilla");
+        va2.gname = "vany11"
+        document.body.append(va2);
+
+        class Hello extends LitElement {
+            static properties = {
+                name: {},
+            };
+            connectedCallback() {
+                super.connectedCallback();
+            }
+            firstUpdated() {
+                this.greet = this.renderRoot.querySelector("pi-greet");
+                this.greet.gname = "heinz";
+                console.log("heinz is set", this.greet);
+                setTimeout(() => {
+                    console.log("erika is set", this.greet);
+                    this.renderRoot.querySelector("pi-greet").gname = "erika";
+                }, 4000);
+            }
+            render() {
+                return html`<strong>hello <pi-greet></pi-greet></strong>`;
+            }
         }
-      }
 
-      customElements.define("pi-start", Hello);
-      let el = document.createElement("pi-greet");
-      el.gname = "otto";
-      console.log(el);
-      document.body.append(el);
+        customElements.define("pi-start", Hello);
+        let el = document.createElement("pi-greet");
+        el.gname = "otto";
+        console.log(el);
+        document.body.append(el);
 
-      let el2 = document.createElement("pi-greet2");
-      el2.gname = "otto2";
-      console.log(el2);
-      document.body.append(el2);
+        let el2 = document.createElement("pi-greet2");
+        el2.gname = "otto2";
+        console.log(el2);
+        document.body.append(el2);
 
-      setTimeout(() => {
-        class Greet extends LitElement {
-          static properties = {
-            gname: {},
-          };
+        let el3 = document.createElement("pi-greet3");
+        el3.gname = "otto3";
+        console.log(el3);
+        document.body.append(el3);
 
-          constructor() {
-            super();
-            this.gname = "world";
-          }
-          set gname(val) {
-            console.log("+++setting gname", val);
-            this._n = val;
-            //this.requestUpdate();
-            //this.gname = val;
-          }
-          get gname() {
-            return this._n;
-          }
-          render() {
-            console.log(Object.getOwnPropertyDescriptors(Greet.prototype));
-            return html`<em>${this.gname}</em>`;
-          }
-        }
-        customElements.define("pi-greet", Greet);
-        console.log("greet is upgraded");
+        setTimeout(() => {
+            class Greet extends LitElement {
+                static properties = {
+                    gname: {
+                        noAccessor: true
+                    },
+                };
 
-        class Greet2 extends Greet {}
+                constructor() {
+                    super();
+                    this.gname = "world";
+                }
+                connectedCallback() {
+                    super.connectedCallback();
+                    console.log("connected", this);
+                    // this.init();
+                }
+                set gname(val) {
+                    console.log("+++setting gname", val);
+                    this._n = val;
+                    //this.requestUpdate();
+                    //this.gname = val;
+                }
+                get gname() {
+                    return this._n;
+                }
+                render() {
+                    console.log(Object.getOwnPropertyDescriptors(Greet.prototype));
+                    return html`<em>${this.gname}</em>`;
+                }
+            }
+            customElements.define("pi-greet", Greet);
+            console.log("greet is upgraded");
 
-        customElements.define("pi-greet2", Greet2);
-        console.log("greet2 is upgraded");
-      }, 2000);
+
+            class Greet2 extends Greet {}
+            customElements.define("pi-greet2", Greet2);
+            console.log("greet2 is upgraded");
+
+            class Greet3 extends Greet2 {
+                static properties = {
+                    ...Greet.properties
+                }
+
+                set xxgname(val) {
+                    console.log("+++setting gname3", val);
+                    this._n = val.split("").reverse().join("");
+                    // this.requestUpdate();
+                    //this.gname = val;
+                }
+                get xxgname() {
+                    return this._n;
+                }
+            }
+            customElements.define("pi-greet3", Greet3);
+            console.log("greet3 is upgraded");
+        }, 2000);
     </script>
-  </body>
+</body>
+
 </html>

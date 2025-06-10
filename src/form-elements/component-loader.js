@@ -1,5 +1,10 @@
 import { kebabize } from "../lib/util.js";
 
+/*
+
+photog.RwGallery photog-rw-gallery -- pi-photog.-rw-gallery
+
+*/
 let paths = {
   "": "./",
   custom: "../custom/",
@@ -50,11 +55,18 @@ export const get_classname = (name) => {
 export const get_component_tag = (name) => {
   let classname = get_classname(name);
   load_component(classname);
+
+  if (/[.]/.test(classname)) {
+    name = kebabize(classname);
+    name = name.replace(".", "");
+    return name;
+  }
   return "pi-" + kebabize(classname);
 };
 
 export const get_component_element = (name) => {
   let tag = get_component_tag(name);
+
   return document.createElement(tag);
 };
 

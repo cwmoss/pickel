@@ -8,7 +8,7 @@ export default class Face extends LitElement {
   static formAssociated = true;
 
   static properties = {
-    value: {},
+    value: { noAccessor: true },
     name: { reflect: true },
     label: {},
     noLabel: { type: Boolean, attribute: "no-label" },
@@ -17,7 +17,8 @@ export default class Face extends LitElement {
     id: {},
     placeholder: {},
     originalType: {},
-    options: { type: Object, attribute: false },
+    options: { type: Object, attribute: false, noAccessor: true },
+    initialValue: { noAccessor: true },
     is_fresh: { type: Boolean, state: true },
     is_valid: { type: Boolean, state: true },
     error_message: {},
@@ -115,13 +116,12 @@ export default class Face extends LitElement {
     this.is_fresh = true;
     this.is_valid = true;
     this.internals = this.attachInternals();
-    this.value = this.get_default_value();
-    this.internals.setFormValue(this.value);
+    // this.internals.setFormValue(this.value);
   }
 
   get_default_value() {
-    //onsole.log("FACE value",this )
-    return "";
+    console.log("$FACE default value", this.initialValue, this.name);
+    return this.initialValue;
   }
 
   get_updated_data() {
@@ -137,6 +137,34 @@ export default class Face extends LitElement {
     this.internals.setFormValue(v);
   }
   */
+
+  _value = "";
+
+  set value(val) {
+    if (!val) val = this.get_default_value();
+    this._value = val;
+  }
+  get value() {
+    return this._value;
+  }
+
+  _opts = {};
+  set options(opts) {
+    console.log("$FACE set options", opts, this.name);
+    if (opts) this._opts = opts;
+  }
+  get options() {
+    return this._opts;
+  }
+
+  _initialValue = "";
+  set initialValue(val) {
+    console.log("$FACE set initialValue", val, this.name);
+    if (val) this._initialValue = val;
+  }
+  get initialValue() {
+    return this._initialValue;
+  }
   updated(changedProperties) {
     if (changedProperties.has("value")) {
       this.internals.setFormValue(this.value);

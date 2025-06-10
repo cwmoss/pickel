@@ -9,22 +9,23 @@ import api from "../lib/api.js";
 let schema = globalschema;
 
 export default class ObjectContainer extends Container {
-  get value() {
-    console.log("$$$ GETTER FOR VALUE");
-    return this._value;
+  update_value(val) {
+    this._value = val;
+    this.els.forEach((el) => {
+      let name = el._name;
+      console.log("$OBJ update", name, val[name]);
+      el.value = val[name];
+    });
+    this.preview = this.get_preview("container");
   }
-  set value(v) {
-    if (!v) {
-      v = {};
-    }
-    this._value = v;
+  init() {
+    console.log("$OBJ init", this.type);
   }
-
   build() {
     //this.editmode = false;
     //if (this._was_build) return;
     //this._was_build = true;
-    console.log("+++ build ObjectContainer", this.value);
+    console.log("$OBJ +++ build ObjectContainer", this.type, this.value);
     let fields = this.schema.fields;
     this.els = this.fields_to_els(fields);
     this.preview = this.get_preview("container");
@@ -33,7 +34,7 @@ export default class ObjectContainer extends Container {
   get_preview(from) {
     // top level document
     console.log(
-      "$object container get_preview RENDER",
+      "$OBJ $object container get_preview RENDER",
       this.type,
       schema.is_document(this.type)
     );

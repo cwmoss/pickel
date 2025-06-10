@@ -43,10 +43,6 @@ export default class SelectSlow extends Face {
     return e.target.value;
   }
 
-  get_default_value() {
-    return "";
-  }
-
   render() {
     let outp = html`${this.render_label()}<select
         ?end=${this.end}

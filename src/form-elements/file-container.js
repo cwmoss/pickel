@@ -3,14 +3,20 @@ import {
   get_component_element,
   resolve_components,
 } from "./component-loader.js";
-// import ObjectContainer from "./object-container.js";
-import Container from "./container.js";
+import ObjectContainer from "./object-container.js";
+// import Container from "./container.js";
 import ObjectPreview from "./object-preview.js";
 import MediaWidget from "../slowhand/media-widget.js";
 import schema from "../lib/schema.js";
 import api from "../lib/api.js";
 
-export default class FileContainer extends Container {
+export default class FileContainer extends ObjectContainer {
+  static properties = {
+    ...ObjectContainer.properties,
+    uploader: { type: Object },
+    asset: { type: Object },
+    info: { type: Object },
+  };
   constructor() {
     super();
     console.log("+++ build construct filecontainer", this.value, this.schema);
@@ -18,37 +24,11 @@ export default class FileContainer extends Container {
     //this.schema = test;
   }
 
-  additional_components() {
-    return ["imageupload"];
+  update_value(val) {
+    console.log("$FILE update value", val);
+    this.init();
   }
 
-  set xxxschema(fiedschema) {
-    console.log("+++ build (set schema file)", fiedschema);
-    this._schema = fiedschema;
-    this.type = fiedschema.type;
-    this.supertype = fiedschema.supertype;
-    // if (gschema) schema = gschema;
-    // this.build();
-  }
-  get xxxschema() {
-    return this._schema;
-  }
-
-  get value() {
-    return this._value || {};
-  }
-  set value(v) {
-    console.log("$$$$ filecontainer SET", JSON.stringify(v));
-    if (!v) {
-      v = {};
-    }
-    this._value = v;
-  }
-
-  set xxxschema(schema) {
-    console.log("$$$$ filecontainer SET schema", schema);
-    this._schema = schema;
-  }
   // TODO: warum wird das so früh aufgerufen?
   get_updated_data() {
     if (!this.asset) return this._value;
@@ -79,21 +59,24 @@ export default class FileContainer extends Container {
     if (!this.value?.asset) return "";
     return api.download_file_url(this.value.asset._ref);
   }
-  async after_init() {
-    console.log("$$$$ after init start0", JSON.stringify(this.value));
+
+  async init() {
+    console.log("$FILE after init start0", JSON.stringify(this.value));
     if (this.value.asset?._ref) {
-      console.log("$$$$ after init start");
+      console.log("$FILE after init start");
       this.asset = await api.document(this.value.asset._ref);
-      console.log("$$$$ after init end");
+      console.log("$FILE after init end");
     }
   }
 
   build() {
-    console.log("+++ build file-build", this, this.supertype, this.schema);
-    if (this._was_build) return;
-    this._was_build = true;
-    if (!this.schema) return;
-    console.log("+++ build file-build", this, this.supertype, this.schema);
+    console.log(
+      "$FILE +++ build file-build",
+      this,
+      this.supertype,
+      this.schema
+    );
+
     this.uploader = get_component_element("imageupload");
     this.uploader.value = api.imageurl_from_ref(this.value.asset); // this.value.asset;
     this.uploader.upload_url = api.upload_image_url();
@@ -149,7 +132,7 @@ export default class FileContainer extends Container {
     return html`${this.asset._ref}`; // (${this.asset.size})
   }
   render_els() {
-    console.log("+++ render FileContainer", this.value.asset);
+    console.log("$FILE +++ render FileContainer", this.value.asset);
     let title = this.value?.asset?._ref ?? "";
     return html`<a target="_blank" href="${this.download_url}">${title}</a>`;
     return html`<div

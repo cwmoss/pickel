@@ -10,6 +10,13 @@ import schema from "../lib/schema.js";
 import api from "../lib/api.js";
 
 export default class ImageContainer extends ObjectContainer {
+  static properties = {
+    ...ObjectContainer.properties,
+    uploader: { type: Object },
+    asset: { type: Object },
+    info: { type: Object },
+  };
+
   get value() {
     return this._value || {};
   }

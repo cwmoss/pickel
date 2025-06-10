@@ -59,10 +59,6 @@ export default class Select extends Face {
     return e.target.value;
   }
 
-  get_default_value() {
-    return "";
-  }
-
   render() {
     let outp = html`<select
         ?end=${this.end}

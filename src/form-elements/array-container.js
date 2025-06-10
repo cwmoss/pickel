@@ -1,7 +1,7 @@
 import { html } from "../../vendor/lit-core.min.js";
 import Container from "./container.js";
 import globalschema from "../lib/schema.js";
-import { get_component, resolve_components } from "./component-loader.js";
+import { get_component_tag, resolve_components } from "./component-loader.js";
 import api from "../lib/api.js";
 import { hashID } from "../lib/util.js";
 // import MultiUpload from "../upload/multi-upload.js";
@@ -23,15 +23,26 @@ let draghandle_image = html`<svg
 https://github.com/SortableJS/Sortable?tab=readme-ov-file
 */
 export default class ArrayContainer extends Container {
+  static properties = {
+    ...Container.properties,
+    edit_item: { type: Object },
+  };
+
   enable_add = true;
-  get value() {
-    return this._value || [];
-  }
+
+  _value = [];
+
   set value(v) {
+    console.log("$ARR set value", v);
     if (!v) {
       v = [];
     }
     this._value = v;
+    this.build_elements();
+  }
+
+  get value() {
+    return this._value || [];
   }
 
   additional_components() {
@@ -41,8 +52,10 @@ export default class ArrayContainer extends Container {
     }
     return [];
   }
-  after_init() {
-    console.log("$$$ array type", this.of[0].type);
+
+  init() {
+    console.log("$ARR init array type", this.schema, this.of);
+    // console.log(this.of[0].type);
     this.has_image = false;
     if (schema.is_image(this.of[0].type)) {
       this.has_image = true;
@@ -51,6 +64,14 @@ export default class ArrayContainer extends Container {
       this.subtype = this.of[0].type;
       this.of[0].type = "reference";
     }*/
+  }
+
+  firstUpdated() {
+    console.log(
+      "$ARR first update",
+      this.options,
+      this.renderRoot.querySelector(".dnd")
+    );
     if (this.options?.sortable !== false) {
       setTimeout(() => {
         let sortable = LitSortable.create(
@@ -116,7 +137,7 @@ export default class ArrayContainer extends Container {
     // this.els.push(f);
     this.edit_item = item;
     // this.requestUpdate();
-    console.log(this.renderRoot.querySelector("pi-dialog"));
+    console.log(this.querySelector("pi-dialog"));
     // setTimeout(() => this.querySelector("pi-dialog").open(), 100);
   }
   /*
@@ -148,13 +169,15 @@ export default class ArrayContainer extends Container {
     return super.get_updated_data();
   }
   build() {
-    if (!this.of.length) return;
-    if (this._was_build) return;
-    this._was_build = true;
+    let multiupload = get_component_tag("multiimageupload");
     this.new_array_item_edit();
     this.editmode = true;
     let type = this.of[0].type;
-
+    console.log("$ARR", this._name, this.value);
+    this.build_elements();
+  }
+  build_elements() {
+    let type = this.of[0].type;
     this.els = this.value.map((val, index) => {
       let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
       f.opts = {
@@ -166,13 +189,9 @@ export default class ArrayContainer extends Container {
       return f;
     });
   }
-
   item_new() {
-    console.log(
-      "$ item new",
-      this.renderRoot.querySelector("pi-dialog.new-item")
-    );
-    this.renderRoot.querySelector("pi-dialog.new-item").open_dialog();
+    console.log("$ item new", this.querySelector("pi-dialog.new-item"));
+    this.querySelector("pi-dialog.new-item").open_dialog();
   }
   item_new_save(e) {
     console.log("$array item new save", e, this.edit_item.get_updated_data());
@@ -220,7 +239,7 @@ export default class ArrayContainer extends Container {
   }
 
   render_els() {
-    console.log("+++ render ArrayContainer", this.els, this.options);
+    console.log("$ARR render ArrayContainer", this.els, this.options);
     return html`<div class="dnd" @dropped=${this.dropped}>
         ${this.els.map((el, idx) => {
           console.log("els array element", el);

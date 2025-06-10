@@ -13,10 +13,12 @@ let schema = globalschema;
 export default class Container extends LitElement {
   static properties = {
     // schema of this field
-    schema: { attribute: false, type: Object },
+    schema: { attribute: false, type: Object, noAccessor: true },
+    value: { attribute: false, type: Object, noAccessor: true },
+
     type: { type: String },
     supertype: { type: String },
-    of: { type: Array },
+    of: { type: Array, noAccessor: true },
     level: { type: Number, reflect: true },
     array: { type: Boolean, reflect: true },
     label: {},
@@ -25,17 +27,24 @@ export default class Container extends LitElement {
     dialog_title: {},
     is_image: { type: Boolean },
     prefix: { type: String },
-    value: { type: Object, attribute: false },
+
     editmode: { type: Boolean, reflect: true },
     noLabel: { type: Boolean },
     preview: { type: Object },
-    options: { type: Object },
+    options: { type: Object, noAccessor: true },
     edit_item: { type: Object },
     has_image: { type: Boolean },
-
-    uploader: { type: Object },
+    defined_state: {
+      state: true,
+      hasChanged: (oldval, newval) => {
+        console.log("$ARR $OBJ defined state", oldval, newval);
+        return false;
+      },
+    },
+    /*  uploader: { type: Object },
     asset: { type: Object },
     info: { type: Object },
+    */
   };
 
   _was_build = false;
@@ -61,17 +70,19 @@ export default class Container extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     // console.log("++ connected");
-    // await this.init();
-    this.build();
+    // his.init();
   }
 
   // sets the fieldschema
-  set schema(fiedschema) {
-    console.log("+++ build (set schema)", this);
-    this._schema = fiedschema;
-    this.type = fiedschema.type;
-    this.supertype = fiedschema.supertype;
+  set schema(fieldschema) {
+    console.log("$ARR $OBJ $CONT +++ build (set schema)", this);
+    this._schema = fieldschema;
+    this.type = fieldschema.type;
+    this.supertype = fieldschema.supertype;
+    if (fieldschema.of) this.of = fieldschema.of;
     // if (gschema) schema = gschema;
+    this.defined_state = "schema";
+    this.init();
     this.build();
   }
   get schema() {
@@ -82,11 +93,12 @@ export default class Container extends LitElement {
   }
 
   get value() {
-    console.log("$$$ GETTER FOR VALUE");
     return this._value;
   }
   set value(v) {
+    console.log("$CONTAINER set value", v);
     this._value = v;
+    this.update_value(v);
   }
 
   get of() {
@@ -96,6 +108,13 @@ export default class Container extends LitElement {
     this._of = v;
   }
 
+  _opts = {};
+  set options(opts) {
+    if (opts) this._opts = opts;
+  }
+  get options() {
+    return this._opts;
+  }
   // https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
 
   // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
@@ -156,7 +175,7 @@ export default class Container extends LitElement {
     return value;
   }
 
-  async after_init() {}
+  init() {}
 
   async xxinit() {
     console.log("$$$ container init", schema, this.schema);
@@ -179,17 +198,25 @@ export default class Container extends LitElement {
   }
 
   new_input(field, name, value) {
+    // console.log("$ARR $OBJ new input", field);
     let fieldschema = schema.get_field_schema(field);
     let comp = schema.get_component_for_field(fieldschema);
     let tag = get_component_tag(comp);
-    console.log("+++ build (new_input)", tag, field, fieldschema);
+    console.log(
+      "$ARR $OBJ +++ build (new_input)",
+      fieldschema.supertype,
+      tag,
+      field,
+      fieldschema,
+      value
+    );
     // let is_container = schema.is_container(field);
     let f = document.createElement(tag);
 
     f.label = field.title;
     f._name = field.name;
 
-    switch (field.supertype) {
+    switch (fieldschema.supertype) {
       case "file":
       case "image":
         console.log("+++ build (image/file)", f, field, fieldschema);
@@ -197,13 +224,13 @@ export default class Container extends LitElement {
         f.value = value ?? { asset: null };
         break;
       case "array":
+        f.options = fieldschema.options;
         f.schema = fieldschema;
-        f.of = fieldschema.of;
-        f.options = fieldschema.options || {};
         f.value = value ?? [];
         f.level = (this.level ?? 0) + 1;
         break;
       case "object":
+        console.log("$OBJ set schema");
         f.schema = fieldschema;
         f.level = (this.level ?? 0) + 1;
         f.value = value ?? {};
@@ -214,12 +241,11 @@ export default class Container extends LitElement {
         break;
       default:
         f.originalType = field.type;
+        f.options = field.options;
+        f.initialValue = field.initialValue;
         f.value = value;
     }
-    if (field.options && typeof f["set_options"] === "function") {
-      f.set_options(field.options);
-      console.warn("setting options", field.options, f);
-    }
+
     if (field.validation && typeof f["set_validation"] === "function") {
       f.set_validation(field.validation);
       console.warn("setting validations", field.validation, f);
