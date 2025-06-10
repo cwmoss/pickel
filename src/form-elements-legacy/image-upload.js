@@ -332,4 +332,4 @@ export default class ImageUpload extends LitElement {
   }
 }
 
-window.customElements.define("pi-image-upload", ImageUpload);
+window.customElements.define("pi-imageupload", ImageUpload);

@@ -148,9 +148,6 @@ export default class ArrayContainer extends Container {
     return super.get_updated_data();
   }
   build() {
-    if (!this.of.length) return;
-    if (this._was_build) return;
-    this._was_build = true;
     this.new_array_item_edit();
     this.editmode = true;
     let type = this.of[0].type;
@@ -267,4 +264,4 @@ export default class ArrayContainer extends Container {
   }
 }
 
-customElements.define("pi-array-container", ArrayContainer);
+customElements.define("pi-arraycontainer", ArrayContainer);

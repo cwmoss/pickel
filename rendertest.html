@@ -34,6 +34,16 @@
       }
 
       customElements.define("pi-start", Hello);
+      let el = document.createElement("pi-greet");
+      el.gname = "otto";
+      console.log(el);
+      document.body.append(el);
+
+      let el2 = document.createElement("pi-greet2");
+      el2.gname = "otto2";
+      console.log(el2);
+      document.body.append(el2);
+
       setTimeout(() => {
         class Greet extends LitElement {
           static properties = {
@@ -45,7 +55,7 @@
             this.gname = "world";
           }
           set gname(val) {
-            console.log("+++setting", val);
+            console.log("+++setting gname", val);
             this._n = val;
             //this.requestUpdate();
             //this.gname = val;
@@ -60,6 +70,11 @@
         }
         customElements.define("pi-greet", Greet);
         console.log("greet is upgraded");
+
+        class Greet2 extends Greet {}
+
+        customElements.define("pi-greet2", Greet2);
+        console.log("greet2 is upgraded");
       }, 2000);
     </script>
   </body>

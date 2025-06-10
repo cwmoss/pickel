@@ -18,15 +18,10 @@ export default class Reference extends Face {
     await this.init();
   }
 
-  set schema(fiedschema) {
-    this._schema = fiedschema;
-    this.type = fiedschema.type;
-    this.supertype = fiedschema.supertype;
-    // if (gschema) schema = gschema;
-    // this.build();
-  }
-  get schema() {
-    return this._schema;
+  set_schema(schema) {
+    this.schema = schema;
+    this.type = schema.type;
+    this.supertype = schema.supertype;
   }
 
   async init() {

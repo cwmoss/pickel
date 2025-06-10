@@ -39,7 +39,7 @@ export default class Slug extends Face {
   }
   render() {
     console.log("render slug");
-    return html`<pi-input
+    return html`<form-input
       @input=${this.update_input}
       .value=${this.value?.current ?? ""}
       .label=${this.label}
@@ -54,7 +54,7 @@ export default class Slug extends Face {
             Generate
           </pi-btn>`
         : ""}
-    </pi-input> `;
+    </form-input> `;
   }
 }
 

@@ -1,21 +1,37 @@
 import { html } from "../../vendor/lit-core.min.js";
-import { get_component, resolve_components } from "./component-loader.js";
-import ObjectContainer from "./object-container.js";
+import {
+  get_component_element,
+  resolve_components,
+} from "./component-loader.js";
+// import ObjectContainer from "./object-container.js";
+import Container from "./container.js";
 import ObjectPreview from "./object-preview.js";
 import MediaWidget from "../slowhand/media-widget.js";
 import schema from "../lib/schema.js";
 import api from "../lib/api.js";
 
-export default class FileContainer extends ObjectContainer {
-  static properties = {
-    ...ObjectContainer.properties,
-    uploader: { type: Object },
-    asset: { type: Object },
-    info: { type: Object },
-  };
+export default class FileContainer extends Container {
+  constructor() {
+    super();
+    console.log("+++ build construct filecontainer", this.value, this.schema);
+    // this.prefix = this.getAttribute("prefix");
+    //this.schema = test;
+  }
 
   additional_components() {
     return ["imageupload"];
+  }
+
+  set xxxschema(fiedschema) {
+    console.log("+++ build (set schema file)", fiedschema);
+    this._schema = fiedschema;
+    this.type = fiedschema.type;
+    this.supertype = fiedschema.supertype;
+    // if (gschema) schema = gschema;
+    // this.build();
+  }
+  get xxxschema() {
+    return this._schema;
   }
 
   get value() {
@@ -29,6 +45,10 @@ export default class FileContainer extends ObjectContainer {
     this._value = v;
   }
 
+  set xxxschema(schema) {
+    console.log("$$$$ filecontainer SET schema", schema);
+    this._schema = schema;
+  }
   // TODO: warum wird das so früh aufgerufen?
   get_updated_data() {
     if (!this.asset) return this._value;
@@ -69,7 +89,12 @@ export default class FileContainer extends ObjectContainer {
   }
 
   build() {
-    this.uploader = get_component("imageupload");
+    console.log("+++ build file-build", this, this.supertype, this.schema);
+    if (this._was_build) return;
+    this._was_build = true;
+    if (!this.schema) return;
+    console.log("+++ build file-build", this, this.supertype, this.schema);
+    this.uploader = get_component_element("imageupload");
     this.uploader.value = api.imageurl_from_ref(this.value.asset); // this.value.asset;
     this.uploader.upload_url = api.upload_image_url();
     // console.log("+++ build", this.value);
@@ -147,4 +172,4 @@ export default class FileContainer extends ObjectContainer {
   }
 }
 
-customElements.define("pi-filecontainer", FileContainer);
+customElements.define("pi-file-container", FileContainer);

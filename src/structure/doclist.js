@@ -48,13 +48,13 @@ export default class Doclist extends Panel {
     ></pi-btn>`;
   }
   render_head() {
-    return html`<form-input
+    return html`<pi-input
       plain
       @pi-input=${this.search}
       no-label
       .input_type=${"search"}
       decostart="search"
-    ></form-input>`;
+    ></pi-input>`;
   }
 }
 

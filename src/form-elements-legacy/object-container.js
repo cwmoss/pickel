@@ -22,9 +22,7 @@ export default class ObjectContainer extends Container {
 
   build() {
     //this.editmode = false;
-    if (this._was_build) return;
-    this._was_build = true;
-    console.log("+++ build ObjectContainer", this.value);
+    // console.log("+++ build", this.value);
     let fields = this.schema.fields;
     this.els = this.fields_to_els(fields);
     this.preview = this.get_preview("container");
@@ -58,4 +56,4 @@ export default class ObjectContainer extends Container {
   }
 }
 
-customElements.define("pi-object-container", ObjectContainer);
+customElements.define("pi-objectcontainer", ObjectContainer);

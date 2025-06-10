@@ -63,5 +63,4 @@ export default class Input extends Face {
   }
 }
 
-//customElements.define("form-input", Input);
-customElements.define("pi-input", Input);
+customElements.define("form-input", Input);

@@ -24,7 +24,7 @@ export default class Text extends Face {
   static styles = [style];
   connectedCallback() {
     super.connectedCallback();
-    // setTimeout(() => this.init());
+    setTimeout(() => this.init());
   }
 
   init() {

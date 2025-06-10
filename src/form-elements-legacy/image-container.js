@@ -1,8 +1,5 @@
 import { html } from "../../vendor/lit-core.min.js";
-import {
-  get_component_element,
-  resolve_components,
-} from "./component-loader.js";
+import { get_component, resolve_components } from "./component-loader.js";
 import ObjectContainer from "./object-container.js";
 import ObjectPreview from "./object-preview.js";
 import MediaWidget from "../slowhand/media-widget.js";
@@ -10,6 +7,12 @@ import schema from "../lib/schema.js";
 import api from "../lib/api.js";
 
 export default class ImageContainer extends ObjectContainer {
+  static properties = {
+    ...ObjectContainer.properties,
+    uploader: { type: Object },
+    asset: { type: Object },
+    info: { type: Object },
+  };
   get value() {
     return this._value || {};
   }
@@ -57,10 +60,7 @@ export default class ImageContainer extends ObjectContainer {
   }
 
   build() {
-    if (this._was_build) return;
-    this._was_build = true;
-    console.log("+++ build ImageContainer", this.value);
-    this.uploader = get_component_element("imageupload");
+    this.uploader = get_component("imageupload");
     this.uploader.value = api.imageurl_from_ref(this.value.asset); // this.value.asset;
     this.uploader.upload_url = api.upload_image_url();
     // console.log("+++ build", this.value);
@@ -122,7 +122,7 @@ export default class ImageContainer extends ObjectContainer {
     return html`${this.asset.width} x ${this.asset.height} (${this.asset.size})`;
   }
   render_els() {
-    console.log("+++ render ImageContainer", this.value.asset, this.uploader);
+    console.log("+++ render ImageContainer", this.value.asset);
     return html`<div
         class="image-container"
         @image-removed=${this.image_removed}
@@ -143,4 +143,4 @@ export default class ImageContainer extends ObjectContainer {
   }
 }
 
-customElements.define("pi-image-container", ImageContainer);
+customElements.define("pi-imagecontainer", ImageContainer);

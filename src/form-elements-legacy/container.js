@@ -1,10 +1,6 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import globalschema from "../lib/schema.js";
-import {
-  get_component,
-  get_component_tag,
-  resolve_components,
-} from "./component-loader.js";
+import { get_component, resolve_components } from "./component-loader.js";
 import { is_empty } from "../lib/util.js";
 import api from "../lib/api.js";
 
@@ -32,16 +28,9 @@ export default class Container extends LitElement {
     options: { type: Object },
     edit_item: { type: Object },
     has_image: { type: Boolean },
-
-    uploader: { type: Object },
-    asset: { type: Object },
-    info: { type: Object },
   };
 
-  _was_build = false;
-  _schema = {};
   _value = {};
-  _of = [];
   _type = "";
   _preview_data = {};
   els = [];
@@ -58,27 +47,10 @@ export default class Container extends LitElement {
     //this.schema = test;
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback();
     // console.log("++ connected");
-    // await this.init();
-    this.build();
-  }
-
-  // sets the fieldschema
-  set schema(fiedschema) {
-    console.log("+++ build (set schema)", this);
-    this._schema = fiedschema;
-    this.type = fiedschema.type;
-    this.supertype = fiedschema.supertype;
-    // if (gschema) schema = gschema;
-    //this.build();
-  }
-  get schema() {
-    return this._schema;
-  }
-  set global_schema(gschema) {
-    this.schema = gschema;
+    await this.init();
   }
 
   get value() {
@@ -88,14 +60,6 @@ export default class Container extends LitElement {
   set value(v) {
     this._value = v;
   }
-
-  get of() {
-    return this._of;
-  }
-  set of(v) {
-    this._of = v;
-  }
-
   // https://stackoverflow.com/questions/679915/how-do-i-test-for-an-empty-javascript-object
 
   // https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop
@@ -137,7 +101,7 @@ export default class Container extends LitElement {
   get_updated_data() {
     let value = this._value || {};
     this.els.forEach((el) => {
-      const val = el.value; // el.get_updated_data();
+      const val = el.get_updated_data();
       console.log(
         "$container-element get updated data",
         el._name,
@@ -158,7 +122,14 @@ export default class Container extends LitElement {
 
   async after_init() {}
 
-  async xxinit() {
+  // sets the fieldschema
+  set_schema(fiedschema, gschema) {
+    this.schema = fiedschema;
+    this.type = fiedschema.type;
+    this.supertype = fiedschema.supertype;
+    if (gschema) schema = gschema;
+  }
+  async init() {
     console.log("$$$ container init", schema, this.schema);
     let types = schema.get_all_components_for(this.schema);
     if (typeof this["additional_components"] === "function") {
@@ -181,39 +152,32 @@ export default class Container extends LitElement {
   new_input(field, name, value) {
     let fieldschema = schema.get_field_schema(field);
     let comp = schema.get_component_for_field(fieldschema);
-    let tag = get_component_tag(comp);
-    console.log("+++ build (new_input)", tag, field, fieldschema);
+    let f = get_component(comp);
     // let is_container = schema.is_container(field);
-    let f = document.createElement(tag);
 
-    f.label = field.title;
-    f._name = field.name;
-
-    switch (field.supertype) {
-      case "file":
+    if (typeof f["set_schema"] === "function") {
+      f.set_schema(fieldschema, schema);
+      f.prefix = name;
+      f.level = (this.level ?? 0) + 1;
+    } else {
+      f.originalType = field.type;
+    }
+    switch (f.supertype) {
       case "image":
-        console.log("+++ build (image/file)", f, field, fieldschema);
-        f.schema = fieldschema;
         f.value = value ?? { asset: null };
         break;
       case "array":
-        f.schema = fieldschema;
         f.of = fieldschema.of;
         f.options = fieldschema.options || {};
         f.value = value ?? [];
-        f.level = (this.level ?? 0) + 1;
         break;
       case "object":
-        f.schema = fieldschema;
-        f.level = (this.level ?? 0) + 1;
         f.value = value ?? {};
         break;
       case "reference":
-        f.schema = fieldschema;
         f.value = value ?? {};
         break;
       default:
-        f.originalType = field.type;
         f.value = value;
     }
     if (field.options && typeof f["set_options"] === "function") {
@@ -224,7 +188,89 @@ export default class Container extends LitElement {
       f.set_validation(field.validation);
       console.warn("setting validations", field.validation, f);
     }
+    f.label = field.title;
+    f._name = field.name;
+    return f;
+  }
 
+  xxnew_input(field, name, value) {
+    let f;
+    let type = field.type;
+    let subtype = "";
+    if (schema.is_reference(type)) {
+      type = "reference";
+      subtype = field.type;
+    }
+    if (schema.is_object(type)) {
+      type = "object";
+      subtype = field.type;
+    }
+    if (schema.is_image(type)) {
+      type = "image";
+      subtype = field.type;
+    }
+    let component = "";
+
+    switch (type) {
+      case "image":
+        f = get_component("imageobject");
+        f.schemaid = this.schemaid;
+        f.prefix = name;
+        f.value = value ?? { asset: null };
+        f.level = (this.level ?? 0) + 1;
+        f.label = field.title;
+        f.dialog_button = field.dialog_button;
+        f.dialog_title = field.dialog_title;
+        f.type = subtype;
+        break;
+      case "object":
+        f = get_component("object");
+        f.schemaid = this.schemaid;
+        f.prefix = name;
+        f.value = value ?? {};
+        f.level = (this.level ?? 0) + 1;
+        f.label = field.title;
+        f.dialog_button = field.dialog_button;
+        f.dialog_title = field.dialog_title;
+        f.type = subtype;
+        break;
+      case "array":
+        console.log("$container ++ array container // field", field);
+        component = "array";
+        if (field.component) {
+          component = field.component;
+        }
+        f = get_component(component);
+        f.schemaid = this.schemaid;
+        f.prefix = name;
+        f.value = value ?? [];
+        f.level = (this.level ?? 0) + 1;
+        f.label = field.title;
+        f.of = field.of;
+        f.options = field.opts || {};
+        f.type = field.type;
+        console.log("$container ++ array container2 // container", f, f.opts);
+        break;
+      case "reference":
+        f = get_component("reference");
+        f.type = subtype;
+        f.schemaid = this.schemaid;
+        f.originalType = type;
+        f.value = value ?? {};
+        f.level = (this.level ?? 0) + 1;
+        f.label = field.title;
+        f.dialog_button = field.dialog_button;
+        f.dialog_title = field.dialog_title;
+        f.schema = field;
+        this.refs[field.name] = f;
+        break;
+      default:
+        f = get_component(type);
+        f.originalType = type;
+        f.value = value;
+    }
+
+    f._name = field.name;
     return f;
   }
 
@@ -272,7 +318,6 @@ export default class Container extends LitElement {
   render() {
     // ${this.render_preview()}
     // console.log("render container", this.els);
-    if (!this.schema) return;
     let preview = true;
 
     if (this.editmode !== undefined) {

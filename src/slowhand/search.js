@@ -147,7 +147,7 @@ export default class Search extends LitElement {
   }
   render() {
     return html`<div id="rel">
-      <form-input
+      <pi-input
         plain
         @focusin=${this.hasfocus}
         @click=${this.hasfocus}
@@ -162,7 +162,7 @@ export default class Search extends LitElement {
           class="input-group-text"
           .items=${["Type", ...(this.types ?? [])]}
         ></pi-select
-      ></form-input>
+      ></pi-input>
       <div id="menu" @click=${this.select}>
         ${this.result
           ? this.result.map((el, idx) => {

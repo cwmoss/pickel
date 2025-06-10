@@ -46,18 +46,6 @@ export const get_classname = (name) => {
   console.log("(L) map", name);
   return map[name] || default_comp;
 };
-
-export const get_component_tag = (name) => {
-  let classname = get_classname(name);
-  load_component(classname);
-  return "pi-" + kebabize(classname);
-};
-
-export const get_component_element = (name) => {
-  let tag = get_component_tag(name);
-  return document.createElement(tag);
-};
-
 export const get_component = (name) => {
   let classname = get_classname(name);
   // console.log("++ get component", name, classname, classes);
