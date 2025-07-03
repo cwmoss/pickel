@@ -1,6 +1,6 @@
 import { html } from "../../vendor/lit-core.min.js";
 import Container from "./container.js";
-import globalschema from "../lib/schema.js";
+import globalschema from "./schema.js";
 import { get_component_tag, resolve_components } from "./component-loader.js";
 import api from "../lib/api.js";
 import { hashID } from "../lib/util.js";

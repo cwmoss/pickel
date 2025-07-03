@@ -1,10 +1,9 @@
-import { html } from "../../vendor/lit-core.min.js";
-import { get_component, resolve_components } from "./component-loader.js";
+// import { html } from "../../vendor/lit-core.min.js";
+// import { get_component, resolve_components } from "./component-loader.js";
 
 import Container from "./container.js";
 import ObjectPreview from "./object-preview.js";
-import globalschema from "../lib/schema.js";
-import api from "../lib/api.js";
+import globalschema from "./schema.js";
 
 let schema = globalschema;
 

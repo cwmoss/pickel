@@ -1,12 +1,11 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import globalschema from "../lib/schema.js";
+import globalschema from "./schema.js";
 import {
   get_component,
   get_component_tag,
   resolve_components,
 } from "./component-loader.js";
 import { is_empty } from "../lib/util.js";
-import api from "../lib/api.js";
 
 let schema = globalschema;
 

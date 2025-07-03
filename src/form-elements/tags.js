@@ -1,6 +1,5 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import Tagify from "../../vendor/tagify.m.js";
-import ArrayContainer from "./array-container.js";
 import Face from "./face.js";
 import { tagstyles } from "./tagify.css.js";
 

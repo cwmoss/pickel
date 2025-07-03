@@ -1,5 +1,5 @@
 import datasets from "./datasets.js";
-import schema from "./schema.js";
+import schema from "../form-elements/schema.js";
 import { toast_alert, toast_info } from "../basic/toast.js";
 class Api {
   loading = false;

@@ -7,7 +7,6 @@ import ObjectContainer from "./object-container.js";
 // import Container from "./container.js";
 import ObjectPreview from "./object-preview.js";
 import MediaWidget from "../slowhand/media-widget.js";
-import schema from "../lib/schema.js";
 import api from "../lib/api.js";
 
 export default class FileContainer extends ObjectContainer {

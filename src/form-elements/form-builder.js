@@ -1,7 +1,6 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import { schema_build, schema_build_from_yaml } from "../lib/schema.js";
+import { schema_build, schema_build_from_yaml } from "./schema.js";
 import ObjectContainer from "./object-container.js";
-import Button from "./button.js";
 
 let yamlparser = null;
 
@@ -67,9 +66,7 @@ export default class FormBuilder extends LitElement {
               this.yaml_schema instanceof String
             ) {
               if (!yamlparser) {
-                const { default: YAML } = await import(
-                  "../../vendor/yamlparser.min.js"
-                );
+                const { default: YAML } = await import("./yamlparser.min.js");
                 console.log("yamlparser loaded", YAML);
                 yamlparser = YAML;
               }

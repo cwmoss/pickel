@@ -1,6 +1,6 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
 import api from "../lib/api.js";
-import schema from "../lib/schema.js";
+import schema from "../form-elements/schema.js";
 import Panel from "./panel.js";
 
 import ObjectContainer from "../form-elements/object-container.js";

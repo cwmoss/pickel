@@ -1,5 +1,5 @@
 import api from "./api.js";
-import schema from "./schema.js";
+import schema from "../form-elements/schema.js";
 import datasets from "./datasets.js";
 import bus from "./bus.js";
 class Project {
