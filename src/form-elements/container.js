@@ -1,5 +1,4 @@
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import globalschema from "./schema.js";
 import {
   get_component,
   get_component_tag,
@@ -7,14 +6,16 @@ import {
 } from "./component-loader.js";
 import { is_empty } from "../lib/util.js";
 
-let schema = globalschema;
-
 export default class Container extends LitElement {
   static properties = {
     // schema of this field
     schema: { attribute: false, type: Object, noAccessor: true },
     value: { attribute: false, type: Object, noAccessor: true },
-
+    /*
+      manager contains the schema object
+      schema contains the fieldschema object
+    */
+    manager: { attribute: false, type: Object },
     type: { type: String },
     supertype: { type: String },
     of: { type: Array, noAccessor: true },
