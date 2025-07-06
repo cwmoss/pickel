@@ -1,14 +1,11 @@
 import { html } from "../../vendor/lit-core.min.js";
 import Container from "./container.js";
-import globalschema from "./schema.js";
 import { get_component_tag, resolve_components } from "./component-loader.js";
 import api from "../lib/api.js";
 import { hashID } from "../lib/util.js";
 // import MultiUpload from "../upload/multi-upload.js";
 // import Sortable from "../../vendor/sortable.complete.esm.js";
 import { LitSortable } from "../../vendor/lit-sortable.js";
-
-let schema = globalschema;
 
 let draghandle_image = html`<svg
   xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +43,7 @@ export default class ArrayContainer extends Container {
   }
 
   additional_components() {
-    if (schema.is_image(this.of[0].type)) {
+    if (this.manager.is_image(this.of[0].type)) {
       //  this.has_image = true;
       return ["multiimageupload"];
     }
@@ -57,7 +54,7 @@ export default class ArrayContainer extends Container {
     console.log("$ARR init array type", this.schema, this.of);
     // console.log(this.of[0].type);
     this.has_image = false;
-    if (schema.is_image(this.of[0].type)) {
+    if (this.manager.is_image(this.of[0].type)) {
       this.has_image = true;
     }
     /*if (schema.is_ref(this.of[0].type)) {

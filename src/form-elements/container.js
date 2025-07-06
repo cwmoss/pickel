@@ -88,9 +88,6 @@ export default class Container extends LitElement {
   get schema() {
     return this._schema;
   }
-  set global_schema(gschema) {
-    this.schema = gschema;
-  }
 
   get value() {
     return this._value;
@@ -179,7 +176,7 @@ export default class Container extends LitElement {
 
   async xxinit() {
     console.log("$$$ container init", schema, this.schema);
-    let types = schema.get_all_components_for(this.schema);
+    let types = this.manager.get_all_components_for(this.schema);
     if (typeof this["additional_components"] === "function") {
       console.log(
         "$$ additional components",
@@ -199,8 +196,8 @@ export default class Container extends LitElement {
 
   new_input(field, name, value) {
     // console.log("$ARR $OBJ new input", field);
-    let fieldschema = schema.get_field_schema(field);
-    let comp = schema.get_component_for_field(fieldschema);
+    let fieldschema = this.manager.get_field_schema(field);
+    let comp = this.manager.get_component_for_field(fieldschema);
     let tag = get_component_tag(comp);
     console.log(
       "$ARR $OBJ +++ build (new_input)",
@@ -220,22 +217,26 @@ export default class Container extends LitElement {
       case "file":
       case "image":
         console.log("+++ build (image/file)", f, field, fieldschema);
+        f.manager = this.manager;
         f.schema = fieldschema;
         f.value = value ?? { asset: null };
         break;
       case "array":
+        f.manager = this.manager;
         f.options = fieldschema.options;
         f.schema = fieldschema;
         f.value = value ?? [];
         f.level = (this.level ?? 0) + 1;
         break;
       case "object":
+        f.manager = this.manager;
         console.log("$OBJ set schema");
         f.schema = fieldschema;
         f.level = (this.level ?? 0) + 1;
         f.value = value ?? {};
         break;
       case "reference":
+        // f.manager = this.manager;
         f.schema = fieldschema;
         f.value = value ?? {};
         break;

@@ -46,7 +46,7 @@ export default class Editor extends Panel {
 
     this.container = new ObjectContainer();
     console.log("$$$ set_schema in objectc");
-
+    this.container.manager = schema;
     this.container.editmode = true;
     this.container.value = this.document;
     this.container.prefix = "";

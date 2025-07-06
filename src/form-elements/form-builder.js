@@ -115,7 +115,7 @@ export default class FormBuilder extends LitElement {
 
     this.container = new ObjectContainer();
     console.log("$$$ form-builder set_schema in objectc");
-
+    this.container.manager = this._schema;
     this.container.editmode = true;
 
     this.container.value = this.value;

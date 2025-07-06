@@ -3,9 +3,6 @@
 
 import Container from "./container.js";
 import ObjectPreview from "./object-preview.js";
-import globalschema from "./schema.js";
-
-let schema = globalschema;
 
 export default class ObjectContainer extends Container {
   update_value(val) {
@@ -35,13 +32,13 @@ export default class ObjectContainer extends Container {
     console.log(
       "$OBJ $object container get_preview RENDER",
       this.type,
-      schema.is_document(this.type)
+      this.manager.is_document(this.type)
     );
-    if (schema.is_document(this.type)) return "";
+    if (this.manager.is_document(this.type)) return "";
     console.log(
       "$object container get_preview RENDER 01",
       this.type,
-      schema.is_document(this.type)
+      this.manager.is_document(this.type)
     );
     let data = {};
     Object.assign(data, this._value, this._preview_data);
@@ -49,7 +46,7 @@ export default class ObjectContainer extends Container {
     // let title = this.schema?.preview?.title;
     let p = new ObjectPreview();
 
-    p.set_data(data, this.schema, schema.get_preview(data));
+    p.set_data(data, this.schema, this.manager.get_preview(data));
     return p;
   }
 
