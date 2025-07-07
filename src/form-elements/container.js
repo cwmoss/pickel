@@ -73,6 +73,21 @@ export default class Container extends LitElement {
     // his.init();
   }
 
+  init_schema_value() {
+    if (
+      !this.manager ||
+      !this.schema ||
+      !this._value ||
+      is_empty(this.schema) ||
+      is_empty(this._value)
+    )
+      return;
+    console.log("$$$ init container schema/value", this._schema, this._value);
+    this.init();
+    this.build();
+    // this.update_value(this._value);
+  }
+
   // sets the fieldschema
   set schema(fieldschema) {
     console.log("$ARR $OBJ $CONT +++ build (set schema)", this);
@@ -82,8 +97,7 @@ export default class Container extends LitElement {
     if (fieldschema.of) this.of = fieldschema.of;
     // if (gschema) schema = gschema;
     this.defined_state = "schema";
-    this.init();
-    this.build();
+    this.init_schema_value();
   }
   get schema() {
     return this._schema;
@@ -95,7 +109,7 @@ export default class Container extends LitElement {
   set value(v) {
     console.log("$CONTAINER set value", v);
     this._value = v;
-    this.update_value(v);
+    this.init_schema_value();
   }
 
   get of() {

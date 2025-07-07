@@ -145,7 +145,7 @@ export default class ImageUpload extends LitElement {
     super.connectedCallback();
     if (this.value) this.set_preview(this.value);
   }
-  set_image(imageurl) {
+  set image(imageurl) {
     console.log("SET IMAGEURL", imageurl);
     this.value = imageurl;
     this.set_preview(this.value);
