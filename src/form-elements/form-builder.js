@@ -36,13 +36,13 @@ export default class FormBuilder extends LitElement {
       "+++ connected form-builder",
       this._schema,
       this._id,
-      this.innerText,
+      this.textContent,
       this.value
     );
   }
 
   async load_schema() {
-    let text = this.innerText.trim();
+    let text = this.textContent.trim();
     console.log(
       "$$$ form-builder try innerText, schema, yaml_schema",
       text,
