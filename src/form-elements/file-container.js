@@ -10,6 +10,8 @@ import MediaWidget from "../slowhand/media-widget.js";
 import api from "../lib/api.js";
 
 export default class FileContainer extends ObjectContainer {
+  static empty_value = {};
+
   static properties = {
     ...ObjectContainer.properties,
     uploader: { type: Object },
@@ -77,7 +79,7 @@ export default class FileContainer extends ObjectContainer {
     );
 
     this.uploader = get_component_element("imageupload");
-    this.uploader.value = api.imageurl_from_ref(this.value.asset); // this.value.asset;
+    this.uploader.image = api.imageurl_from_ref(this.value.asset); // this.value.asset;
     this.uploader.upload_url = api.upload_image_url();
     // console.log("+++ build", this.value);
     let fields = this.schema.fields || [];

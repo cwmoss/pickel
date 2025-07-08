@@ -27,20 +27,7 @@ export default class ArrayContainer extends Container {
 
   enable_add = true;
 
-  _value = [];
-
-  set value(v) {
-    console.log("$ARR set value", v);
-    if (!v) {
-      v = [];
-    }
-    this._value = v;
-    this.build_elements();
-  }
-
-  get value() {
-    return this._value || [];
-  }
+  static empty_value = [];
 
   additional_components() {
     if (this.manager.is_image(this.of[0].type)) {

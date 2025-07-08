@@ -15,7 +15,7 @@ export default class Container extends LitElement {
       manager contains the schema object
       schema contains the fieldschema object
     */
-    manager: { attribute: false, type: Object },
+    manager: { attribute: false, type: Object, noAccessor: true },
     type: { type: String },
     supertype: { type: String },
     of: { type: Array, noAccessor: true },
@@ -48,13 +48,16 @@ export default class Container extends LitElement {
   };
 
   _was_build = false;
-  _schema = {};
-  _value = {};
+  _schema;
+  _manager;
+  _value;
   _of = [];
   _type = "";
   _preview_data = {};
   els = [];
   refs = {};
+
+  static empty_value = {};
 
   // TODO: better way to deal with circular dependency?
   //load_container($name){
@@ -74,20 +77,31 @@ export default class Container extends LitElement {
   }
 
   init_schema_value() {
-    if (
-      !this.manager ||
-      !this.schema ||
-      !this._value ||
-      is_empty(this.schema) ||
-      is_empty(this._value)
-    )
-      return;
-    console.log("$$$ init container schema/value", this._schema, this._value);
+    console.log(
+      "$$$ $IMG init 0 container schema/value",
+      this.constructor,
+      this.manager,
+      this._schema,
+      this._value
+    );
+    if (!this.manager || !this._schema || !this._value) return;
+    console.log(
+      "$$$ $IMG init 1 container schema/value",
+      this._schema,
+      this._value
+    );
     this.init();
     this.build();
     // this.update_value(this._value);
   }
 
+  set manager(man) {
+    this._manager = man;
+    this.init_schema_value();
+  }
+  get manager() {
+    return this._manager;
+  }
   // sets the fieldschema
   set schema(fieldschema) {
     console.log("$ARR $OBJ $CONT +++ build (set schema)", this);
@@ -104,7 +118,7 @@ export default class Container extends LitElement {
   }
 
   get value() {
-    return this._value;
+    return this._value || this.constructor.empty_value;
   }
   set value(v) {
     console.log("$CONTAINER set value", v);
@@ -188,26 +202,6 @@ export default class Container extends LitElement {
 
   init() {}
 
-  async xxinit() {
-    console.log("$$$ container init", schema, this.schema);
-    let types = this.manager.get_all_components_for(this.schema);
-    if (typeof this["additional_components"] === "function") {
-      console.log(
-        "$$ additional components",
-        this.additional_components(),
-        types,
-        this.schema
-      );
-      types = [...types, ...this.additional_components()];
-    }
-    console.log("$ resolve (C) for", this._name, this.type, this.schema, types);
-    await resolve_components([...new Set(types)]);
-
-    this.build();
-    this.requestUpdate();
-    await this.after_init();
-  }
-
   new_input(field, name, value) {
     // console.log("$ARR $OBJ new input", field);
     let fieldschema = this.manager.get_field_schema(field);
@@ -230,7 +224,13 @@ export default class Container extends LitElement {
     switch (fieldschema.supertype) {
       case "file":
       case "image":
-        console.log("+++ build (image/file)", f, field, fieldschema);
+        console.log(
+          "+++ build $IMG (image/file)",
+          f,
+          field,
+          fieldschema,
+          this.manager
+        );
         f.manager = this.manager;
         f.schema = fieldschema;
         f.value = value ?? { asset: null };
@@ -274,7 +274,7 @@ export default class Container extends LitElement {
     console.log("$ fields=>array", this._value);
     return fields.map((field) => {
       let name = `${this.prefix}[${field.name}]`;
-      let value = this.value[field.name] ?? "";
+      let value = this.value[field.name] ?? undefined;
       let f = this.new_input(field, name, value);
       f.opts = {
         name: name,

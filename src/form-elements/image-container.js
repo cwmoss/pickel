@@ -9,23 +9,14 @@ import MediaWidget from "../slowhand/media-widget.js";
 import api from "../lib/api.js";
 
 export default class ImageContainer extends ObjectContainer {
+  static empty_value = {};
+
   static properties = {
     ...ObjectContainer.properties,
     uploader: { type: Object },
     asset: { type: Object },
     info: { type: Object },
   };
-
-  get value() {
-    return this._value || {};
-  }
-  set value(v) {
-    console.log("$$$$ imagecontainer SET", JSON.stringify(v));
-    if (!v) {
-      v = {};
-    }
-    this._value = v;
-  }
 
   // TODO: warum wird das so früh aufgerufen?
   get_updated_data() {
@@ -54,7 +45,7 @@ export default class ImageContainer extends ObjectContainer {
   }
 
   async fetch_asset() {
-    console.log("$IMG", JSON.stringify(this.value));
+    console.log("$IMG fetch asset", JSON.stringify(this.value));
     if (this.value.asset?._ref) {
       console.log("$$$$ after init start");
       this.asset = await api.document(this.value.asset._ref);
@@ -66,7 +57,7 @@ export default class ImageContainer extends ObjectContainer {
   build() {
     console.log("$IMG build ImageContainer", this.value);
     this.uploader = get_component_element("imageupload");
-    this.uploader.value = api.imageurl_from_ref(this.value.asset); // this.value.asset;
+    this.uploader.image = api.imageurl_from_ref(this.value.asset); // this.value.asset;
     this.uploader.upload_url = api.upload_image_url();
     // console.log("+++ build", this.value);
     let fields = this.schema.fields || [];

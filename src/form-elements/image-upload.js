@@ -131,6 +131,7 @@ export default class ImageUpload extends LitElement {
     thumb: {},
     fname: {},
     value: {},
+    image: {},
     upload_label: { attribute: "upload-label" },
     upload_url: { attribute: "upload-url" },
     remove_url: { attribute: "remove-url" },

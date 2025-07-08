@@ -5,8 +5,10 @@ import Container from "./container.js";
 import ObjectPreview from "./object-preview.js";
 
 export default class ObjectContainer extends Container {
+  static empty_value = {};
+
   update_value(val) {
-    this._value = val;
+    this._value = val || ObjectContainer.empty_value;
     this.els.forEach((el) => {
       let name = el._name;
       console.log("$OBJ update", name, val[name]);
