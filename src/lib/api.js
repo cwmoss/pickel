@@ -5,7 +5,7 @@ class Api {
   loading = false;
 
   constructor() {
-    this.endpoint = `http://localhost:10245`;
+    this.endpoint = ''; // `http://localhost:10245`;
     this.datasets = [];
     // this.documentStore = useDocumentStore();
   }
@@ -53,9 +53,8 @@ class Api {
         query += "pageinfo()";
       }
       if (options.order) {
-        query += `order(${options.order.by} ${
-          options.order.desc ? "desc" : "asc"
-        })`;
+        query += `order(${options.order.by} ${options.order.desc ? "desc" : "asc"
+          })`;
       }
     }
     return this.get(
@@ -245,8 +244,7 @@ class Api {
   }
   async document(documentId, preview) {
     return this.get(
-      `/data/doc/${datasets.current}/${documentId}${
-        preview ? "?preview=1" : ""
+      `/data/doc/${datasets.current}/${documentId}${preview ? "?preview=1" : ""
       }`
     )
       .then(({ documents }) => (documents ? documents[0] : null))
