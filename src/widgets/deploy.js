@@ -4,14 +4,35 @@ import project from "../lib/project.js";
 import Preview from "../slowhand/preview.js";
 import FormBuilder from "../form-elements/form-builder.js";
 
+// https://css-tricks.com/books/greatest-css-tricks/pin-scrolling-to-bottom/
+// funktioniert leider wohl nicht
+let output_styles = css`
+section {
+  margin-top:0.5rem;
+  height: 240px;
+  overflow: scroll;
+}
+section * {
+  overflow-anchor: none;
+}
+output {
+  display:block;
+  width: 350px;
+  white-space: pre-wrap;
+  font-family: monospace;
+}
+#anchor {
+  overflow-anchor: auto;
+  height: 1px;
+}
+`
+
 const deploy = function (secrets, setOutput, cb) {
   const xhr = new XMLHttpRequest();
   console.log("+++ widget options", secrets);
 
-  setOutput("hello start\n++++\n!!!!");
-
-  xhr.open("POST", secrets.hook, true);
-  xhr.setRequestHeader("X-Slft-Deploy", secrets.apiKey);
+  xhr.open("POST", secrets.url, true);
+  xhr.setRequestHeader("x-slft-deploy", secrets.apikey);
 
   xhr.onprogress = function (e) {
     console.log("progress");
@@ -35,7 +56,10 @@ export default class DeployWidget extends LitElement {
     show_dialog: { state: true, type: Boolean },
     deploying: { state: true, type: Boolean },
     preferences: { state: true, type: Object },
+    output: {}
   };
+
+  static styles = [output_styles];
 
   docid = ".deployment";
   async connectedCallback() {
@@ -56,6 +80,24 @@ export default class DeployWidget extends LitElement {
 
   deploy() {
     console.log("preferences", this.preferences);
+
+    // this.output = `deploying site ${this.preferences.url}\n<span style="background-color: black; color: white">hier </span>`;
+    let section = this.shadowRoot.querySelector("section")
+    let output = this.shadowRoot.querySelector("output")
+    output.insertAdjacentHTML('beforeend', `deploying site ${this.preferences.url}\n`)
+
+    section.scroll(0, 1);
+
+    // ${html`${this.output}`}
+
+    deploy({ url: this.preferences.url, apikey: this.preferences.apikey },
+      (res) => {
+        // this.output += res
+        // output.insertAdjacentHTML('beforeend', res)
+        output.innerHTML = res
+        section.scrollTop = section.scrollHeight;
+      },
+      () => output.insertAdjacentHTML('beforeend', "\ndeploy finished"));
   }
 
   render() {
@@ -64,7 +106,10 @@ export default class DeployWidget extends LitElement {
     return html`
       <pi-card title="Deploy">
         <pi-btn @click=${this.deploy}>Deploy</pi-btn>
-        ${true ? html`` : ""}
+        <section>
+          <output></output>
+          <div id="anchor"></div>
+        </section>
         <div slot="footer">
           <pi-dialog xopen xnobutton>
             <pi-btn slot="button">Preferences</pi-btn>
@@ -104,5 +149,6 @@ export default class DeployWidget extends LitElement {
     `;
   }
 }
+
 
 customElements.define("deploy-widget", DeployWidget);

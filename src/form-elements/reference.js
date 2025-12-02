@@ -8,6 +8,7 @@ import { slugify, hashID } from "../lib/util.js";
 export default class Reference extends Face {
   static properties = {
     ...Face.properties,
+    value: { noAccessor: true },
     preview: { type: Object },
     schema: { type: Object },
     prefix: {},
@@ -20,10 +21,10 @@ export default class Reference extends Face {
     // this.fetch_preview();
   }
 
-  set schema(fiedschema) {
-    this._schema = fiedschema;
-    this.type = fiedschema.type;
-    this.supertype = fiedschema.supertype;
+  set schema(fieldschema) {
+    this._schema = fieldschema;
+    this.type = fieldschema.type;
+    this.supertype = fieldschema.supertype;
     // if (gschema) schema = gschema;
     // this.build();
   }
@@ -65,7 +66,7 @@ export default class Reference extends Face {
 
   get allowed_type() {
     console.log("$REF", this._name, this.schema);
-    return this.schema.to ? this.schema.to[0].type ?? "" : "";
+    return this.schema?.to ? this.schema.to[0]?.type ?? "" : "";
   }
   async select(e) {
     e.stopPropagation();
@@ -75,16 +76,13 @@ export default class Reference extends Face {
     };
     await this.init();
   }
-  search() {}
+  search() { }
   remove() {
     console.log("++remove REF");
     this.preview = null;
-    this.value = {};
+    this.value = undefined;
   }
-  update_input(e) {
-    console.log("+++ update", hashID(5), e, e.target.value);
-    this.value.current = e.target.value;
-  }
+
   render_search() {
     return html`<pi-search
       @open-doc=${this.select}

@@ -124,7 +124,7 @@ export default class Face extends LitElement {
     return this.initialValue;
   }
 
-  get_updated_data() {
+  xxget_updated_data() {
     return this.value;
   }
 
@@ -141,10 +141,13 @@ export default class Face extends LitElement {
   _value = "";
 
   set value(val) {
+    console.log("FACE set value", this.name, val)
     if (!val) val = this.get_default_value();
     this._value = val;
   }
   get value() {
+    console.log("FACE get value", this.name)
+    if (typeof this["get_updated_data"] === "function") return this.get_updated_data()
     return this._value;
   }
 

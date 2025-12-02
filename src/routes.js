@@ -17,4 +17,9 @@ export default {
   "/about": {
     class: "about",
   },
+  "/login": {
+    class: "login",
+    title: "Login",
+    anon: true,
+  },
 };

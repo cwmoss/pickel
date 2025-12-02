@@ -11,6 +11,7 @@ router.base("/studio");
 class App extends HTMLElement {
   page = "";
   projectname = "";
+  profile;
 
   constructor() {
     super();
@@ -22,7 +23,7 @@ class App extends HTMLElement {
   }
 
   async connectedCallback() {
-    await project.load_current_project();
+    if (this.profile) await project.load_current_project();
     let template = await load_template("_layout");
     const clone = template[0].content.cloneNode(true);
     this.appendChild(clone);
@@ -42,6 +43,13 @@ class App extends HTMLElement {
 
   async load_page(name, ctx) {
     let path = "./pages/" + name + ".js";
+
+    if (!this.profile && !ctx.route.anon) {
+      router("/login");
+      // router.redirect("/login");
+      return;
+    }
+
     const { default: PageClass } = await import(path);
     let page = new PageClass();
     page.set_route(ctx);

@@ -1,4 +1,4 @@
-import { html } from "../../vendor/lit-core.min.js";
+import { html, repeat } from "../../vendor/lit-all.min.js";
 import Container from "./container.js";
 import { get_component_tag, resolve_components } from "./component-loader.js";
 import api from "../lib/api.js";
@@ -58,13 +58,52 @@ export default class ArrayContainer extends Container {
     );
     if (this.options?.sortable !== false) {
       setTimeout(() => {
+        let presortPrevious = [];
+        let before;
+
         let sortable = LitSortable.create(
+
           this.renderRoot.querySelector(".dnd"),
           {
             delay: 100,
             handle: ".handle",
-            onEnd: (e) => this.dropped(e),
-          }
+            // onEnd: (e) => this.dropped(e),
+            onStart: e => {
+              // used to put the items back in their pre-sort position onEnd
+              console.log("$$$$ +++ dropped START", this.value);
+              before = e.item.previousSibling;
+              // presortPrevious = e.items.map(item => item.previousSibling)
+            },
+            onEnd: (e) => {
+              before.after(e.item);
+              this.els.splice(e.newIndex, 0, this.els.splice(e.oldIndex, 1)[0]);
+
+              this.dropped(e)
+              this.requestUpdate();
+              return;
+
+
+              const { items, newIndicies, oldIndicies } = e
+              console.log("$$$$ +++ dropped", this.value);
+              // RETURN ELEMENTS TO PREVIOUS POSITIONS, 'CANCELLING' THE SORT
+              presortPrevious.forEach((previous, i) => previous.after(items[i]))
+
+              // ALLOW LIT TO UPDATE THE DOM BY MOVING ITEMS IN ARRAY
+              // IMPORTANT: NEED TO REMOVE ALL ITEMS FROM ARRAY AND ADD THEM BACK AS A 2nd STEP
+              const movedArrayItems = oldIndicies.map(({ index }) => this.els[index])
+
+              // 1. REMOVE MOVED ITEMS
+              const indiciesToRemove = oldIndicies.map(({ index }) => index)
+              const myFilteredArray = this.els.filter((item, i) => !indiciesToRemove.includes(i))
+
+              // 2. ADD THEM ALL BACK IN
+              newIndicies.forEach(({ index }, i) => myFilteredArray.splice(index, 0, movedArrayItems[i]))
+              this.els = myFilteredArray
+
+              this.dropped(e);
+            }
+          },
+          // this, "els"
         );
       });
     }
@@ -134,6 +173,13 @@ export default class ArrayContainer extends Container {
       e.newIndex
       // this.querySelectorAll(".els > *")
     );
+    // this.get_updated_data()
+    let newval = this.els.map(e => e.value)
+    // this.value = newval
+    console.log("$$$$ +++ new value", this.els, this.value);
+    this.requestUpdate();
+    return;
+
     [this.value[e.oldIndex], this.value[e.newIndex]] = [
       this.value[e.newIndex],
       this.value[e.oldIndex],
@@ -146,10 +192,12 @@ export default class ArrayContainer extends Container {
     ];*/
     this.requestUpdate();
   }
-  rearrange(from, to) {}
+  rearrange(from, to) { }
 
   get_updated_data() {
     console.log("$array get updated data");
+    let newval = this.els.map(e => e.value)
+    return newval
     return super.get_updated_data();
   }
   build() {
@@ -214,23 +262,23 @@ export default class ArrayContainer extends Container {
     }
     return html`${uploader}
     ${this.enable_add
-      ? html` <div class="container--actions">
+        ? html` <div class="container--actions">
           <button type="button" @click=${this.item_new} part="button">
             Add Item ${this.opts.sortable}
           </button>
         </div>`
-      : ""}`;
+        : ""}`;
   }
 
   render_els() {
     console.log("$ARR render ArrayContainer", this.els, this.options);
     return html`<div class="dnd" @dropped=${this.dropped}>
-        ${this.els.map((el, idx) => {
-          console.log("els array element", el);
-          return html`<div class="array-el">
+        ${repeat(this.els, el => el.value, (el, idx) => {
+      console.log("els array element", el);
+      return html`<div class="array-el">
             ${this.options?.sortable !== false
-              ? html`<div class="handle"></div>`
-              : ""}
+          ? html`<div class="handle"></div>`
+          : ""}
             <div class="el-content" @click=${() => this.item_edit(el)}>
               ${el}
             </div>
@@ -243,7 +291,7 @@ export default class ArrayContainer extends Container {
               ></pi-btn>
             </div>
           </div> `;
-        })}
+    })}
       </div>
       ${this.els.length == 0
         ? html`<div class="container--empty-array">no entries</div>`
@@ -265,8 +313,8 @@ export default class ArrayContainer extends Container {
       </div> `;
     })}
     ${this.els.length == 0
-      ? html`<div class="container--empty-array">no entries</div>`
-      : ""} `;
+        ? html`<div class="container--empty-array">no entries</div>`
+        : ""} `;
   }
 }
 

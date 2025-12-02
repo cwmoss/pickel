@@ -6,6 +6,51 @@ export const LitSortable = {
 };
 
 function create(container, options) {
+  return Sortable.create(container, options);
+}
+
+function createx(container, options, el, listname) {
+  let onStart = options.onStart;
+  let onMove = options.onMove;
+  let onEnd = options.onEnd;
+
+  let presortPrevious = [];
+
+  options.onStart = e => {
+    // used to put the items back in their pre-sort position onEnd
+    presortPrevious = e.items.map(item => item.previousSibling)
+  }
+
+  return Sortable.create(container, options);
+
+  options.onEnd = e => {
+    const { items, newIndicies, oldIndicies } = e
+
+    // RETURN ELEMENTS TO PREVIOUS POSITIONS, 'CANCELLING' THE SORT
+    presortPrevious.forEach((previous, i) => previous.after(items[i]))
+
+    // ALLOW LIT TO UPDATE THE DOM BY MOVING ITEMS IN ARRAY
+    // IMPORTANT: NEED TO REMOVE ALL ITEMS FROM ARRAY AND ADD THEM BACK AS A 2nd STEP
+    const movedArrayItems = oldIndicies.map(({ index }) => el[listname][index])
+
+    // 1. REMOVE MOVED ITEMS
+    const indiciesToRemove = oldIndicies.map(({ index }) => index)
+    const myFilteredArray = el[listname].filter((item, i) => !indiciesToRemove.includes(i))
+
+    // 2. ADD THEM ALL BACK IN
+    newIndicies.forEach(({ index }, i) => myFilteredArray.splice(index, 0, movedArrayItems[i]))
+    el[listname] = myFilteredArray
+
+    if (onEnd) onEnd(e, el);
+    // REQUEST LIT DOM UPDATE
+    // this.requestUpdate();
+
+    // UPDATE ARRAY IN DATABASE IF DESIRED
+  }
+
+  return Sortable.create(container, options);
+}
+function createOLDfix(container, options) {
   let onStart = options.onStart;
   let onMove = options.onMove;
   let onEnd = options.onEnd;

@@ -43,23 +43,28 @@ export default class Text extends Face {
         this.dispatchEvent(evt);
       },
     });
+    console.log("FACE init MD", this.text)
     this.easyMDE.value(this.text);
   }
   get text() {
-    let text = api.block_to_text(this.value);
+    let text = api.block_to_text(this._value);
     // console.log("++ text ++", text);
     return text;
   }
+
+  get xvalue() {
+    console.log("md text get value")
+    return this.fetch_value()
+    // return this.get_updated_data();
+  }
+
   get_updated_data() {
     // TODO: warum wird das frühzeitig aufgerufen?
-    if (!this.easyMDE) return this.value;
+    console.log("get MD value");
+    if (!this.easyMDE) return this._value;
     return this.easyMDE.value();
   }
 
-  update_input(e) {
-    console.log("+++ update", hashID(5), e, e.target.value);
-    this.value.current = e.target.value;
-  }
   render() {
     console.log("render text");
     return html`<link rel="stylesheet" href="mde/easymde.min.css" class="rel" />

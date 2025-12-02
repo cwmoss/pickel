@@ -30,20 +30,20 @@ export default class Slug extends Face {
     if (!ok) slug += "-" + hashID(5);
     console.log("generate RESULT ", slug);
     this.value = { current: slug };
-    // this.requestUpdate();
+    this.requestUpdate();
   }
   update_input(e) {
     console.log("+++ update", hashID(5), e, e.target.value);
     this.value.current = e.target.value;
   }
   render() {
-    console.log("render slug");
+    console.log("render slug", this.value?.current);
     return html`<pi-input
       @input=${this.update_input}
       .value=${this.value?.current ?? ""}
       .label=${this.label}
     >
-      ${this.from
+      ${true
         ? html`<pi-btn
             style="margin-left: 0.5rem;"
             stretch
@@ -53,7 +53,7 @@ export default class Slug extends Face {
             Generate
           </pi-btn>`
         : ""}
-    </pi-input> `;
+    </pi-input>`;
   }
 }
 

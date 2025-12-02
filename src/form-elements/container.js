@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "../../vendor/lit-core.min.js";
+import { LitElement, css, html, repeat } from "../../vendor/lit-all.min.js";
 import {
   get_component,
   get_component_tag,
@@ -200,7 +200,7 @@ export default class Container extends LitElement {
     return value;
   }
 
-  init() {}
+  init() { }
 
   new_input(field, name, value) {
     // console.log("$ARR $OBJ new input", field);
@@ -288,7 +288,7 @@ export default class Container extends LitElement {
     });
   }
 
-  get_preview() {}
+  get_preview() { }
 
   new_previewdata(e) {
     e.stopPropagation();
@@ -331,17 +331,17 @@ export default class Container extends LitElement {
       <div ?hidden=${!preview} class="preview">${this.render_preview()}</div>
       <div ?hidden=${preview} class="edit">
         ${this.dialog_button
-          ? html`<pi-dialog
+        ? html`<pi-dialog
               title=${this.dialog_title ?? "edit"}
               trigger_title=${this.dialog_button}
             >
               <div class="els">${this.render_els()}</div>
             </pi-dialog>`
-          : html`
+        : html`
               <div
                 @toggle-fullscreen=${(e) => {
-                  console.log("$$ fullscreen", e);
-                }}
+            console.log("$$ fullscreen", e);
+          }}
                 class="els"
               >
                 ${this.render_els()}
