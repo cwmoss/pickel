@@ -7,6 +7,7 @@
 @import url("form.css");
 @import url("nav.css");
 @import url("dashboard.css");
+@import url("pages.css");
 
 [class^="fa-"]:before,
 [class*=" fa-"]:before {

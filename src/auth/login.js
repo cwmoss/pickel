@@ -12,14 +12,14 @@ template.innerHTML = `
     display: block;
     background-color:white;
     padding:1em !important;
-    transform:rotate(-3deg);
+    /* transform:rotate(-3deg); */
     box-sizing: border-box;
     box-shadow: 3px 3px 10px #ccc;
     text-align:left;
     width: 800px;
     max-width: 80vw;
-    border-left: 10px solid;
-    border-image: repeating-linear-gradient(43deg,
+  //  border-left: 10px solid;
+  //  border-image: repeating-linear-gradient(43deg,
             black,
             black 4px,
             transparent 5px,
@@ -134,121 +134,119 @@ path{
 </form>`;
 
 export default class Login extends HTMLElement {
-    endpoint = "/auth";
+  endpoint = "/auth";
 
-    constructor() {
-        super();
-        this.attachShadow({
-            mode: "open",
-        });
-        this.shadowRoot.appendChild(template.content.cloneNode(true));
-        this.shadowRoot
-            .querySelector("form")
-            .addEventListener("submit", (e) => {
-                e.preventDefault();
-                if (this.mode == "login") this.login();
-                else this.reset_request();
-            });
-        this.shadowRoot
-            .querySelector(".change-mode")
-            .addEventListener("click", () => {
-                this.change_mode();
-            });
-        this.alert = this.shadowRoot.getElementById("alert");
-        this.message = this.shadowRoot.getElementById("message");
-        // this.change_mode(true);
-    }
+  constructor() {
+    super();
+    this.attachShadow({
+      mode: "open",
+    });
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
+    this.shadowRoot.querySelector("form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (this.mode == "login") this.login();
+      else this.reset_request();
+    });
+    this.shadowRoot
+      .querySelector(".change-mode")
+      .addEventListener("click", () => {
+        this.change_mode();
+      });
+    this.alert = this.shadowRoot.getElementById("alert");
+    this.message = this.shadowRoot.getElementById("message");
+    // this.change_mode(true);
+  }
 
-    connectedCallback() {
-        this.change_mode(true);
-    }
+  connectedCallback() {
+    this.change_mode(true);
+  }
 
-    change_mode(init) {
-        if (init) {
-            this.mode = this.getAttribute("mode") || "login";
-        } else {
-            if (this.mode == "login") {
-                this.mode = "reset";
-            } else {
-                this.mode = "login";
-            }
-        }
-        this.alert.setAttribute("hidden", "");
-        this.message.innerHTML = "";
-        this.setAttribute("mode", this.mode);
+  change_mode(init) {
+    if (init) {
+      this.mode = this.getAttribute("mode") || "login";
+    } else {
+      if (this.mode == "login") {
+        this.mode = "reset";
+      } else {
+        this.mode = "login";
+      }
     }
-    async login() {
-        // console.log("submit+++", this);
-        this.alert.setAttribute("hidden", "");
-        let path = "/login";
-        const args = {
-            email: this.shadowRoot.getElementById("email").value,
-            password: this.shadowRoot.getElementById("password").value,
-        };
-        let resp = await fetch(`${this.endpoint}${path}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": this.csrf_token(),
-            },
-            credentials: "include",
-            body: JSON.stringify(args),
-        });
-        let data = await resp.json();
-        if (data.ok == false) {
-            this.alert.removeAttribute("hidden");
-            this.message.innerHTML = "Login fehlgeschlagen";
-        } else {
-            let ev = new CustomEvent("login-successful", {
-                detail: data,
-                bubbles: true,
-                composed: true,
-            });
-            this.dispatchEvent(ev);
-        }
+    this.alert.setAttribute("hidden", "");
+    this.message.innerHTML = "";
+    this.setAttribute("mode", this.mode);
+  }
+  async login() {
+    // console.log("submit+++", this);
+    this.alert.setAttribute("hidden", "");
+    let path = "/login";
+    const args = {
+      email: this.shadowRoot.getElementById("email").value,
+      password: this.shadowRoot.getElementById("password").value,
+    };
+    let resp = await fetch(`${this.endpoint}${path}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": this.csrf_token(),
+      },
+      credentials: "include",
+      body: JSON.stringify(args),
+    });
+    let data = await resp.json();
+    if (data.ok == false) {
+      this.alert.removeAttribute("hidden");
+      this.message.innerHTML = "Login fehlgeschlagen";
+    } else {
+      let ev = new CustomEvent("login-successful", {
+        detail: data,
+        bubbles: true,
+        composed: true,
+      });
+      this.dispatchEvent(ev);
     }
+  }
 
-    async reset_request() {
-        // console.log("submit+++", this);
-        this.alert.setAttribute("hidden", "");
-        let path = "/request_reset";
-        const args = {
-            email: this.shadowRoot.getElementById("email").value,
-        };
-        let resp = await fetch(`${this.endpoint}${path}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": this.csrf_token(),
-            },
-            credentials: "include",
-            body: JSON.stringify(args),
-        });
-        let data = await resp.json();
-        if (data.ok == false) {
-            this.alert.removeAttribute("hidden");
-            let msg = "";
-            if (data.problems && data.problems.length) {
-                msg = data.problems.map((e) => e.message).join("<br>");
-            } else {
-                msg = data.message ?? "Es ist ein Fehler aufgetreten.";
-            }
-            console.log("++ msg", msg);
-            this.message.innerHTML = msg;
-        } else {
-            this.alert.removeAttribute("hidden");
-            this.message.innerHTML = "OK, schau in dein Postfach :)";
-            let ev = new CustomEvent("reset-successful", {
-                detail: data,
-                bubbles: true,
-                composed: true,
-            });
-            this.dispatchEvent(ev);
-        }
+  async reset_request() {
+    // console.log("submit+++", this);
+    this.alert.setAttribute("hidden", "");
+    let path = "/request_reset";
+    const args = {
+      email: this.shadowRoot.getElementById("email").value,
+    };
+    let resp = await fetch(`${this.endpoint}${path}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": this.csrf_token(),
+      },
+      credentials: "include",
+      body: JSON.stringify(args),
+    });
+    let data = await resp.json();
+    if (data.ok == false) {
+      this.alert.removeAttribute("hidden");
+      let msg = "";
+      if (data.problems && data.problems.length) {
+        msg = data.problems.map((e) => e.message).join("<br>");
+      } else {
+        msg = data.message ?? "Es ist ein Fehler aufgetreten.";
+      }
+      console.log("++ msg", msg);
+      this.message.innerHTML = msg;
+    } else {
+      this.alert.removeAttribute("hidden");
+      this.message.innerHTML = "OK, schau in dein Postfach :)";
+      let ev = new CustomEvent("reset-successful", {
+        detail: data,
+        bubbles: true,
+        composed: true,
+      });
+      this.dispatchEvent(ev);
     }
-    csrf_token() {
-        return "TODO";
-    }
+  }
+  csrf_token() {
+    return "TODO";
+  }
 }
 
 customElements.define("app-login", Login);
