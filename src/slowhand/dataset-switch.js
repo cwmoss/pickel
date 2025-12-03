@@ -13,8 +13,11 @@ export default class DatasetSwitch extends LitElement {
   async connectedCallback() {
     super.connectedCallback();
     if (this.loaded) return;
-    this.loaded = true;
+    this.initialize();
+  }
 
+  initialize() {
+    this.loaded = true;
     // this.current = dataset.current;
     let schema = project.schema();
     this.current = schema.name;

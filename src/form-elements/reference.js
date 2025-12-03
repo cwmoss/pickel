@@ -74,7 +74,7 @@ export default class Reference extends Face {
       _type: this.type,
       _ref: e.detail.id,
     };
-    await this.init();
+    // await this.init();
   }
   search() { }
   remove() {

@@ -2,6 +2,8 @@ import router from "../vendor/page.m.js";
 import routes from "./routes.js";
 import project from "./lib/project.js";
 import bus from "./lib/bus.js";
+import auth from "./auth/auth.js";
+import "./auth/logout.js";
 
 import { load_template } from "./lib/template.js";
 // let router = window.page;
@@ -17,12 +19,25 @@ class App extends HTMLElement {
     super();
     this.define_routes();
     // this.innerHTML = layout;
+    document.addEventListener("login-successful", async (ev) => {
+      this.profile = auth.login_from_wc(ev.detail);
+      await project.load_current_project();
+      this.update_layout();
+      router("/");
+    });
+    document.addEventListener("logout-successful", async (ev) => {
+      auth.logged_out();
+      this.profile = null
+      this.update_layout();
+      router("/");
+    });
     this.addEventListener("open-doc", this.opendoc);
     bus.subscribe(bus.ev.page_loaded, (ev) => this.title_change(ev));
     bus.subscribe(bus.ev.project_loaded, (ev) => this.title_change(ev));
   }
 
   async connectedCallback() {
+    this.profile = await auth.first_login;
     if (this.profile) await project.load_current_project();
     let template = await load_template("_layout");
     const clone = template[0].content.cloneNode(true);
@@ -32,8 +47,19 @@ class App extends HTMLElement {
       this.content = this.querySelector("main");
       this.nav = this.querySelector("pi-navigation");
       console.log("+++ nav => ", this.nav);
+      this.update_layout();
       router();
     });
+  }
+
+  update_layout() {
+    console.log("+++ update layout");
+    if (this.profile) {
+      this.querySelectorAll("*[initialize-after-login]").forEach(el => el.initialize());
+      this.querySelectorAll("*[auth-only]").forEach(el => el.removeAttribute("hidden"));
+    } else {
+      this.querySelectorAll("*[auth-only]").forEach(el => el.setAttribute("hidden", ""));
+    }
   }
 
   opendoc(e) {

@@ -1,85 +1,24 @@
-import bus from "./bus.js";
-import gql from "./gql.js";
-
-let q_fetch_profile = gql`
-    query owner__GetProfileInit($id: uuid!) {
-        profile: profiles_by_pk(id: $id) {
-            id
-            email
-            extrapoints
-            is_active
-            position
-
-            t1
-            t2
-            t3
-            username
-            avatar
-        }
-
-        settings: competition_by_pk(id: true) {
-            id
-            starts_at
-            finals_starts_at
-            final_match
-            groups
-            recent_match_no
-            name
-            version
-        }
-
-        spruch: random_keks {
-            baecker
-            keks
-        }
-    }
-`;
-
-let q_activate = gql`
-    mutation owner__ActivateProfile($id: uuid!) {
-        update_profiles_by_pk(
-            pk_columns: { id: $id }
-            _set: { is_active: true }
-        ) {
-            is_active
-        }
-    }
-`;
-
 class app_auth {
     state;
     profile = {};
     expires = 0;
     settings = {};
-    graphql;
     endpoint = "/auth";
     first_login;
 
-    constructor() { }
+    constructor() {
+        this.init();
+    }
 
-    init(graphql) {
-        this.graphql = graphql;
+    init() {
         this.first_login = this.login_silent();
         // this.check_expire();
     }
-
-    async fetch_profile(id, roles) {
-        console.log("+++ fetch profile via graphql-client");
-        let result = await this.graphql.fetch(q_fetch_profile, {
-            id: id,
-        });
-        console.log("++++ hasura result profile", roles, result);
-        if (!result.profile) return "hasura-profile-not-found";
-
-        this.profile = { ...result.profile };
-        this.profile.roles = roles ? roles : [];
-
-        if (result.settings) {
-            this.settings = result.settings;
-        }
-        return this.profile;
+    logged_out() {
+        this.profile = null;
+        this.expires = 0;
+        this.first_login = false;
     }
-
     async check_expire(redirect) {
         const expired = this.expires < Date.now();
         // console.log("+++ expired?", expired);
@@ -93,8 +32,13 @@ class app_auth {
     }
 
     async _setup_profile(resp) {
-        this._expires = (resp.user.expires_ts - 60) * 1000;
-        const profile = await this.fetch_profile(resp.user.id, resp.user.roles);
+        console.log("++ setup profile", resp.user);
+        this.expires = (resp.user.expires_ts - 60) * 1000;
+        const profile = {
+            uname: resp.user.uname, roles: resp.user.roles ?? [], default_role: resp.user.default_role,
+            avatar: resp.user.avatar, id: resp.user.id, email: resp.user.email,
+            orgid: resp.user.orgid
+        };
         console.log("++ setup profile", profile);
         return profile;
     }

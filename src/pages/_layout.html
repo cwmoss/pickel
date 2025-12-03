@@ -1,7 +1,7 @@
 <template>
   <header>
     <h1>slowhand</h1>
-    <pi-navigation hidden>
+    <pi-navigation auth-only hidden>
       <nav>
         <ul>
           <li class="ds-switch"><pi-search></pi-search></li>
@@ -13,14 +13,15 @@
           <li><a href="/studio/media">Media</a></li>
           <li><a href="/studio/admin">Admin</a></li>
           <li><a href="/studio/about">About</a></li>
-          <li class="ds-switch"><dataset-switch></dataset-switch></li>
+          <li class="ds-switch"><dataset-switch initialize-after-login></dataset-switch></li>
         </ul>
       </nav>
+
     </pi-navigation>
   </header>
   <main></main>
   <footer>
     made <span class="fa-italic"></span> with pickel
-    <button type="button">Toast</button>
+    <button type="button">Toast</button> <app-logout auth-only></app-logout>
   </footer>
 </template>
