@@ -7,11 +7,11 @@ export default class Typelist extends Panel {
   async fetch_content() {
     let content = [];
     let schema = project.schema();
-    console.log("+panel=>schema", this.index, schema);
+    console.log("+panel=>schema", this.index, this.id, schema);
 
     schema.documents.forEach((item) => {
       let el = new Preview();
-      el.set_data({ id: item.name, title: item.title });
+      el.set_data({ id: item.id, title: item.title });
       el.simple = true;
       el.icon = "folder";
       content.push(el);

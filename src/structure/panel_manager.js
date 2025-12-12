@@ -2,10 +2,18 @@ import Split from "../../vendor/split-grid.js";
 import Doclist from "./doclist.js";
 import Typelist from "./typelist.js";
 import Editor from "./editor.js";
+import Arraylist from "./arraylist.js";
 
 import { slugify_simple } from "../lib/util.js";
 import urlStore from "../lib/url-store.js";
 //import Preview from "./preview.js";
+import { edit_node, node, type_node } from "./nodes/index.js";
+
+const tree = new node("root")
+tree.children = [
+  new type_node("article", "Pages"),
+  new edit_node("www.lotsenturm-usedom.de", "Options"),
+];
 
 const template = document.createElement("template");
 /*
@@ -72,14 +80,33 @@ export default class PanelManager extends HTMLElement {
   }
 
   initialize() {
-    this.add_rootpanel();
+    // this.add_rootpanel();
+    let root = this.make_panel(tree.title, 0, tree);
+    this.panels.push(root);
+
     let saved = urlStore.get_array("z");
     console.log("$$$ path read", saved);
+    let current = root;
+    let broken = false;
     saved.forEach((id, idx) => {
-      let panel = this.make_panel(id, idx + 1);
+      console.log("$$$ path step", id, idx, current);
+      let next = current.node.find_child(id);
+      if (!next || broken) {
+        broken = true;
+        return
+      }
+      let panel = this.make_panel(id, idx + 1, next);
       panel.doc_id = id;
       this.panels.push(panel);
+      current = panel;
     });
+    if (broken) {
+      console.log("$$$ path broken, render editor, happens for search results searching");
+      let id = saved.slice(-1)[0]
+      let panel = this.make_panel(id, null, new edit_node(id, "Edit " + id));
+      panel.doc_id = id;
+      this.panels.push(panel);
+    }
     this.render();
 
     // set_active funktioniert erst nach dem rendern des panels
@@ -93,8 +120,44 @@ export default class PanelManager extends HTMLElement {
     );
   }
 
-  add_rootpanel() {
-    this.add_panel("docs");
+  make_panel_element(name) {
+    if (name == "Typelist") return new Typelist();
+    if (name == "Arraylist") return new Arraylist();
+    if (name == "Doclist") return new Doclist();
+    return new Editor();
+  }
+
+  make_panel(title, index, node) {
+    index ??= this.panels.length;
+    console.log("$$ make panel", title, index, node);
+    let p;
+    p = this.make_panel_element(node.element);
+    p.node = node
+    // p.title = title;
+    p.index = index;
+    return p
+    if (index == 0) {
+      // p = new Typelist();
+      p = new Arraylist();
+      p.node = tree;
+    } else if (index == 1) {
+      p = new Doclist();
+    } else {
+      p = new Editor();
+    }
+    p.title = title;
+    p.index = index;
+    p.id = slugify_simple(title);
+
+    return p;
+  }
+
+
+  add_panel(title, node) {
+    console.log("$$ make panel add", title, node);
+    let panel = this.make_panel(title, node);
+
+    this.panels.push(panel);
   }
 
   close(detail) {
@@ -106,9 +169,12 @@ export default class PanelManager extends HTMLElement {
   }
 
   open_new(preview) {
-    console.log("$$$ request new panel", preview, preview.panel);
+    console.log("$$ make panel request new panel", preview, preview.panel);
     this.panels[preview.panel].set_active(preview.id);
-    let panel = this.make_panel(preview.id, preview.panel + 1);
+    let node = this.panels[preview.panel].node
+    let newnode = node.find_child(preview.id)
+
+    let panel = this.make_panel(preview.id, preview.panel + 1, newnode);
     panel.doc_id = preview.id;
     panel.doc_create = preview.create ?? null;
     this.panels.splice(preview.panel + 1, Infinity, panel);
@@ -140,6 +206,7 @@ export default class PanelManager extends HTMLElement {
     return "300px";
   }
   render() {
+    console.log("$$ make panel render", this.panels);
     let container = this.container;
     let add = [];
     let cols = [];
@@ -225,44 +292,13 @@ export default class PanelManager extends HTMLElement {
     );
   }
 
-  add_panel(title) {
-    let panel = this.make_panel(title);
 
-    this.panels.push(panel);
-  }
   make_gutter() {
     let div = document.createElement("div");
     div.classList.add("gutter");
     return div;
   }
-  make_panel(title, index) {
-    index ??= this.panels.length;
-    console.log("$$ make panel", title, index);
-    let p;
-    if (index == 0) {
-      p = new Typelist();
-    } else if (index == 1) {
-      p = new Doclist();
-    } else {
-      p = new Editor();
-    }
-    p.title = title;
-    p.index = index;
-    p.id = slugify_simple(title);
 
-    return p;
-  }
-  xxmake_panel(title, index) {
-    let p = new Panel();
-    p.setAttribute("title", title);
-    p.index = index ?? this.panels.length;
-    p.id = slugify_simple(title);
-    return p;
-
-    let div = document.createElement("div");
-    div.appendChild(p);
-    return div;
-  }
 }
 
 customElements.define("pi-panel-manager", PanelManager);

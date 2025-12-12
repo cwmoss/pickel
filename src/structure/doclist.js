@@ -9,13 +9,13 @@ export default class Doclist extends Panel {
   async fetch_content(fts) {
     let content = [];
     let schema = project.schema();
-    console.log("+panel=>schema", this.index, schema);
+    console.log("+panel=>schema", this.index, schema, this.node);
     let docs = [];
     if (fts) {
-      let res = await api.search(fts, this.title, true);
+      let res = await api.search(fts, this.node.id, true);
       docs = res.result;
     } else {
-      docs = await api.documents(this.title, { preview: true });
+      docs = await api.documents(this.node.id, { preview: true });
     }
 
     docs.forEach((item) => {

@@ -148,6 +148,15 @@ export default class Panel extends LitElement {
     this.collabsed = false;
   }
 
+  set node(node) {
+    this._node = node
+    this.title = node.title
+  }
+
+  get node() {
+    return this._node
+  }
+
   async connectedCallback() {
     super.connectedCallback();
     // für jedes panel nur 1x initialisieren
@@ -249,9 +258,9 @@ export default class Panel extends LitElement {
     return html`
       <div
         class="wrapper ${classMap({
-          panel: !this.collabsed,
-          "panel-collapsed": this.collabsed,
-        })}"
+      panel: !this.collabsed,
+      "panel-collapsed": this.collabsed,
+    })}"
       >
         <div collabsed class="panel--head-collapsed ellipsis">
           <span @click=${this.handle_collapse} class="panel--title"
@@ -265,10 +274,10 @@ export default class Panel extends LitElement {
           <div class="actions">${this.render_actions()}</div>
         </div>
         ${head2
-          ? html`<div not-collabsed class="panel--head2">
+        ? html`<div not-collabsed class="panel--head2">
               ${this.render_head()}
             </div>`
-          : ""}
+        : ""}
 
         <div
           not-collabsed
