@@ -213,8 +213,10 @@ class schema {
   }
   get_icon(type) {
     if (type) {
-      return this.get_type(type).icon ?? "";
+      console.log("$ schema get_icon", type);
+      return this.get_type(type)?.icon ?? "";
     }
+    return "";
   }
   get_preview(data) {
     let type = data?._type;
