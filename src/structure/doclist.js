@@ -12,10 +12,12 @@ export default class Doclist extends Panel {
     console.log("+panel=>schema", this.index, schema, this.node);
     let docs = [];
     if (fts) {
-      let res = await api.search(fts, this.node.id, true);
+      let res = await api.search(fts, this.node.type, true);
       docs = res.result;
     } else {
-      docs = await api.documents(this.node.id, { preview: true });
+      let { q, opts } = this.node.query()
+      opts.preview = true
+      docs = await api.documentQuery(q, opts);
     }
 
     docs.forEach((item) => {
@@ -29,7 +31,7 @@ export default class Doclist extends Panel {
   }
 
   create() {
-    let doc = { _id: crypto.randomUUID(), _type: this.title };
+    let doc = { _id: crypto.randomUUID(), _type: this.node.type };
     this.dispatchEvent(
       new CustomEvent("open-preview", {
         detail: { panel: this.index, id: doc._id, create: doc },

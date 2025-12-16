@@ -39,6 +39,7 @@ class App extends HTMLElement {
   async connectedCallback() {
     this.profile = await auth.first_login;
     if (this.profile) await project.load_current_project();
+    // else await project.load_current_project();
     let template = await load_template("_layout");
     const clone = template[0].content.cloneNode(true);
     this.appendChild(clone);

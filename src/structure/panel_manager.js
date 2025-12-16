@@ -4,16 +4,21 @@ import Typelist from "./typelist.js";
 import Editor from "./editor.js";
 import Arraylist from "./arraylist.js";
 
+import project from "../lib/project.js";
+
 import { slugify_simple } from "../lib/util.js";
 import urlStore from "../lib/url-store.js";
 //import Preview from "./preview.js";
-import { edit_node, node, type_node } from "./nodes/index.js";
+import { edit_node } from "./nodes/index.js";
 
-const tree = new node("root")
+/*const tree = new node("root")
 tree.children = [
   new type_node("article", "Pages"),
   new edit_node("www.lotsenturm-usedom.de", "Options"),
 ];
+*/
+
+// const tree = new default_root();
 
 const template = document.createElement("template");
 /*
@@ -81,6 +86,8 @@ export default class PanelManager extends HTMLElement {
 
   initialize() {
     // this.add_rootpanel();
+    console.log("$$$ panelmanager initialize", project.name, project.schema())
+    let tree = project.get_structure();
     let root = this.make_panel(tree.title, 0, tree);
     this.panels.push(root);
 
