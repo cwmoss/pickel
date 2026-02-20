@@ -8,7 +8,7 @@ export default class edit_node extends node {
 
     }
 
-    xxxfind_child(id) {
-        // return new edit_node(id, "Edit " + id);
+    find_child(id) {
+        return new edit_node(id, "Edit " + id);
     }
 }
