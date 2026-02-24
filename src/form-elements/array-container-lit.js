@@ -19,9 +19,9 @@ let draghandle_image = html`<svg
 /*
 https://github.com/SortableJS/Sortable?tab=readme-ov-file
 */
-export default class ArrayContainer extends HTMLElement {
+export default class ArrayContainer extends Container {
     static properties = {
-        //       ...Container.properties,
+        ...Container.properties,
         edit_item: { type: Object },
     };
 
@@ -35,33 +35,6 @@ export default class ArrayContainer extends HTMLElement {
             return ["multiimageupload"];
         }
         return [];
-    }
-
-    connectedCallback() {
-        // super.connectedCallback();
-        // console.log("++ connected");
-        // his.init();
-        this.init_schema_value();
-    }
-
-    init_schema_value() {
-        console.log(
-            "$$$ $IMG init 0 container schema/value",
-            this.constructor,
-            this.manager,
-            this._schema,
-            this._value
-        );
-        if (!this.manager || !this._schema || !this._value) return;
-        console.log(
-            "$$$ $IMG init 1 container schema/value",
-            this._schema,
-            this._value
-        );
-        this.init();
-        this.build();
-        this.render();
-        // this.update_value(this._value);
     }
 
     init() {
@@ -278,49 +251,6 @@ export default class ArrayContainer extends HTMLElement {
         this.build();
         this.requestUpdate();
     }
-
-    render() {
-        // ${this.render_preview()}
-        // console.log("render container", this.els);
-        if (!this.schema) return;
-        let preview = true;
-
-        if (this.editmode !== undefined) {
-            preview = !this.editmode;
-        } else {
-            if (this.level > 3) preview = true;
-            else preview = false;
-        }
-
-        // if (preview) return this.render_preview();
-        return html`<div @preview-data=${this.new_previewdata}>
-      ${this.noLabel
-                ? ""
-                : html`<label title=${this.type}>${this.label}</label>`}
-      <div ?hidden=${!preview} class="preview">${this.render_preview()}</div>
-      <div ?hidden=${preview} class="edit">
-        ${this.dialog_button
-                ? html`<pi-dialog
-              title=${this.dialog_title ?? "edit"}
-              trigger_title=${this.dialog_button}
-            >
-              <div class="els">${this.render_els()}</div>
-            </pi-dialog>`
-                : html`
-              <div
-                @toggle-fullscreen=${(e) => {
-                        console.log("$$ fullscreen", e);
-                    }}
-                class="els"
-              >
-                ${this.render_els()}
-              </div>
-              ${this.render_actions()}
-            `}
-      </div>
-    </div>`;
-    }
-
     render_actions() {
         let uploader = "";
         console.log("$$$ upl url", api.upload_image_url());

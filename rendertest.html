@@ -30,6 +30,34 @@
                 }
             })
         }
+
+
+        customElements.whenDefined("pi-some-container").then(() => {
+            console.log("*** some container defined", this)
+            let when_def = document.createElement("pi-some-container");
+            document.body.append(when_def);
+        })
+
+
+
+        class SomeContainer extends HTMLElement {
+
+            connectedCallback() {
+                console.log("*** connectedCallback container active", this.xprop);
+            }
+
+        }
+        customElements.define("pi-some-container", SomeContainer);
+
+
+        customElements.whenDefined("pi-some-container").then(() => {
+            console.log("*** some container defined when_def2", this)
+            let when_def2 = document.createElement("pi-some-container");
+            document.body.append(when_def2);
+        })
+
+
+
         class Vanilla extends LitElement {
             static properties = {
                 gname: {
