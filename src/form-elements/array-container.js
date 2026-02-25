@@ -1,4 +1,4 @@
-import { html, repeat } from "../../vendor/lit-all.min.js";
+import { html, repeat, render, unsafeHTML } from "../../vendor/lit-all.min.js";
 import Container from "./container.js";
 import { get_component_tag, resolve_components } from "./component-loader.js";
 import api from "../lib/api.js";
@@ -28,9 +28,10 @@ export default class ArrayContainer extends HTMLElement {
     enable_add = true;
 
     static empty_value = [];
+    els = [];
 
     additional_components() {
-        if (this.manager.is_image(this.of[0].type)) {
+        if (this.setup.manager.schema.is_image(this.of[0].type)) {
             //  this.has_image = true;
             return ["multiimageupload"];
         }
@@ -41,6 +42,7 @@ export default class ArrayContainer extends HTMLElement {
         // super.connectedCallback();
         // console.log("++ connected");
         // his.init();
+        this.value = this.setup.value;
         this.init_schema_value();
     }
 
@@ -48,27 +50,33 @@ export default class ArrayContainer extends HTMLElement {
         console.log(
             "$$$ $IMG init 0 container schema/value",
             this.constructor,
-            this.manager,
-            this._schema,
-            this._value
-        );
-        if (!this.manager || !this._schema || !this._value) return;
-        console.log(
-            "$$$ $IMG init 1 container schema/value",
+            this.setup,
             this._schema,
             this._value
         );
         this.init();
         this.build();
-        this.render();
+        this.run_render();
         // this.update_value(this._value);
     }
 
+    run_render() {
+        render(this.render(), this);
+        let zone = this.querySelector(".dnd");
+        console.log("#### elements zone", zone);
+        this.render_els(zone);
+    }
+    get of() {
+        return this.setup.schema.of;
+    }
+    get sortable() {
+        return false;
+    }
     init() {
-        console.log("$ARR init array type", this.schema, this.of);
+        console.log("$ARR init array type", this.setup.schema, this.of);
         // console.log(this.of[0].type);
         this.has_image = false;
-        if (this.manager.is_image(this.of[0].type)) {
+        if (this.setup.manager.schema.is_image(this.of[0].type)) {
             this.has_image = true;
         }
         /*if (schema.is_ref(this.of[0].type)) {
@@ -81,9 +89,9 @@ export default class ArrayContainer extends HTMLElement {
         console.log(
             "$ARR first update",
             this.options,
-            this.renderRoot.querySelector(".dnd")
+            //  this.renderRoot.querySelector(".dnd")
         );
-        if (this.options?.sortable !== false) {
+        if (this.sortable !== false) {
             setTimeout(() => {
                 let presortPrevious = [];
                 let before;
@@ -168,15 +176,12 @@ export default class ArrayContainer extends HTMLElement {
           this.value.push(val);
         }
     */
-        let f = this.new_input(
+        let f = this.setup.manager.make_new_input(
             { type: type, subtype: this.subtype },
             `${this.prefix}[${index}]`,
             val
         );
-        f.opts = {
-            label: this.name,
-            // id: field.name,
-        };
+
         //this
         console.log("$$ new array item", f);
         return f;
@@ -238,11 +243,8 @@ export default class ArrayContainer extends HTMLElement {
     build_elements() {
         let type = this.of[0].type;
         this.els = this.value.map((val, index) => {
-            let f = this.new_input({ type: type }, `${this.prefix}[${index}]`, val);
-            f.opts = {
-                label: this.name,
-                // id: field.name,
-            };
+            let f = this.setup.manager.make_new_input({ type: type }, `${this.prefix}[${index}]`, val, this.setup.level);
+
             f.noLabel = true;
             f.editmode = false;
             return f;
@@ -281,8 +283,8 @@ export default class ArrayContainer extends HTMLElement {
 
     render() {
         // ${this.render_preview()}
-        // console.log("render container", this.els);
-        if (!this.schema) return;
+        console.log("render ARRAY container", this.els);
+
         let preview = true;
 
         if (this.editmode !== undefined) {
@@ -299,24 +301,18 @@ export default class ArrayContainer extends HTMLElement {
                 : html`<label title=${this.type}>${this.label}</label>`}
       <div ?hidden=${!preview} class="preview">${this.render_preview()}</div>
       <div ?hidden=${preview} class="edit">
-        ${this.dialog_button
-                ? html`<pi-dialog
-              title=${this.dialog_title ?? "edit"}
-              trigger_title=${this.dialog_button}
-            >
-              <div class="els">${this.render_els()}</div>
-            </pi-dialog>`
-                : html`
+        
               <div
                 @toggle-fullscreen=${(e) => {
-                        console.log("$$ fullscreen", e);
-                    }}
+                console.log("$$ fullscreen", e);
+            }}
                 class="els"
               >
-                ${this.render_els()}
+                ${this.render_els_zone()}
+                ${this.render_new_dialog()}
               </div>
               ${this.render_actions()}
-            `}
+            
       </div>
     </div>`;
     }
@@ -334,44 +330,54 @@ export default class ArrayContainer extends HTMLElement {
     ${this.enable_add
                 ? html` <div class="container--actions">
           <button type="button" @click=${this.item_new} part="button">
-            Add Item ${this.opts.sortable}
+            Add Item ${this.sortable}
           </button>
         </div>`
                 : ""}`;
     }
 
-    render_els() {
+    render_els_zone() {
+        return html`<div class="dnd" @dropped=${this.dropped}></div>
+        ${this.els.length == 0
+                ? html`<div class="container--empty-array">no entries</div>`
+                : ""}
+        `
+    }
+    render_els(root) {
         console.log("$ARR render ArrayContainer", this.els, this.options);
-        return html`<div class="dnd" @dropped=${this.dropped}>
-        ${repeat(this.els, el => el.value, (el, idx) => {
-            console.log("els array element", el);
-            return html`<div class="array-el">
-            ${this.options?.sortable !== false
-                    ? html`<div class="handle"></div>`
-                    : ""}
-            <div class="el-content" @click=${() => this.item_edit(el)}>
-              ${el}
-            </div>
+        //  @click=${() => this.item_edit(el)}
+        // @click=${() => this.item_remove(idx, el)}
+        let tpl = document.createElement("template");
+        tpl.innerHTML = `<div class="array-el">
+            ${this.sortable !== false
+                ? `<div class="handle"></div>`
+                : ""}
+            <div class="el-content"></div>
             <div class="el-actions">
               <pi-btn
                 title="remove"
                 flat
-                @click=${() => this.item_remove(idx, el)}
                 ><sl-icon name="trash" label="remove"></sl-icon
               ></pi-btn>
             </div>
-          </div> `;
-        })}
-      </div>
-      ${this.els.length == 0
-                ? html`<div class="container--empty-array">no entries</div>`
-                : ""}
+          </div>`;
 
-      <pi-dialog nobutton class="new-item" @close=${this.item_new_save}
-        >${this.edit_item}
-        <pi-btn close primary @click=${this.item_new_save}>Save</pi-btn>
-        <pi-btn close @click=${this.item_new_cancel}>Cancel</pi-btn>
-      </pi-dialog> `;
+        this.els.forEach(el => {
+            let dom = tpl.content.cloneNode(true);
+            // console.log("el-node", dom);
+            dom.querySelector(".el-content").appendChild(el);
+            root.appendChild(dom);
+        })
+        console.log("result-html", html);
+    }
+
+    render_new_dialog() {
+        return html`
+            <pi-dialog nobutton class="new-item" @close=${this.item_new_save}
+        > ${this.edit_item}
+        <pi-btn close primary @click=${this.item_new_save}> Save</pi-btn>
+            <pi-btn close @click=${this.item_new_cancel}> Cancel</pi-btn>
+      </pi-dialog>`;
     }
 
     render_preview() {
@@ -381,10 +387,12 @@ export default class ArrayContainer extends HTMLElement {
         <div class="handle"></div>
         ${el}
       </div> `;
-        })}
+        })
+            }
     ${this.els.length == 0
                 ? html`<div class="container--empty-array">no entries</div>`
-                : ""} `;
+                : ""
+            } `;
     }
 }
 

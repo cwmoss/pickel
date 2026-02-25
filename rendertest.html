@@ -31,7 +31,20 @@
             })
         }
 
+        class ElementWithSetup extends HTMLElement {
+            constructor() {
+                super();
+                if (Object.prototype.hasOwnProperty.call(this, "safe_setup")) {
+                    const val = this["safe_setup"]
+                    delete this["safe_setup"]
+                    this["safe_setup"] = val
+                }
+            }
 
+            set safe_setup(props) {
+                this._safe_setup = props;
+            }
+        }
         customElements.whenDefined("pi-some-container").then(() => {
             console.log("*** some container defined", this)
             let when_def = document.createElement("pi-some-container");
@@ -56,7 +69,52 @@
             document.body.append(when_def2);
         })
 
+        let m1 = document.createElement("my-el");
+        m1.safe_setup = {
+            a: "the A",
+            b: "the B"
+        }
+        document.body.append(m1);
 
+        class MyElem extends ElementWithSetup {
+            connectedCallback() {
+                console.log("*** connectedCallback safe", this._safe_setup);
+            }
+        }
+        customElements.define("my-el", MyElem);
+
+        let m2 = document.createElement("my-el");
+        m2.safe_setup = {
+            a: "the A2",
+            b: "the B2"
+        }
+        document.body.append(m2);
+
+        let m3 = document.createElement("my-el2");
+        m3.safe_setup = {
+            a: "the A3",
+            b: "the B3"
+        }
+        document.body.append(m3);
+
+        class MyElem2 extends ElementWithSetup {
+            connectedCallback() {
+                console.log("*** connectedCallback safe2", this._safe_setup);
+            }
+
+            set safe_setup(props) {
+                super.safe_setup = props;
+                console.log("** safe props via child")
+            }
+        }
+        customElements.define("my-el2", MyElem2);
+
+        let m4 = document.createElement("my-el2");
+        m4.safe_setup = {
+            a: "the A4",
+            b: "the B4"
+        }
+        document.body.append(m4);
 
         class Vanilla extends LitElement {
             static properties = {
