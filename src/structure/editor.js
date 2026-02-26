@@ -53,7 +53,8 @@ export default class Editor extends Panel {
             prefix: "",
             level: 0,
             value: this.document,
-            editmode: true
+            editmode: true,
+            name: ""
         };
         this.container.setup = setup;
 

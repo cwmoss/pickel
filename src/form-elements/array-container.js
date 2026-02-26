@@ -4,8 +4,8 @@ import { get_component_tag, resolve_components } from "./component-loader.js";
 import api from "../lib/api.js";
 import { hashID } from "../lib/util.js";
 // import MultiUpload from "../upload/multi-upload.js";
-// import Sortable from "../../vendor/sortable.complete.esm.js";
-import { LitSortable } from "../../vendor/lit-sortable.js";
+import Sortable from "../../vendor/sortable.complete.esm.js";
+// import { LitSortable } from "../../vendor/lit-sortable.js";
 
 let draghandle_image = html`<svg
   xmlns="http://www.w3.org/2000/svg"
@@ -16,6 +16,19 @@ let draghandle_image = html`<svg
   <path d="M0 0h24v24H0z" fill="none" />
   <path d="M3 15h18v-2H3v2zm0 4h18v-2H3v2zm0-8h18V9H3v2zm0-6v2h18V5H3z" />
 </svg>`;
+
+/*
+this better?
+https://www.geeksforgeeks.org/how-to-move-an-array-element-from-one-array-position-to-another-in-javascript/
+*/
+
+function move_array_item(input, from, to) {
+    let numberOfDeletedElm = 1;
+    const elm = input.splice(from, numberOfDeletedElm)[0];
+    numberOfDeletedElm = 0;
+    input.splice(to, numberOfDeletedElm, elm);
+}
+
 /*
 https://github.com/SortableJS/Sortable?tab=readme-ov-file
 */
@@ -42,10 +55,28 @@ export default class ArrayContainer extends HTMLElement {
         // super.connectedCallback();
         // console.log("++ connected");
         // his.init();
-        this.value = this.setup.value;
+        this.setup_once();
         this.init_schema_value();
+        this.addEventListener("click", this);
     }
+    _setup_run = false;
+    setup_once() {
+        if (!this.setup) return;
+        if (this._setup_run) return;
+        this._setup_run = true;
+        this.schema = this.setup.schema;
+        this.level = this.setup.level
+        this.label = this.setup.label
+        this.name = this.setup.name
+        this.id = this.setup.id
 
+        this.options = this.setup.options || {}
+        this.initialValue = this.setup.initialValue
+        this.value = this.setup.value
+        if (this.setup.validation && typeof this["set_validation"] === "function") {
+            this.set_validation(this.setup.validation)
+        }
+    }
     init_schema_value() {
         console.log(
             "$$$ $IMG init 0 container schema/value",
@@ -57,7 +88,39 @@ export default class ArrayContainer extends HTMLElement {
         this.init();
         this.build();
         this.run_render();
+        this.init_sortable();
         // this.update_value(this._value);
+    }
+
+    init_sortable() {
+        let zone = this.querySelector(".dnd");
+        new Sortable(zone, {
+            handle: '.handle', // handle's class
+            animation: 150,
+            onStart: e => {
+                // used to put the items back in their pre-sort position onEnd
+                console.log("$$$$ +++ dropped START", e.item, this.value);
+                // before = e.item.previousSibling;
+                // presortPrevious = e.items.map(item => item.previousSibling)
+            },
+            onEnd: (e) => {
+                console.log("$$$$ +++ dropped END", e.oldIndex, e.newIndex, this.value);
+                move_array_item(this.els, e.oldIndex, e.newIndex);
+                this.value = this.get_updated_data()
+                // console.log("updated: ", this.get_updated_data())
+                // move_array_item(this.value, e.oldIndex, e.newIndex);
+            }
+        });
+    }
+
+    handleEvent(e) {
+        console.log("clicked", e.target);
+        if (e.target.matches("[title=remove]") || e.target.closest("[title=remove]")) {
+            let del = e.target.closest(".array-el")
+            console.log("remove item", del);
+            this.item_remove(del);
+        }
+
     }
 
     run_render() {
@@ -70,7 +133,7 @@ export default class ArrayContainer extends HTMLElement {
         return this.setup.schema.of;
     }
     get sortable() {
-        return false;
+        return true;
     }
     init() {
         console.log("$ARR init array type", this.setup.schema, this.of);
@@ -85,67 +148,8 @@ export default class ArrayContainer extends HTMLElement {
         }*/
     }
 
-    firstUpdated() {
-        console.log(
-            "$ARR first update",
-            this.options,
-            //  this.renderRoot.querySelector(".dnd")
-        );
-        if (this.sortable !== false) {
-            setTimeout(() => {
-                let presortPrevious = [];
-                let before;
-
-                let sortable = LitSortable.create(
-
-                    this.renderRoot.querySelector(".dnd"),
-                    {
-                        delay: 100,
-                        handle: ".handle",
-                        // onEnd: (e) => this.dropped(e),
-                        onStart: e => {
-                            // used to put the items back in their pre-sort position onEnd
-                            console.log("$$$$ +++ dropped START", this.value);
-                            before = e.item.previousSibling;
-                            // presortPrevious = e.items.map(item => item.previousSibling)
-                        },
-                        onEnd: (e) => {
-                            before.after(e.item);
-                            this.els.splice(e.newIndex, 0, this.els.splice(e.oldIndex, 1)[0]);
-
-                            this.dropped(e)
-                            this.requestUpdate();
-                            return;
-
-
-                            const { items, newIndicies, oldIndicies } = e
-                            console.log("$$$$ +++ dropped", this.value);
-                            // RETURN ELEMENTS TO PREVIOUS POSITIONS, 'CANCELLING' THE SORT
-                            presortPrevious.forEach((previous, i) => previous.after(items[i]))
-
-                            // ALLOW LIT TO UPDATE THE DOM BY MOVING ITEMS IN ARRAY
-                            // IMPORTANT: NEED TO REMOVE ALL ITEMS FROM ARRAY AND ADD THEM BACK AS A 2nd STEP
-                            const movedArrayItems = oldIndicies.map(({ index }) => this.els[index])
-
-                            // 1. REMOVE MOVED ITEMS
-                            const indiciesToRemove = oldIndicies.map(({ index }) => index)
-                            const myFilteredArray = this.els.filter((item, i) => !indiciesToRemove.includes(i))
-
-                            // 2. ADD THEM ALL BACK IN
-                            newIndicies.forEach(({ index }, i) => myFilteredArray.splice(index, 0, movedArrayItems[i]))
-                            this.els = myFilteredArray
-
-                            this.dropped(e);
-                        }
-                    },
-                    // this, "els"
-                );
-            });
-        }
-    }
-
     get_preview() {
-        this.requestUpdate();
+        // this.requestUpdate();
     }
 
     // TODO: alle varianten
@@ -195,43 +199,13 @@ export default class ArrayContainer extends HTMLElement {
         console.log(this.querySelector("pi-dialog"));
         // setTimeout(() => this.querySelector("pi-dialog").open(), 100);
     }
-    /*
-    https://www.geeksforgeeks.org/how-to-move-an-array-element-from-one-array-position-to-another-in-javascript/
-    */
-    dropped(e) {
-        console.log(
-            "$$$$ +++ dropped old=>new",
-            e.oldIndex,
-            e.newIndex
-            // this.querySelectorAll(".els > *")
-        );
-        // this.get_updated_data()
-        let newval = this.els.map(e => e.value)
-        // this.value = newval
-        console.log("$$$$ +++ new value", this.els, this.value);
-        this.requestUpdate();
-        return;
-
-        [this.value[e.oldIndex], this.value[e.newIndex]] = [
-            this.value[e.newIndex],
-            this.value[e.oldIndex],
-        ];
-        console.log("++ new value", this.value);
-        this.build();
-        /* [this.els[e.oldIndex], this.els[e.newIndex]] = [
-          this.els[e.newIndex],
-          els[e.oldIndex],
-        ];*/
-        this.requestUpdate();
-    }
-    rearrange(from, to) { }
 
     get_updated_data() {
-        console.log("$array get updated data");
         let newval = this.els.map(e => e.value)
+        console.log("$array get updated data", newval);
         return newval
-        return super.get_updated_data();
     }
+
     build() {
         let multiupload = get_component_tag("multiimageupload");
         this.new_array_item_edit();
@@ -262,11 +236,13 @@ export default class ArrayContainer extends HTMLElement {
     item_new_cancel(e) {
         console.log("$array item new cancel", e, this.edit_item);
     }
-    item_remove(idx) {
+    item_remove(el) {
+        let idx = Array.from(el.parentNode.children).indexOf(el);
         console.log("item-remove", idx);
-        this.value.splice(idx, 1);
+        // this.value.splice(idx, 1);
         this.els.splice(idx, 1);
-        this.requestUpdate();
+        this.value = this.get_updated_data()
+        el.remove();
     }
     item_edit(item) {
         item.editmode = true;

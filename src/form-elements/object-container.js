@@ -10,10 +10,29 @@ export default class ObjectContainer extends Container {
 
     connectedCallback() {
         super.connectedCallback();
-        this.value = this.setup.value;
+        this.setup_once();
         // console.log("++ connected");
         // his.init();
         this.build();
+    }
+
+    _setup_run = false;
+    setup_once() {
+        if (!this.setup) return;
+        if (this._setup_run) return;
+        this._setup_run = true;
+        this.schema = this.setup.schema;
+        this.level = this.setup.level
+        this.label = this.setup.label
+        this.name = this.setup.name
+        this.id = this.setup.id
+
+        this.options = this.setup.options || {}
+        this.initialValue = this.setup.initialValue
+        this.value = this.setup.value
+        if (this.setup.validation && typeof this["set_validation"] === "function") {
+            this.set_validation(this.setup.validation)
+        }
     }
 
     update_value(val) {

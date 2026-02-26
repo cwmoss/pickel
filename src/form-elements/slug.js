@@ -4,47 +4,47 @@ import { get_document, api } from "./_helper.js";
 import { slugify, hashID } from "../lib/util.js";
 
 export default class Slug extends Face {
-  static properties = { ...Face.properties, prefix: {}, suffix: {} };
+    static properties = { ...Face.properties, prefix: {}, suffix: {} };
 
-  get from() {
-    let doc = get_document(this);
-    let field = doc.title ? "title" : doc.name ? "name" : "";
-    console.log("++ from field", field);
-    if (field) return field;
-    return false;
-  }
-  get from_text() {
-    let doc = get_document(this);
-    return doc[this.from];
-  }
+    get from() {
+        let doc = get_document(this);
+        let field = doc.title ? "title" : doc.name ? "name" : "";
+        console.log("++ from field", field);
+        if (field) return field;
+        return false;
+    }
+    get from_text() {
+        let doc = get_document(this);
+        return doc[this.from];
+    }
 
-  get_default_value() {
-    return { current: "" };
-  }
+    get_default_value() {
+        return { current: "" };
+    }
 
-  async generate() {
-    let doc = get_document(this);
-    console.log("generate ", doc, this.from_text);
-    let slug = slugify(this.from_text);
-    let ok = await api.checkSlug(slug, doc._type, doc._id);
-    if (!ok) slug += "-" + hashID(5);
-    console.log("generate RESULT ", slug);
-    this.value = { current: slug };
-    this.requestUpdate();
-  }
-  update_input(e) {
-    console.log("+++ update", hashID(5), e, e.target.value);
-    this.value.current = e.target.value;
-  }
-  render() {
-    console.log("render slug", this.value?.current);
-    return html`<pi-input
+    async generate() {
+        let doc = get_document(this);
+        console.log("generate ", doc, this.from_text);
+        let slug = slugify(this.from_text);
+        let ok = await api.checkSlug(slug, doc._type, doc._id);
+        if (!ok) slug += "-" + hashID(5);
+        console.log("generate RESULT ", slug);
+        this.value = { current: slug };
+        this.requestUpdate();
+    }
+    update_input(e) {
+        console.log("+++ update", hashID(5), e, e.target.value);
+        this.value.current = e.target.value;
+    }
+    render() {
+        console.log("render §§§ slug", this.value?.current);
+        return html`<pi-input
       @input=${this.update_input}
       .value=${this.value?.current ?? ""}
       .label=${this.label}
     >
       ${true
-        ? html`<pi-btn
+                ? html`<pi-btn
             style="margin-left: 0.5rem;"
             stretch
             slot="suffix-button"
@@ -52,9 +52,9 @@ export default class Slug extends Face {
           >
             Generate
           </pi-btn>`
-        : ""}
+                : ""}
     </pi-input>`;
-  }
+    }
 }
 
 customElements.define("pi-slug", Slug);

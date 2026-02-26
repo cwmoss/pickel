@@ -118,19 +118,19 @@ export default class Container extends LitElement {
             const val = el.value; // el.get_updated_data();
             console.log(
                 "$container-element get updated data",
-                el._name,
+                el.name,
                 el.constructor.name,
                 val
             );
 
-            let name = el._name;
+            let name = el.name;
             if (is_empty(el.value)) {
                 delete value[name];
             } else {
                 value[name] = val;
             }
         });
-        console.log("$container get updated data", this._name, value);
+        console.log("$container get updated data", this.name, value);
         return value;
     }
 

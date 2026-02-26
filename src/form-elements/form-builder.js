@@ -106,7 +106,7 @@ export default class FormBuilder extends LitElement {
         this.document_schema = this._schema.get_type(this.document_type);
 
         console.log(
-            "$$$ form-builder build container",
+            "$$$ form-builder FB build container",
             this.document_type,
             this.document_schema,
             this._schema,
@@ -121,6 +121,7 @@ export default class FormBuilder extends LitElement {
         console.log("$$$ form-builder set_schema in objectc");
         let setup = {
             manager: this.element_manager,
+            schema: this.document_schema,
             prefix: "",
             level: 0,
             value: this.value,
