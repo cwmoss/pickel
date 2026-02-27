@@ -36,25 +36,36 @@ const style = css`
   *::part(btn-primary) {
     background: var(--color-accent);
   }
+
   /*
 for editor array container
 */
-  .array-el {
-    display: flex;
-  }
-  .handle {
-    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
-    width: 25px;
-    background-color: #fafafa;
-    background-repeat: no-repeat;
-    background-position-x: 50%;
-    background-position-y: center;
-    cursor: grab; /*move ?? */
-    /*border-left: 1px solid #ccc;*/
-  }
-  .array-el .el-content {
-    width: 100%;
-  }
+.array-el {
+  display: flex;
+}
+
+.handle {
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg==");
+  width: 25px;
+  background-color: #fafafa;
+  background-repeat: no-repeat;
+  background-position-x: 50%;
+  background-position-y: center;
+  cursor: grab;
+  /*move ?? */
+  /*border-left: 1px solid #ccc;*/
+}
+
+.array-el .el-content {
+  width: 100%;
+}
+
+.array-el {
+  border-bottom: 1px solid rgba(134, 144, 160, 0.4);
+}
+.array-el .el-actions{
+    align-self: center;
+}
   .wrapper {
     /* min-height: 100vh;*/
   }
@@ -68,6 +79,9 @@ for editor array container
     margin: 0px;
     height: calc(100% - 100px);
     overflow-y: auto;
+  }
+  .child--content pi-preview{
+    border-bottom: 1px solid rgba(134, 144, 160, 0.4);
   }
   .panel--head {
     width: 100%;
@@ -131,136 +145,136 @@ for editor array container
 `;
 
 export default class Panel extends LitElement {
-  static properties = {
-    title: {},
-    collabsed: { type: Boolean },
-    init: { type: Boolean },
-    doc_id: {},
-    content: { type: Array },
-  };
+    static properties = {
+        title: {},
+        collabsed: { type: Boolean },
+        init: { type: Boolean },
+        doc_id: {},
+        content: { type: Array },
+    };
 
-  static styles = [style];
+    static styles = [style];
 
-  constructor() {
-    super();
-    this.index = null;
-    this.init = false;
-    this.collabsed = false;
-  }
-
-  set node(node) {
-    this._node = node
-    this.title = node.title
-  }
-
-  get node() {
-    return this._node
-  }
-
-  async connectedCallback() {
-    super.connectedCallback();
-    // für jedes panel nur 1x initialisieren
-    if (this.init) return;
-    this.init = true;
-    console.log("+++ panel connected", this.title);
-    this.handle_collapse();
-    await this.fetch_content();
-  }
-
-  async xxxfetch_content() {
-    let content = [];
-    let schema = project.schema();
-    console.log("+panel=>schema", this.index, schema);
-    if (this.index == 0) {
-      schema.documents.forEach((item) => {
-        let el = new Preview();
-        el.set_data({ id: item.name, title: item.title });
-        el.simple = true;
-        el.icon = "folder";
-        content.push(el);
-      });
-    } else if (this.index == 1) {
-      let docs = await api.documents(this.title);
-      docs.forEach((item) => {
-        let el = new Preview();
-        el.set_data(item);
-        el.icon = "file-earmark";
-        content.push(el);
-      });
-    } else {
-      let formbuilder = new Editor();
-      formbuilder.id = this.doc_id;
-      content.push(formbuilder);
-      // content.textContent = JSON.stringify(doc);
+    constructor() {
+        super();
+        this.index = null;
+        this.init = false;
+        this.collabsed = false;
     }
-    this.content = content;
-  }
-  // TODO: refactor
-  // kann schon beim ersten rendern gemacht werden
-  set_active_init(id) {
-    this.shadowRoot.getElementById(id)?.setAttribute("active", "");
-    console.log("active INIT", id, this.doc_id);
-  }
-  set_active(id) {
-    let els = this.shadowRoot.querySelectorAll(".child--content > [active]");
-    console.log("active elements", id, els);
-    els.forEach((el) => {
-      if (el.data.id != id) el.removeAttribute("active");
-    });
-  }
-  open_preview(e) {
-    e.detail.panel = this.index;
-  }
-  handle_collapse(e) {
-    if (e) {
-      this.collabsed = !this.collabsed;
+
+    set node(node) {
+        this._node = node
+        this.title = node.title
     }
-    if (this.collabsed) {
-      if (e)
-        this.dispatchEvent(
-          new CustomEvent("panel-collapsed", {
-            detail: { index: this.index },
-            bubbles: 1,
-            composed: 1,
-          })
-        );
-    } else {
-      if (e)
-        this.dispatchEvent(
-          new CustomEvent("panel-expanded", {
-            detail: { index: this.index },
-            bubbles: 1,
-            composed: 1,
-          })
-        );
+
+    get node() {
+        return this._node
     }
-  }
 
-  onPanelHeadClose() {
-    // stop
-  }
+    async connectedCallback() {
+        super.connectedCallback();
+        // für jedes panel nur 1x initialisieren
+        if (this.init) return;
+        this.init = true;
+        console.log("+++ panel connected", this.title);
+        this.handle_collapse();
+        await this.fetch_content();
+    }
 
-  render_actions() {
-    return "";
-  }
+    async xxxfetch_content() {
+        let content = [];
+        let schema = project.schema();
+        console.log("+panel=>schema", this.index, schema);
+        if (this.index == 0) {
+            schema.documents.forEach((item) => {
+                let el = new Preview();
+                el.set_data({ id: item.name, title: item.title });
+                el.simple = true;
+                el.icon = "folder";
+                content.push(el);
+            });
+        } else if (this.index == 1) {
+            let docs = await api.documents(this.title);
+            docs.forEach((item) => {
+                let el = new Preview();
+                el.set_data(item);
+                el.icon = "file-earmark";
+                content.push(el);
+            });
+        } else {
+            let formbuilder = new Editor();
+            formbuilder.id = this.doc_id;
+            content.push(formbuilder);
+            // content.textContent = JSON.stringify(doc);
+        }
+        this.content = content;
+    }
+    // TODO: refactor
+    // kann schon beim ersten rendern gemacht werden
+    set_active_init(id) {
+        this.shadowRoot.getElementById(id)?.setAttribute("active", "");
+        console.log("active INIT", id, this.doc_id);
+    }
+    set_active(id) {
+        let els = this.shadowRoot.querySelectorAll(".child--content > [active]");
+        console.log("active elements", id, els);
+        els.forEach((el) => {
+            if (el.data.id != id) el.removeAttribute("active");
+        });
+    }
+    open_preview(e) {
+        e.detail.panel = this.index;
+    }
+    handle_collapse(e) {
+        if (e) {
+            this.collabsed = !this.collabsed;
+        }
+        if (this.collabsed) {
+            if (e)
+                this.dispatchEvent(
+                    new CustomEvent("panel-collapsed", {
+                        detail: { index: this.index },
+                        bubbles: 1,
+                        composed: 1,
+                    })
+                );
+        } else {
+            if (e)
+                this.dispatchEvent(
+                    new CustomEvent("panel-expanded", {
+                        detail: { index: this.index },
+                        bubbles: 1,
+                        composed: 1,
+                    })
+                );
+        }
+    }
 
-  render_head() {
-    return "";
-  }
+    onPanelHeadClose() {
+        // stop
+    }
 
-  render_content() {
-    return html` ${this.content?.map((item) => item)} `;
-  }
+    render_actions() {
+        return "";
+    }
 
-  render() {
-    console.log("render panel", this);
-    let head2 = this.render_head();
-    return html`
+    render_head() {
+        return "";
+    }
+
+    render_content() {
+        return html` ${this.content?.map((item) => item)} `;
+    }
+
+    render() {
+        console.log("render panel", this);
+        let head2 = this.render_head();
+        return html`
       <div
         class="wrapper ${classMap({
-      panel: !this.collabsed,
-      "panel-collapsed": this.collabsed,
-    })}"
+            panel: !this.collabsed,
+            "panel-collapsed": this.collabsed,
+        })}"
       >
         <div collabsed class="panel--head-collapsed ellipsis">
           <span @click=${this.handle_collapse} class="panel--title"
@@ -274,10 +288,10 @@ export default class Panel extends LitElement {
           <div class="actions">${this.render_actions()}</div>
         </div>
         ${head2
-        ? html`<div not-collabsed class="panel--head2">
+                ? html`<div not-collabsed class="panel--head2">
               ${this.render_head()}
             </div>`
-        : ""}
+                : ""}
 
         <div
           not-collabsed
@@ -288,5 +302,5 @@ export default class Panel extends LitElement {
         </div>
       </div>
     `;
-  }
+    }
 }
