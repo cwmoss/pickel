@@ -59,6 +59,11 @@ export default class ArrayContainer extends HTMLElement {
         this.init_schema_value();
         this.addEventListener("click", this);
     }
+    disconnectedCallback() {
+        if (this._sortable) {
+            this._sortable.destroy();
+        }
+    }
     _setup_run = false;
     setup_once() {
         if (!this.setup) return;
@@ -92,9 +97,13 @@ export default class ArrayContainer extends HTMLElement {
         // this.update_value(this._value);
     }
 
+    _sortable = null;
     init_sortable() {
         let zone = this.querySelector(".dnd");
-        new Sortable(zone, {
+        if (this._sortable) {
+            this._sortable.destroy();
+        }
+        this._sortable = new Sortable(zone, {
             handle: '.handle', // handle's class
             animation: 150,
             onStart: e => {
