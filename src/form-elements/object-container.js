@@ -25,6 +25,7 @@ export default class ObjectContainer extends Container {
         this.level = this.setup.level
         this.label = this.setup.label
         this.name = this.setup.name
+        this.prefix = this.setup.name
         this.id = this.setup.id
 
         this.options = this.setup.options || {}
@@ -38,7 +39,7 @@ export default class ObjectContainer extends Container {
     update_value(val) {
         this._value = val || ObjectContainer.empty_value;
         this.els.forEach((el) => {
-            let name = el._name;
+            let name = el.name;
             console.log("$OBJ update", name, val[name]);
             el.value = val[name];
         });

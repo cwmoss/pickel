@@ -191,8 +191,9 @@ export default class ArrayContainer extends HTMLElement {
     */
         let f = this.setup.manager.make_new_input(
             { type: type, subtype: this.subtype },
-            `${this.prefix}[${index}]`,
-            val
+            `${type}__new_item`,
+            // `${this.setup.prefix}[${index}]`,
+            val, 0
         );
 
         //this
@@ -220,13 +221,13 @@ export default class ArrayContainer extends HTMLElement {
         this.new_array_item_edit();
         this.editmode = true;
         let type = this.of[0].type;
-        console.log("$ARR", this._name, this.value);
+        console.log("$ARR", this.name, this.value);
         this.build_elements();
     }
     build_elements() {
         let type = this.of[0].type;
         this.els = this.value.map((val, index) => {
-            let f = this.setup.manager.make_new_input({ type: type }, `${this.prefix}[${index}]`, val, this.setup.level);
+            let f = this.setup.manager.make_new_input({ type: type }, `${this.setup.prefix}[${index}]`, val, this.setup.level);
 
             f.noLabel = true;
             f.editmode = false;

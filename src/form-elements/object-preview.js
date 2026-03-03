@@ -65,64 +65,65 @@ let style = css`
 `;
 
 export default class ObjectPreview extends LitElement {
-  static properties = {
-    active: { type: Boolean, reflect: true },
-    simple: { type: Boolean, reflect: true },
-    icon: {},
-    title: {},
-    subtitle: {},
-    media: {},
-    data: { type: Object },
-    schema: { type: Object },
-  };
+    static properties = {
+        active: { type: Boolean, reflect: true },
+        simple: { type: Boolean, reflect: true },
+        icon: {},
+        title: {},
+        subtitle: {},
+        media: {},
+        data: { type: Object },
+        schema: { type: Object },
+    };
 
-  static styles = [style];
+    static styles = [style];
 
-  set_data(data, schema, schema_preview) {
-    this.schema = schema;
-    //console.log("$$ object-preview data0", this, data, schema_preview);
+    set_data(data, schema, schema_preview) {
+        this.schema = schema;
+        console.log("$$ object-preview data0", this, data, schema_preview);
 
-    if (schema_preview) {
-      this.title = schema_preview.title;
-      this.subtitle = schema_preview.subtitle;
-      this.media = schema_preview.media;
-      return;
+        if (schema_preview) {
+            this.title = schema_preview.title;
+            this.subtitle = schema_preview.subtitle;
+            this.media = schema_preview.media;
+            return;
+        }
+        //console.error("$$ object-preview data1", this, data, schema_preview);
+        this.title = resolve_path(data, schema?.preview?.title || "title");
+        if (!this.title) this.title = "Untitled";
+        this.subtitle = resolve_path(data, schema?.preview?.subtitle || "subtitle");
+        this.media = resolve_path(data, schema?.preview?.media || "media");
+        console.log("$$ object-preview data", data);
+        // this.data = data;
     }
-    //console.error("$$ object-preview data1", this, data, schema_preview);
-    this.title = resolve_path(data, schema?.preview?.title || "title");
-    if (!this.title) this.title = "Untitled";
-    this.subtitle = resolve_path(data, schema?.preview?.subtitle || "subtitle");
-    this.media = resolve_path(data, schema?.preview?.media || "media");
-    console.log("$$ object-preview data", data);
-    // this.data = data;
-  }
-  open() {
-    // this.active = true;
-    this.dispatchEvent(
-      new CustomEvent("open-edit", {
-        detail: { id: this.id },
-        bubbles: 1,
-        composed: 1,
-      })
-    );
-  }
-  render() {
-    let detail = this.subtitle;
-    let media = "";
-    if (this.media) media = html`<img src="${this.media}" />`;
-    else if (this.icon) media = html`<sl-icon name="${this.icon}"></sl-icon>`;
-    return html`<div class="flx" @click=${this.open}>
+    open() {
+        // this.active = true;
+        this.dispatchEvent(
+            new CustomEvent("open-edit", {
+                detail: { id: this.id },
+                bubbles: 1,
+                composed: 1,
+            })
+        );
+    }
+    render() {
+        console.log("$$ object-preview render", this.title);
+        let detail = this.subtitle;
+        let media = "";
+        if (this.media) media = html`<img src="${this.media}" />`;
+        else if (this.icon) media = html`<sl-icon name="${this.icon}"></sl-icon>`;
+        return html`<div class="flx" @click=${this.open}>
       <div class="media">${media}</div>
       <div>
         <h2 title="${this.title}">${this.title}</h2>
         ${this.simple
-          ? ""
-          : html` <div class="detail">
+                ? ""
+                : html` <div class="detail">
               <p>${detail}</p>
             </div>`}
       </div>
     </div>`;
-  }
+    }
 }
 
 customElements.define("pi-object-preview", ObjectPreview);

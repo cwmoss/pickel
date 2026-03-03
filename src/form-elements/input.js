@@ -4,7 +4,7 @@ import Face from "./face.js";
 export default class Input extends Face {
     static properties = {
         ...Face.properties,
-        value: {},
+        value: { noAccessor: true },
         input_type: {},
         prefix: {},
         suffix: {},

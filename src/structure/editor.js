@@ -50,11 +50,11 @@ export default class Editor extends Panel {
         let setup = {
             manager: this.element_manager,
             schema: this.schema,
-            prefix: "",
+            prefix: this.document._type,
             level: 0,
             value: this.document,
             editmode: true,
-            name: ""
+            name: this.document._type,
         };
         this.container.setup = setup;
 

@@ -13,7 +13,8 @@ class ElementManager {
     fields_to_els(fields, val, setup) {
         console.log("$ fields=>array", val);
         return fields.map((field) => {
-            let name = `${setup.prefix}[${field.name}]`;
+            let prefix = setup.prefix ? setup.prefix : setup.name;
+            let name = `${prefix}[${field.name}]`;
             let value = val[field.name] ?? undefined;
             let f = this.make_new_input(field, name, value, setup.level);
             return f;
@@ -21,7 +22,7 @@ class ElementManager {
     }
 
     make_new_input(field, name, value, level) {
-        // console.log("$ARR $OBJ new input", field);
+        console.log("$$ NEW input", name, level);
         let fieldschema = this.schema.get_field_schema(field);
         let comp = this.schema.get_component_for_field(fieldschema);
         let tag = get_component_tag(comp);
@@ -38,6 +39,7 @@ class ElementManager {
 
         let setup = {
             label: field.title,
+            prefix: name,
             name: field.name,
             id: field.name,
         };
@@ -54,6 +56,7 @@ class ElementManager {
                 );
                 setup.manager = this;
                 setup.schema = fieldschema;
+                setup.level = (level ?? 0) + 1;
                 setup.value = value ?? { asset: null };
                 break;
             case "array":

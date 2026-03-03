@@ -107,7 +107,7 @@ export default class Container extends LitElement {
     update_value(val) {
         this._value = val;
         this.els.forEach((el) => {
-            let name = el._name;
+            let name = el.name;
             el.value = val[name];
         });
     }
@@ -115,7 +115,9 @@ export default class Container extends LitElement {
     get_updated_data() {
         let value = this._value || {};
         this.els.forEach((el) => {
-            const val = el.value; // el.get_updated_data();
+            let val = undefined;
+            if (typeof el["get_updated_data"] === "function") val = el.get_updated_data()
+            else val = el.value
             console.log(
                 "$container-element get updated data",
                 el.name,
@@ -124,7 +126,7 @@ export default class Container extends LitElement {
             );
 
             let name = el.name;
-            if (is_empty(el.value)) {
+            if (is_empty(val)) {
                 delete value[name];
             } else {
                 value[name] = val;
@@ -140,8 +142,8 @@ export default class Container extends LitElement {
 
     new_previewdata(e) {
         e.stopPropagation();
-        console.log("++preview DATA", this.type, this.prefix, e.detail);
-        this._preview_data[e.detail.name] = e.detail;
+        console.log("++preview DATA", this.name, this.type, this.setup.prefix, e.detail);
+        this._preview_data[e.detail.name] = e.detail; // key besser: e.detail.name
         this.preview = this.get_preview("containerUPDATE");
         this.requestUpdate();
     }

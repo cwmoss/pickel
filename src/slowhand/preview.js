@@ -87,14 +87,14 @@ export default class Preview extends LitElement {
         let schema_preview;
         schema_preview = schema.get_preview(data);
         if (schema_preview) {
-            console.log("$$ yes schema data", schema_preview);
+            console.log("$$ preview yes schema data", schema_preview);
             this.title = schema_preview.title;
             this.subtitle = schema_preview.subtitle;
             this.media = schema_preview.media;
 
             return;
         }
-        console.log("$$ no schema data");
+        console.log("$$ preview no schema data");
         this.title = data.title ?? data.name ?? this.id;
         this.subtitle = data.subtitle ?? data?.slug?.current ?? this.id;
         this.media = data.image ?? data.media ?? null;
