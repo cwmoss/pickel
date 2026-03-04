@@ -28,8 +28,9 @@ export default class ImageContainer extends ObjectContainer {
             this._value,
             this.asset
         );
-        if (!this._value.asset) return {};
+
         let value = this._value || {};
+        if (!value.asset) return {};
         /*
           do some corrections
         */
