@@ -103,7 +103,7 @@ export default class Editor extends Panel {
     show_backlinks() {
         this.dispatchEvent(
             new CustomEvent("open-detail", {
-                detail: { panel: this.index, id: "backlinks", parent: this.document._id },
+                detail: { panel: this.index, id: "$backlinks", parent: this.document._id },
                 bubbles: 1,
                 composed: 1,
             })
@@ -112,7 +112,7 @@ export default class Editor extends Panel {
     show_revisions() {
         this.dispatchEvent(
             new CustomEvent("open-detail", {
-                detail: { panel: this.index, id: "revisions", parent: this.document._id },
+                detail: { panel: this.index, id: "$revisions", parent: this.document._id },
                 bubbles: 1,
                 composed: 1,
             })

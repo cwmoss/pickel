@@ -11,11 +11,12 @@ export default class edit_node extends node {
     }
 
     find_child(id) {
+        if (id.startsWith("$")) return this.detail(id);
         return new edit_node(id, "Edit " + id);
     }
 
     detail(id) {
-        if (id == "backlinks") return new details_node(id, "Details: " + id, this.id);
-        if (id == "revisions") return new revisions_node(id, "Revisions: " + id, this.id);
+        if (id == "$backlinks") return new details_node(id, "Details: " + id, this.id);
+        if (id == "$revisions") return new revisions_node(id, "Revisions: " + id, this.id);
     }
 }
