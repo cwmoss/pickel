@@ -14,6 +14,8 @@ export default class ImageContainer extends ObjectContainer {
     static properties = {
         ...ObjectContainer.properties,
         uploader: { type: Object },
+
+        // TODO: wozu das asset objekt?
         asset: { type: Object },
         info: { type: Object },
     };
@@ -35,51 +37,51 @@ export default class ImageContainer extends ObjectContainer {
 
         value = super.get_updated_data();
         console.log(
-            "$$$$ image updated data",
+            "$$$$ image updated data2",
             value,
             this.schema
         );
         value._type = this.setup.schema.name ?? "image";
         value.asset = {
             type: "reference",
-            _ref: this.asset?._id,
+            _ref: this._value.asset?._ref,
         };
 
         return value;
     }
 
     async fetch_asset() {
-        console.log("$$$$ image fetch asset", JSON.stringify(this.value));
-        if (this.value.asset?._ref) {
+        console.log("$$$$ image fetch asset", JSON.stringify(this._value));
+        if (this._value.asset?._ref) {
             console.log("$$$$ image after init start");
-            this.asset = await api.document(this.value.asset._ref);
+            this.asset = await api.document(this._value.asset._ref);
             this.uploader.image = this.image_url;
             // console.log("$$$$ after init end");
         }
     }
 
     build() {
-        console.log("$IMG build ImageContainer", this.value);
+        console.log("$IMG build ImageContainer", this._value);
         this.uploader = get_component_element("imageupload");
-        this.uploader.image = api.imageurl_from_ref(this.value.asset); // this.value.asset;
+        this.uploader.image = api.imageurl_from_ref(this._value.asset); // this.value.asset;
         this.uploader.upload_url = api.upload_image_url();
         // console.log("+++ build", this.value);
 
         let fields = this.setup.schema.fields;
         fields = fields.filter((f) => f.name != "asset");
 
-        this.els = this.setup.manager.fields_to_els(fields, this.value, this.setup);
+        this.els = this.setup.manager.fields_to_els(fields, this._value, this.setup);
         this.preview = new ObjectPreview();
 
         this.preview.set_data({
-            id: this.value?.asset?._ref,
-            title: this.value?.asset?._ref,
-            media: this.value?.asset ?? "",
+            id: this._value?.asset?._ref,
+            title: this._value?.asset?._ref,
+            media: this._value?.asset ?? "",
         });
     }
     get image_url_from_value() {
-        if (!this.value.asset) return "";
-        return api.imageurl_from_ref(this.value.asset);
+        if (!this._value.asset) return "";
+        return api.imageurl_from_ref(this._value.asset);
     }
     get image_url() {
         // ${api.images()}/${this.item.path}

@@ -226,6 +226,14 @@ export default class Panel extends LitElement {
     open_editor(e) {
         e.detail.panel = this.index;
     }
+    close() {
+        let evt = new CustomEvent("close-panel", {
+            detail: { panel: this.index },
+            bubbles: true,
+            composed: true,
+        });
+        this.dispatchEvent(evt);
+    }
     handle_collapse(e) {
         if (e) {
             this.collabsed = !this.collabsed;

@@ -3,13 +3,14 @@ import Doclist from "./doclist.js";
 import Typelist from "./typelist.js";
 import Editor from "./editor.js";
 import Arraylist from "./arraylist.js";
-
+import Backlinkslist from "./backlinks.js";
+import RevisionsPanel from "./revisions-panel.js";
 import project from "../lib/project.js";
 
 import { slugify_simple } from "../lib/util.js";
 import urlStore from "../lib/url-store.js";
 //import Preview from "./preview.js";
-import { edit_node } from "./nodes/index.js";
+import { edit_node, revisions_node } from "./nodes/index.js";
 
 /*const tree = new node("root")
 tree.children = [
@@ -132,6 +133,8 @@ export default class PanelManager extends HTMLElement {
         if (name == "Typelist") return new Typelist();
         if (name == "Arraylist") return new Arraylist();
         if (name == "Doclist") return new Doclist();
+        if (name == "Backlinkslist") return new Backlinkslist();
+        if (name == "RevisionsPanel") return new RevisionsPanel();
         return new Editor();
     }
 
@@ -198,7 +201,26 @@ export default class PanelManager extends HTMLElement {
         console.log("$$ make panel for detail", detail, detail.panel);
 
         let node = this.panels[detail.panel].node
-        let newnode = node.find_child(detail.id)
+        let newnode = node.detail(detail.id)
+        console.log("$$ details node", node, newnode);
+
+        let panel = this.make_panel(detail.id, detail.panel + 1, newnode);
+        panel.doc_id = detail.id;
+
+        this.panels.splice(detail.panel + 1, Infinity, panel);
+        let active = this.panels.map((p) => p.doc_id);
+        console.log("$$$ path", active);
+        // das root panel brauchen wir nicht
+        active.shift();
+        urlStore.set_array("z", active);
+        this.render();
+    }
+
+    xxxopen_revisions(detail) {
+        console.log("$$ make panel for detail", detail, detail.panel);
+
+        let node = this.panels[detail.panel].node
+        let newnode = node.detail(detail.id)
         console.log("$$ details node", node, newnode);
 
         let panel = this.make_panel(detail.id, detail.panel + 1, newnode);

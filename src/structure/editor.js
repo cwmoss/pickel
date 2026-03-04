@@ -80,14 +80,7 @@ export default class Editor extends Panel {
 
         return false;
     }
-    close() {
-        let evt = new CustomEvent("close-panel", {
-            detail: { panel: this.index },
-            bubbles: true,
-            composed: true,
-        });
-        this.dispatchEvent(evt);
-    }
+
     go_fullscreen(e) {
         console.log("$ fullscreen", e);
         this.fullscreen = e.detail;
@@ -110,7 +103,16 @@ export default class Editor extends Panel {
     show_backlinks() {
         this.dispatchEvent(
             new CustomEvent("open-detail", {
-                detail: { panel: this.index, id: "backlinks", backlink: this.document._id },
+                detail: { panel: this.index, id: "backlinks", parent: this.document._id },
+                bubbles: 1,
+                composed: 1,
+            })
+        );
+    }
+    show_revisions() {
+        this.dispatchEvent(
+            new CustomEvent("open-detail", {
+                detail: { panel: this.index, id: "revisions", parent: this.document._id },
                 bubbles: 1,
                 composed: 1,
             })
@@ -157,6 +159,11 @@ export default class Editor extends Panel {
         title=${"backlinks"}
         @click=${this.show_backlinks}
       ><sl-icon name="link" label="backlinks"></sl-icon></pi-btn>
+      <pi-btn
+        flat
+        title=${"revisions"}
+        @click=${this.show_revisions}
+      >R</pi-btn>
       <pi-close @click=${this.close}></pi-close>`;
     }
     /* let json = JSON.stringify(this.document) || "{}";

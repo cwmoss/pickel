@@ -1,7 +1,8 @@
 import node from "./node.js";
 import edit_node from "./edit_node.js";
-export default class details_node extends node {
-    element = "Backlinkslist"
+export default class revisions_node extends node {
+
+    element = "RevisionsPanel"
 
     constructor(id, title, parent_id) {
         super(id, title, []);
