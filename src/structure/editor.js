@@ -107,6 +107,15 @@ export default class Editor extends Panel {
 
         this.shadowRoot.querySelector("#editor-json-view").open_dialog();
     }
+    show_backlinks() {
+        this.dispatchEvent(
+            new CustomEvent("open-detail", {
+                detail: { panel: this.index, id: "backlinks", backlink: this.document._id },
+                bubbles: 1,
+                composed: 1,
+            })
+        );
+    }
     async save(e) {
         let doc = this.container.get_updated_data();
         console.log("$ save", doc);
@@ -125,9 +134,6 @@ export default class Editor extends Panel {
     // <button type="button" @click=${this.inspect}>i</button>
     render_actions() {
         if (!this.schema) return "";
-        let json = JSON.stringify(this.document) || "{}";
-        // console.log("JSON", json);
-        let doc = JSON.parse(json);
         console.log("+++ actions", this.schema.actions);
         return html`<pi-btn primary form="editor" @click=${this.save}>
         Save
@@ -146,21 +152,22 @@ export default class Editor extends Panel {
         title=${"inspect document"}
         @click=${this.show_json}
       ></pi-btn>
-      <pi-dialog
-        id="editor-json-view"
-        nobutton
-        title="inspect"
-        .trigger_title=${"i"}
-        ><json-viewer
-          .data=${doc}
-          style="--background-color: white;"
-        ></json-viewer
-      ></pi-dialog>
+      <pi-btn
+        flat
+        title=${"backlinks"}
+        @click=${this.show_backlinks}
+      ><sl-icon name="link" label="backlinks"></sl-icon></pi-btn>
       <pi-close @click=${this.close}></pi-close>`;
     }
+    /* let json = JSON.stringify(this.document) || "{}";
+        // console.log("JSON", json);
+        let doc = JSON.parse(json);
+        */
     // ${this.container}
     render_content() {
         if (!this.document) return "";
+        let json = JSON.stringify(this.document) || "{}";
+        let doc = JSON.parse(json);
         console.log("render formbuilder", this.document, this.container);
         return html`<form id="editor" @submit=${this.save}>
       <div ?hidden=${this.fullscreen} class="actions"></div>
@@ -171,7 +178,18 @@ export default class Editor extends Panel {
       >
         ${this.container}
       </section>
-    </form>`;
+    </form>
+    <pi-dialog
+        id="editor-json-view"
+        nobutton
+        title="inspect"
+        .trigger_title=${"i"}
+        ><json-viewer
+          .data=${doc}
+          style="--background-color: white;"
+        ></json-viewer
+      ></pi-dialog>
+    `;
     }
 
     xxcreateRenderRoot() {

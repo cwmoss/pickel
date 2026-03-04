@@ -222,7 +222,8 @@ export default class Panel extends LitElement {
             if (el.data.id != id) el.removeAttribute("active");
         });
     }
-    open_preview(e) {
+    // add current panel index and let bubble up
+    open_editor(e) {
         e.detail.panel = this.index;
     }
     handle_collapse(e) {
@@ -295,7 +296,7 @@ export default class Panel extends LitElement {
 
         <div
           not-collabsed
-          @open-preview=${this.open_preview}
+          @open-editor=${this.open_editor}
           class="child--content"
         >
           ${this.render_content()}

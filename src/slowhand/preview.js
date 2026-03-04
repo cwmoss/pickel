@@ -105,7 +105,7 @@ export default class Preview extends LitElement {
     open() {
         this.active = true;
         this.dispatchEvent(
-            new CustomEvent("open-preview", {
+            new CustomEvent("open-editor", {
                 detail: { id: this.id },
                 bubbles: 1,
                 composed: 1,

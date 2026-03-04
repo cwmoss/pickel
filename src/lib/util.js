@@ -132,6 +132,9 @@ export const is_empty = (value) => {
     if (typeof value === "string") {
         return value ? false : true;
     }
+    if (value === false || value === true) {
+        return false;
+    }
     //if (typeof value !== 'object') {
     // boolean, number, string, function, etc.
     //  return false;

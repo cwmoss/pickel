@@ -21,7 +21,7 @@ export default class Input extends Face {
         return this.input_type || "text";
     }
     render_input() {
-        console.log("render_input §§§ pi-input", this.value)
+        console.log("render_input §§§ pi-input", this.name, this.value)
         return html`<input
       @input=${(e) => this.input_event(e)}
       @focusout=${this.validate_event}

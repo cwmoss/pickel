@@ -37,11 +37,12 @@ export default class Slug extends Face {
         this.value.current = e.target.value;
     }
     render() {
-        console.log("render §§§ slug", this.value?.current);
+        console.log("render §§§ slug §§§ pi-input", this.value, this.setup);
         return html`<pi-input
       @input=${this.update_input}
       .value=${this.value?.current ?? ""}
       .label=${this.label}
+      .name=${"_sluginput"}
     >
       ${true
                 ? html`<pi-btn

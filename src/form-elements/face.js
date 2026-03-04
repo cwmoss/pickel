@@ -8,7 +8,7 @@ export default class Face extends LitElement {
     static formAssociated = true;
 
     static properties = {
-        value: { noAccessor: true },
+        value: {},
         name: { reflect: true },
         label: {},
         noLabel: { type: Boolean, attribute: "no-label" },
@@ -142,7 +142,7 @@ export default class Face extends LitElement {
     }
 
     get_default_value() {
-        console.log("$FACE default value", this.initialValue, this.setup.name);
+        console.log("$FACE default value", this.initialValue, this.name);
         return this.initialValue;
     }
 
@@ -163,12 +163,12 @@ export default class Face extends LitElement {
     _value = "";
 
     set value(val) {
-        console.log("FACE set value", this.setup.name, val)
+        console.log("$$FACE set value", this.name, val)
         if (!val) val = this.get_default_value();
         this._value = val;
     }
     get value() {
-        console.log("FACE get value", this.setup.name)
+        console.log("$$FACE get value", this.name)
         if (typeof this["get_updated_data"] === "function") return this.get_updated_data()
         return this._value;
     }

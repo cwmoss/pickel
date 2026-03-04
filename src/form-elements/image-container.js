@@ -21,34 +21,37 @@ export default class ImageContainer extends ObjectContainer {
 
     // TODO: warum wird das so früh aufgerufen?
     get_updated_data() {
-        if (!this.asset) return this._value;
+        console.log(
+            "$$$$ image updated data",
+            this._value,
+            this.asset
+        );
+        if (!this._value.asset) return {};
         let value = this._value || {};
         /*
           do some corrections
         */
         if (Array.isArray(value)) value = {};
+
+        value = super.get_updated_data();
         console.log(
             "$$$$ image updated data",
-            JSON.stringify(this.value),
+            value,
             this.schema
         );
-        value._type = this.schema.name ?? "image";
+        value._type = this.setup.schema.name ?? "image";
         value.asset = {
             type: "reference",
             _ref: this.asset?._id,
         };
-        this.els.forEach((el) => {
-            const val = el.get_updated_data();
-            let name = el.name;
-            value[name] = val;
-        });
+
         return value;
     }
 
     async fetch_asset() {
-        console.log("$IMG fetch asset", JSON.stringify(this.value));
+        console.log("$$$$ image fetch asset", JSON.stringify(this.value));
         if (this.value.asset?._ref) {
-            console.log("$$$$ after init start");
+            console.log("$$$$ image after init start");
             this.asset = await api.document(this.value.asset._ref);
             this.uploader.image = this.image_url;
             // console.log("$$$$ after init end");
@@ -117,7 +120,7 @@ export default class ImageContainer extends ObjectContainer {
         return html`${this.asset.width} x ${this.asset.height} (${this.asset.size})`;
     }
     render_els() {
-        console.log("+++ render ImageContainer", this.value.asset, this.uploader);
+        console.log("$$$$ image render ImageContainer", this._value.asset, this.uploader);
         return html`<div
         class="image-container"
         @image-removed=${this.image_removed}
