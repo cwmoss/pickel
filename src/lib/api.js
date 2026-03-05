@@ -3,6 +3,8 @@ import schema from "../form-elements/schema.js";
 import { toast_alert, toast_info } from "../basic/toast.js";
 class Api {
     loading = false;
+    version = null;
+    version_php = true;
 
     constructor() {
         this.endpoint = ''; // `http://localhost:10245`;
@@ -10,8 +12,24 @@ class Api {
         // this.documentStore = useDocumentStore();
     }
 
+    check_response(resp) {
+        if (!this.version) {
+            let v = resp.headers.get("x-slowhand-version");
+            if (v) {
+                this.version = v;
+                this.version_php = v.startsWith("p");
+            }
+        }
+        // TODO: re-login
+        if (!resp.ok) {
+            console.log("$slowhand response error", resp.status);
+        }
+        console.log("$slowhand version", this.version, this.version_php);
+        return resp.json();
+    }
+
     async get(path) {
-        return fetch(`${this.endpoint}${path}`).then((resp) => resp.json());
+        return fetch(`${this.endpoint}${path}`).then((resp) => this.check_response(resp));
     }
 
     async post(path, data) {
@@ -21,7 +39,7 @@ class Api {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
-        }).then((resp) => resp.json());
+        }).then((resp) => this.check_response(resp));
     }
 
     async graphql(query, vars) {
