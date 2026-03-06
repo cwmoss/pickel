@@ -68,6 +68,9 @@ max-height:calc(100vh - 170px);
 `;
 
 export default class PanelManager extends HTMLElement {
+
+    collapsed_width = "30px";
+
     constructor() {
         super()
             .attachShadow({ mode: "open" })
@@ -163,16 +166,12 @@ export default class PanelManager extends HTMLElement {
         return p;
     }
 
-
-    add_panel(title, node) {
-        console.log("$$ make panel add", title, node);
-        let panel = this.make_panel(title, node);
-
-        this.panels.push(panel);
-    }
+    operation = "";
 
     close(detail) {
         // this.panels.splice(panel - 1, Infinity);
+        this.operation = "remove";
+
         let panel = detail.panel;
         this.panels.splice(panel, Infinity);
         console.log("$$$ request close panel", panel, this.panels);
@@ -181,6 +180,7 @@ export default class PanelManager extends HTMLElement {
 
     open_new_editor(preview) {
         console.log("$$ make panel request new panel", preview, preview.panel);
+        let before = this.panels.length;
         this.panels[preview.panel].set_active(preview.id);
         let node = this.panels[preview.panel].node
         let newnode = node.find_child(preview.id)
@@ -194,11 +194,13 @@ export default class PanelManager extends HTMLElement {
         // das root panel brauchen wir nicht
         active.shift();
         urlStore.set_array("z", active);
+        if (this.panels.length > before) this.operation = "add";
         this.render();
     }
 
     open_new_detail(detail) {
         console.log("$$ make panel for detail", detail, detail.panel);
+        let before = this.panels.length;
 
         let node = this.panels[detail.panel].node
         let newnode = node.detail(detail.id)
@@ -213,29 +215,11 @@ export default class PanelManager extends HTMLElement {
         // das root panel brauchen wir nicht
         active.shift();
         urlStore.set_array("z", active);
-        this.render();
-    }
-
-    xxxopen_revisions(detail) {
-        console.log("$$ make panel for detail", detail, detail.panel);
-
-        let node = this.panels[detail.panel].node
-        let newnode = node.detail(detail.id)
-        console.log("$$ details node", node, newnode);
-
-        let panel = this.make_panel(detail.id, detail.panel + 1, newnode);
-        panel.doc_id = detail.id;
-
-        this.panels.splice(detail.panel + 1, Infinity, panel);
-        let active = this.panels.map((p) => p.doc_id);
-        console.log("$$$ path", active);
-        // das root panel brauchen wir nicht
-        active.shift();
-        urlStore.set_array("z", active);
+        if (this.panels.length > before) this.operation = "add";
         this.render();
     }
     collapse(e) {
-        this.adjust_panel_width(e.detail.index, "30px");
+        this.adjust_panel_width(e.detail.index, this.collapsed_width);
     }
     expand(e) {
         this.adjust_panel_width(e.detail.index);
@@ -243,26 +227,56 @@ export default class PanelManager extends HTMLElement {
 
     adjust_panel_width(panelindex, size) {
         let sizes = this.container.style["grid-template-columns"].split(" ");
+        console.log(
+            "splitter+++ adjust_panel_width BEFORE", panelindex, size, sizes, "=>",
+            // this.splitter,
+            this.container.style["grid-template-columns"]
+        );
+
         let idx = panelindex * 2;
         if (!size) size = this.default_panel_width(panelindex);
         sizes[idx] = size;
         this.container.style["grid-template-columns"] = sizes.join(" ");
+        console.log(
+            "splitter+++ adjust_panel_width", panelindex, size, "=>",
+            // this.splitter,
+            this.container.style["grid-template-columns"]
+        );
     }
     default_panel_width(idx) {
+        if (this.panels[idx].default_width) return this.panels[idx].default_width;
         if (idx == 0) return "200px";
         if (idx == this.panels.length - 1)
-            return "" + this.container.clientWidth / 2 + "px";
+            return "1fr";
+        // return "" + this.container.clientWidth / 2 + "px";
         return "300px";
+    }
+    current_panel_widths() {
+        let sizes = this.container.style["grid-template-columns"];
+        if (!sizes) return [];
+        return sizes.split(" ").filter((_, i) => i % 2 == 0)
     }
     render() {
         console.log("$$ make panel render", this.panels);
+        let before = this.current_panel_widths();
+        console.log(
+            "splitter+++ render BEFORE", this.operation, before,
+            "=>",
+            this.container.style["grid-template-columns"]
+        );
         let container = this.container;
         let add = [];
         let cols = [];
         let last = this.panels.length - 1;
+        let stable = (this.operation == "" && before.length);
         this.panels.forEach((p, idx) => {
             add.push(p);
-            cols.push(this.default_panel_width(idx));
+            if (stable) {
+                cols.push(before[idx]);
+            } else {
+                cols.push(p.collabsed ? this.collapsed_width : this.default_panel_width(idx));
+            }
+
             if (idx < last) {
                 add.push(this.make_gutter());
                 cols.push("10px");
@@ -296,6 +310,7 @@ export default class PanelManager extends HTMLElement {
         //container.append(...add);
         // TODO: don't throw away the good panels
         if (this.splitter) {
+            this.splitter.destroy();
         }
         this.splitter = Split({
             minSize: 30,
@@ -334,9 +349,10 @@ export default class PanelManager extends HTMLElement {
                 }
             },
         });
+        this.operation = "";
         console.log(
-            "splitter+++",
-            this.splitter,
+            "splitter+++ render",
+            this.splitter, "=>",
             container.style["grid-template-columns"]
         );
     }

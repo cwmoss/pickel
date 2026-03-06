@@ -21,6 +21,7 @@ export default class Editor extends Panel {
     };
 
     _id = Math.floor(Math.random() * Math.floor(Math.random() * Date.now()));
+    default_width = "1fr";
 
     async fetch_content() {
         /*
