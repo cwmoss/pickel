@@ -46,7 +46,7 @@ export default class Doclist extends Panel {
     }
     render_actions() {
         return html`<pi-btn flat title="create" @click=${this.create}
-      ><sl-icon name="plus-lg" style="font-size: 24px;"></sl-icon
+      ><wa-icon name="plus-lg" style="font-size: 24px;"></wa-icon
     ></pi-btn>`;
     }
     render_head() {

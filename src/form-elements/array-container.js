@@ -343,7 +343,7 @@ export default class ArrayContainer extends HTMLElement {
               <pi-btn
                 title="remove"
                 flat
-                ><sl-icon name="trash" label="remove"></sl-icon
+                ><wa-icon name="trash" label="remove"></wa-icon
               ></pi-btn>
             </div>
           </div>`;

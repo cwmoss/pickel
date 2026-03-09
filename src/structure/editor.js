@@ -159,7 +159,7 @@ export default class Editor extends Panel {
         flat
         title=${"backlinks"}
         @click=${this.show_backlinks}
-      ><sl-icon name="link" label="backlinks"></sl-icon></pi-btn>
+      ><wa-icon name="link" label="backlinks"></wa-icon></pi-btn>
       <pi-btn
         flat
         title=${"revisions"}

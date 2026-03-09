@@ -287,7 +287,7 @@ export default class ArrayContainer extends Container {
                 title="remove"
                 flat
                 @click=${() => this.item_remove(idx, el)}
-                ><sl-icon name="trash" label="remove"></sl-icon
+                ><wa-icon name="trash" label="remove"></wa-icon
               ></pi-btn>
             </div>
           </div> `;

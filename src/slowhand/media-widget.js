@@ -8,20 +8,20 @@ import FocusPicker from "../misc/focus-picker.js";
 // console.log("bootstrap import", cssvars);
 
 export default class MediaWidget extends LitElement {
-  static properties = {
-    assets: [],
-    total: { type: Number },
-    page: { type: Number },
-    loading: { type: Boolean },
-    edit: { type: Boolean },
-    picker: { type: Boolean, reflect: true },
-    item: { type: Object },
-    mediatype: {},
-  };
+    static properties = {
+        assets: [],
+        total: { type: Number },
+        page: { type: Number },
+        loading: { type: Boolean },
+        edit: { type: Boolean },
+        picker: { type: Boolean, reflect: true },
+        item: { type: Object },
+        mediatype: {},
+    };
 
-  static styles = [
-    // cssvars,
-    css`
+    static styles = [
+        // cssvars,
+        css`
       :host {
         display: block;
       }
@@ -96,113 +96,112 @@ export default class MediaWidget extends LitElement {
         opacity: 60%;
       }
     `,
-  ];
+    ];
 
-  connectedCallback() {
-    super.connectedCallback();
-    if (!this.mediatype) this.mediatype = "image";
-    this.fetch_data();
-  }
-  change_type(ev) {
-    console.log("filter type ", ev.target.value);
-    this.mediatype = ev.target.value;
-    this.fetch_data();
-  }
-  async fetch_data(page) {
-    this.loading = true;
-    this.assets = [];
-    if (!this.limit) this.limit = 48;
-    if (!page) page = urlStore.get_parameter("p");
-    if (page) this.page = page;
-    if (!this.page) this.page = 1;
-    let res, assets;
-    let type = this.mediatype;
-    let q = `q(_type=="${
-      type == "image" ? "sh.image" : "sh.file"
-    }")order(_createdAt desc)`;
-    res = await api.query(q, {
-      count: true,
-      limit: this.limit,
-      page: this.page,
-    });
-    console.log("result", res.pageinfo.total, res.result.length);
-    this.total = res.pageinfo.total;
-    this.assets = res.result;
-    this.loading = false;
-  }
-
-  move_page(e) {
-    console.log("+++move", e.detail);
-    urlStore.set_parameter("p", e.detail);
-    this.fetch_data(e.detail);
-  }
-
-  start_edit(e) {
-    console.log("++ dblclick", e);
-    if (!e.target.matches("img,sl-icon")) return;
-    let id = e.target.getAttribute("id");
-    this.item = this.assets.find((img) => img._id == id);
-    if (this.picker) {
-      this.dispatchEvent(
-        new CustomEvent("close-dialog", { bubbles: true, composed: true })
-      );
-      this.dispatchEvent(
-        new CustomEvent("pick-image", {
-          detail: this.item,
-          bubbles: true,
-          composed: true,
-        })
-      );
-    } else {
-      this.edit = true;
-      this.shadowRoot.querySelector("pi-dialog").open_dialog();
+    connectedCallback() {
+        super.connectedCallback();
+        if (!this.mediatype) this.mediatype = "image";
+        this.fetch_data();
     }
-  }
-  render_body() {
-    return html`<json-viewer
+    change_type(ev) {
+        console.log("filter type ", ev.target.value);
+        this.mediatype = ev.target.value;
+        this.fetch_data();
+    }
+    async fetch_data(page) {
+        this.loading = true;
+        this.assets = [];
+        if (!this.limit) this.limit = 48;
+        if (!page) page = urlStore.get_parameter("p");
+        if (page) this.page = page;
+        if (!this.page) this.page = 1;
+        let res, assets;
+        let type = this.mediatype;
+        let q = `q(_type=="${type == "image" ? "sh.image" : "sh.file"
+            }")order(_createdAt desc)`;
+        res = await api.query(q, {
+            count: true,
+            limit: this.limit,
+            page: this.page,
+        });
+        console.log("result", res.pageinfo.total, res.result.length);
+        this.total = res.pageinfo.total;
+        this.assets = res.result;
+        this.loading = false;
+    }
+
+    move_page(e) {
+        console.log("+++move", e.detail);
+        urlStore.set_parameter("p", e.detail);
+        this.fetch_data(e.detail);
+    }
+
+    start_edit(e) {
+        console.log("++ dblclick", e);
+        if (!e.target.matches("img,wa-icon")) return;
+        let id = e.target.getAttribute("id");
+        this.item = this.assets.find((img) => img._id == id);
+        if (this.picker) {
+            this.dispatchEvent(
+                new CustomEvent("close-dialog", { bubbles: true, composed: true })
+            );
+            this.dispatchEvent(
+                new CustomEvent("pick-image", {
+                    detail: this.item,
+                    bubbles: true,
+                    composed: true,
+                })
+            );
+        } else {
+            this.edit = true;
+            this.shadowRoot.querySelector("pi-dialog").open_dialog();
+        }
+    }
+    render_body() {
+        return html`<json-viewer
       style="--xxbackground-color: white;"
       .data=${this.data}
     ></json-viewer>`;
-    // return html`<code>${JSON.stringify(this.data)}</code>`;
-  }
+        // return html`<code>${JSON.stringify(this.data)}</code>`;
+    }
 
-  render_editor() {
-    return html`<pi-dialog nobutton>
+    render_editor() {
+        return html`<pi-dialog nobutton>
       ${this.item
-        ? html`<json-viewer .data=${this.item}></json-viewer>
+                ? html`<json-viewer .data=${this.item}></json-viewer>
             <focus-picker
               img="${api.images()}/${this.item.path}"
             ></focus-picker>`
-        : ""}
+                : ""}
     </pi-dialog>`;
-  }
+    }
 
-  files_dropped(e) {
-    console.log("new files...", e.detail);
-  }
+    files_dropped(e) {
+        console.log("new files...", e.detail);
+    }
 
-  render_item_preview(item) {
-    if (item._type == "sh.image")
-      return html`<img
+    render_item_preview(item) {
+        if (item._type == "sh.image")
+            return html`<img
         id="${item._id}"
         src="${api.images()}/${item.path}?size=150x150&mode=fit"
       />`;
-    return html`<sl-icon
+        return html`<wa-icon
       id="${item._id}"
       name="file-pdf"
       label="document"
-    ></sl-icon>`;
-  }
-  /*
-  <pi-pager
-            limit="12"
-            .page=${this.page}
-            .total=${this.total}
-          ></pi-pager>
-          */
-  render() {
-    console.log("rendering", this.page);
-    return html`
+    ></wa-icon>`;
+    }
+    /*
+    <pi-pager
+              limit="12"
+              .page=${this.page}
+              .total=${this.total}
+            ></pi-pager>
+            */
+    render() {
+        console.log("rendering", this.page);
+        return html`
       <window-drop @files-dropped=${this.files_dropped}></window-drop>
       <section>
         <header>
@@ -225,13 +224,13 @@ export default class MediaWidget extends LitElement {
             return html`<div class="item">
               ${this.render_item_preview(img)}
             </div>`;
-          })}
+        })}
         </div>
         ${this.render_editor()}
         <footer></footer>
       </section>
     `;
-  }
+    }
 }
 
 customElements.define("media-widget", MediaWidget);

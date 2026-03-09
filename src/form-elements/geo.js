@@ -23,109 +23,113 @@ let style = css`
 let geo_default = { lat: 52.518611, lng: 13.408333 };
 
 export default class Geo extends Face {
-  static properties = {
-    ...Face.properties,
-    prefix: {},
-    suffix: {},
-    marker: { type: Object },
-  };
-  static styles = [style];
-  connectedCallback() {
-    super.connectedCallback();
-    setTimeout(() => this.init(), 100);
-  }
+    static properties = {
+        ...Face.properties,
+        prefix: {},
+        suffix: {},
+        marker: { type: Object },
+    };
+    static styles = [style];
+    connectedCallback() {
+        super.connectedCallback();
+        setTimeout(() => this.init(), 100);
+    }
 
-  add_marker(latlong) {
-    if (this.marker) {
-      this.marker.setLatLng(latlong);
-      // this.marker.addTo(this.map)
-      this.value = latlong;
-    } else {
-      this.marker = Leaflet.marker(latlong, { draggable: true }).addTo(
-        this.map
-      );
-      this.value = latlong;
-      let content = document.createElement("div");
-      let btn = html`<pi-btn
+    add_marker(latlong) {
+        if (this.marker) {
+            this.marker.setLatLng(latlong);
+            // this.marker.addTo(this.map)
+            this.value = latlong;
+        } else {
+            this.marker = Leaflet.marker(latlong, { draggable: true }).addTo(
+                this.map
+            );
+            this.value = latlong;
+            let content = document.createElement("div");
+            let btn = html`<pi-btn
         flat
         @click=${() => {
-          this.marker.remove();
-          this.marker = null;
-          this.value = null;
-        }}
+                    this.marker.remove();
+                    this.marker = null;
+                    this.value = null;
+                }}
         >remove</pi-btn
       >`;
-      render(btn, content);
-      /*
-      let btn = document.createElement("pi-btn");
-      btn.flat = true;
-      btn.innerHTML = "remove";
-      btn.addEventListener("click", (e) => {
-        console.log("$$ popup click", e);
-        this.marker.remove();
-        this.marker = null;
-        this.value = null;
-      });
-      */
-      let popup = this.marker.bindPopup(content).getPopup();
-      // popup.addEventlistener("click", () => console.log("button clicked?"));
-      this.marker.on("move", (e) => {
-        console.log("move", e);
-        this.value = e.latlng;
-      });
-    }
-  }
-
-  init() {
-    this.el = this.shadowRoot.querySelector("div");
-    this.map = Leaflet.map(this.el).setView(this.latlong, 13); // [51.505, -0.09]
-    Leaflet.Icon.Default.imagePath =
-      "https://unpkg.com/leaflet@1.9.4/dist/images/";
-    Leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(this.map);
-
-    if (this.value.lat) {
-      this.add_marker(this.value);
+            render(btn, content);
+            /*
+            let btn = document.createElement("pi-btn");
+            btn.flat = true;
+            btn.innerHTML = "remove";
+            btn.addEventListener("click", (e) => {
+              console.log("$$ popup click", e);
+              this.marker.remove();
+              this.marker = null;
+              this.value = null;
+            });
+            */
+            let popup = this.marker.bindPopup(content).getPopup();
+            // popup.addEventlistener("click", () => console.log("button clicked?"));
+            this.marker.on("move", (e) => {
+                console.log("move", e);
+                this.value = e.latlng;
+            });
+        }
     }
 
-    this.map.on("click", (e) => {
-      console.log("clicked to map", e);
-      this.add_marker(e.latlng);
-    });
-  }
-  get latlong() {
-    let latlong = geo_default; // this.value;
-    if (this.value.lat) {
-      latlong = this.value;
-    }
-    console.log("++ latlong ++", latlong);
-    return latlong;
-    return Leaflet.latLng(latlong.lat, latlong.lng);
-  }
-  get_updated_data() {
-    return this.value;
-    // TODO: warum wird das frühzeitig aufgerufen?
-    return {};
-  }
+    init() {
+        this.el = this.shadowRoot.querySelector("div");
+        this.map = Leaflet.map(this.el).setView(this.latlong, 13); // [51.505, -0.09]
+        Leaflet.Icon.Default.imagePath =
+            "./vendor/leaflet/";
+        Leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 19,
+            attribution:
+                '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        }).addTo(this.map);
 
-  update_input(e) {
-    console.log("+++ update", hashID(5), e, e.target.value);
-    // this.value.current = e.target.value;
-  }
-  render() {
-    // console.log("render MAP", this.value);
-    return html`<link
+        if (this.value.lat) {
+            this.add_marker(this.value);
+        }
+
+        this.map.on("click", (e) => {
+            console.log("clicked to map", e);
+            this.add_marker(e.latlng);
+        });
+    }
+    get latlong() {
+        let latlong = geo_default; // this.value;
+        if (this.value.lat) {
+            latlong = this.value;
+        }
+        console.log("++ latlong ++", latlong);
+        return latlong;
+        return Leaflet.latLng(latlong.lat, latlong.lng);
+    }
+    get_updated_data() {
+        return this.value;
+        // TODO: warum wird das frühzeitig aufgerufen?
+        return {};
+    }
+
+    update_input(e) {
+        console.log("+++ update", hashID(5), e, e.target.value);
+        // this.value.current = e.target.value;
+    }
+    render() {
+        // console.log("render MAP", this.value);
+        /* <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+            crossorigin=""
+          />*/
+        return html`<link
         rel="stylesheet"
-        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-        crossorigin=""
+        href="./vendor/leaflet.css"
       />
       <label for="input" class="form-label">${this.label}</label>
       <div id="map"></div>`;
-  }
+    }
 }
 
 customElements.define("pi-geo", Geo);

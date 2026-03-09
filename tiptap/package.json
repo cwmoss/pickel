@@ -1,0 +1,23 @@
+{
+  "name": "pi-tiptap",
+  "version": "1.0.0",
+  "browser": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup --config"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@awesome.me/webawesome": "^3.3.1",
+    "@tiptap/core": "^3.20.1",
+    "@tiptap/pm": "^3.20.1",
+    "@tiptap/starter-kit": "^3.20.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "rollup": "^4.59.0"
+  }
+}

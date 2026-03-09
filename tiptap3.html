@@ -1,249 +1,279 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Block test</title>
-    <link rel="stylesheet" href="css/_styles.css" class="rel" />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: content-box;
-      }
 
-      body {
-        font-family:
-          Roboto,
-          system-ui,
-          -apple-system,
-          BlinkMacSystemFont,
-          "Segoe UI",
-          Oxygen,
-          Oxygen-Sans,
-          Ubuntu,
-          Cantarell,
-          "Helvetica Neue",
-          sans-serif;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Block test</title>
+  <link rel="stylesheet" href="css/_styles.css" class="rel" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: content-box;
+    }
 
-      .container {
-        width: 500px;
-        margin: 1rem auto;
-      }
+    body {
+      font-family:
+        Roboto,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Oxygen,
+        Oxygen-Sans,
+        Ubuntu,
+        Cantarell,
+        "Helvetica Neue",
+        sans-serif;
+    }
 
-      form {
-        gap: 1rem;
-        display: flex;
-        flex-direction: column;
-      }
+    .container {
+      width: 500px;
+      margin: 1rem auto;
+    }
 
-      .editor-wrapper {
-        border: 2px solid gray;
-      }
+    form {
+      gap: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
 
-      #lexical-state {
-        width: 100%;
-        height: 300px;
-      }
+    .editor-wrapper {
+      border: 2px solid gray;
+    }
 
-      .PlaygroundEditorTheme__quote {
-        margin: 0;
-        margin-left: 20px;
-        margin-bottom: 10px;
-        font-size: 15px;
-        color: rgb(101, 103, 107);
-        border-left-color: rgb(206, 208, 212);
-        border-left-width: 4px;
-        border-left-style: solid;
-        padding-left: 16px;
-      }
-      button[active] {
-        background-color: beige;
-      }
-      .tiptap:focus {
-        outline: 0;
-      }
-      .tiptap {
-        padding: 1rem;
-      }
-      pre {
-        width: 60ch;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-      }
-    </style>
-    <!--script type="module" src="src/basic/index.js"></script-->
-  </head>
+    #lexical-state {
+      width: 100%;
+      height: 300px;
+    }
 
-  <body>
-    <div class="container">
-      <h3>test block editor</h3>
-      <button id="_save">Save</button>
-      <button class="bold">Bold</button>
-      <button id="_cblock">Custom Block</button>
-      <div class="editor"></div>
-      <pre><code id="_code"></code></pre>
-    </div>
+    .PlaygroundEditorTheme__quote {
+      margin: 0;
+      margin-left: 20px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      color: rgb(101, 103, 107);
+      border-left-color: rgb(206, 208, 212);
+      border-left-width: 4px;
+      border-left-style: solid;
+      padding-left: 16px;
+    }
 
-    <script type="module">
-      import { Editor, Extension, Node } from "https://esm.sh/@tiptap/core";
-      import StarterKit from "https://esm.sh/@tiptap/starter-kit";
-      import EditorBlockElement from "./src/form-elements/editor-block-element.js";
+    button[active] {
+      background-color: beige;
+    }
 
-      const CustomNode = Node.create(() => {
-        // here you could define variables or function that you can use on your schema definition
-        const customVariable = "shx";
+    .tiptap:focus {
+      outline: 0;
+    }
 
-        function onCreate() {}
-        function onUpdate() {}
+    .tiptap {
+      padding: 1rem;
+    }
 
-        function addOptions() {
-          return {
-            HTMLAttributes: {},
-          };
-        }
+    pre {
+      width: 60ch;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+  <script type="module">
+    import {
+      registerIconLibrary
+    } from './tiptap/webawesome-bundle.js';
+    registerIconLibrary('default', {
+      resolver: (name, family, variant) => `/assets/fa-regular/${name}.svg`,
+      mutator: svg => svg.setAttribute('fill', 'currentColor'),
+    });
+  </script>
+</head>
 
-        function parseHTML() {
-          return [
-            {
-              tag: "section",
-            },
-          ];
-        }
+<body>
+  <div class="container">
+    <h3>test block editor bundle</h3>
+    <button id="_save">Save</button><wa-icon name="address-card" variant="regular"></wa-icon>
 
-        function renderHTML({ HTMLAttributes }) {
-          return ["editor-block-element-html-output", HTMLAttributes, 0];
-        }
+    <button class="bold">Bold</button>
+    <button id="_cblock">Custom Block</button>
+    <div class="editor"></div>
+    <pre><code id="_code"></code></pre>
+  </div>
 
-        function addNodeView() {
-          return ({
-            editor,
-            node,
-            getPos,
-            HTMLAttributes,
-            decorations,
-            extension,
-          }) => {
-            const dom = document.createElement("div");
-            // dom.innerHTML = "Hello, I’m a node view!";
-            const el = document.createElement("editor-block-element");
-            el.shid = "i-am-in-the-editor";
-            dom.appendChild(el);
-            return {
-              dom,
-            };
-          };
-        }
-        function addAttributes() {
-          return {
-            shid: {
-              default: "cvalue",
-              parseHTML: (element) => element.getAttribute("data-shid"),
-            },
-          };
-        }
-        function addCommands() {
-          return {
-            addCNode:
-              () =>
-              ({ commands }) => {
-                return commands.setContent("addSlowNode command executed");
-              },
-          };
-        }
-        // https://github.com/ueberdosis/tiptap/discussions/4999
+  <script type="module">
+    // import { Editor, Extension, Node } from "https://esm.sh/@tiptap/core";
+    // import StarterKit from "https://esm.sh/@tiptap/starter-kit";
+    import {
+      Editor,
+      Extension,
+      Node,
+      StarterKit
+    } from "./vendor/tiptap-complete.js";
+    import EditorBlockElement from "./src/form-elements/editor-block-element.js";
+
+    const CustomNode = Node.create(() => {
+      // here you could define variables or function that you can use on your schema definition
+      const customVariable = "shx";
+
+      function onCreate() {}
+
+      function onUpdate() {}
+
+      function addOptions() {
         return {
-          name: "slowhandNode",
-          onCreate,
-          onUpdate,
-          addOptions,
-          parseHTML,
-          addNodeView,
-          renderHTML,
-          addAttributes,
-          selectable: true,
-          inline: false,
-          group: "block",
-          // Your code goes here.
+          HTMLAttributes: {},
         };
-      });
-      const CustomExtension = Extension.create(() => {
-        // Define variables or functions to use inside your extension
-        const customVariable = "foo";
+      }
 
-        function onCreate() {}
-        function onUpdate() {
-          console.log("custom update:", this.editor.getJSON());
-        }
+      function parseHTML() {
+        return [{
+          tag: "section",
+        }, ];
+      }
 
-        // editor.commands.customCommand() // 'Custom command executed'
-        // editor.chain().customCommand().run() // 'Custom command executed'
-        function addCommands() {
+      function renderHTML({
+        HTMLAttributes
+      }) {
+        return ["editor-block-element-html-output", HTMLAttributes, 0];
+      }
+
+      function addNodeView() {
+        return ({
+          editor,
+          node,
+          getPos,
+          HTMLAttributes,
+          decorations,
+          extension,
+        }) => {
+          const dom = document.createElement("div");
+          // dom.innerHTML = "Hello, I’m a node view!";
+          const el = document.createElement("editor-block-element");
+          el.shid = "i-am-in-the-editor";
+          dom.appendChild(el);
           return {
-            addSlowNode:
-              () =>
-              ({ commands }) => {
-                console.log("custom insertcontent");
-                return commands.insertContent({
-                  type: "slowhandNode",
-                  attrs: {
-                    shid: "hallo-ok-bin-custom",
-                  },
-                });
-              },
+            dom,
           };
-        }
-        function extendNodeSchema() {
-          return {
-            slowhandId: {
-              default: null,
-            },
-          };
-        }
+        };
+      }
+
+      function addAttributes() {
         return {
-          name: "customExtension",
-          onCreate,
-          onUpdate,
-          addCommands,
-          // Your code goes here.
+          shid: {
+            default: "cvalue",
+            parseHTML: (element) => element.getAttribute("data-shid"),
+          },
         };
-      });
+      }
 
-      let ed = new Editor({
-        element: document.querySelector(".editor"),
-        extensions: [StarterKit, CustomNode, CustomExtension],
-        content: "<p>Hello from CDN!</p>",
-      });
+      function addCommands() {
+        return {
+          addCNode: () =>
+            ({
+              commands
+            }) => {
+              return commands.setContent("addSlowNode command executed");
+            },
+        };
+      }
+      // https://github.com/ueberdosis/tiptap/discussions/4999
+      return {
+        name: "slowhandNode",
+        onCreate,
+        onUpdate,
+        addOptions,
+        parseHTML,
+        addNodeView,
+        renderHTML,
+        addAttributes,
+        selectable: true,
+        inline: false,
+        group: "block",
+        // Your code goes here.
+      };
+    });
+    const CustomExtension = Extension.create(() => {
+      // Define variables or functions to use inside your extension
+      const customVariable = "foo";
 
-      let bold = document.querySelector("button.bold");
-      bold.addEventListener("click", () => {
-        ed.chain().focus().toggleBold().run();
-        if (ed.isActive("bold")) {
-          bold.setAttribute("active", "");
-        } else {
-          bold.removeAttribute("active");
-        }
-      });
-      _cblock.addEventListener("click", () => {
-        ed.chain().focus().addSlowNode().run();
-      });
-      _save.addEventListener("click", () => {
-        let j = ed.getJSON();
-        console.log("save", j);
-        _code.innerHTML = JSON.stringify(j);
-      });
+      function onCreate() {}
 
-      ed.on("selectionUpdate", ({ editor }) => {
-        // The selection has changed.
-        console.log("check active", editor.getAttributes("bold"));
-        if (editor.isActive("bold")) {
-          bold.setAttribute("active", "");
-        } else {
-          bold.removeAttribute("active");
-        }
-      });
-      console.log("$ editor", ed);
-    </script>
-  </body>
+      function onUpdate() {
+        console.log("custom update:", this.editor.getJSON());
+      }
+
+      // editor.commands.customCommand() // 'Custom command executed'
+      // editor.chain().customCommand().run() // 'Custom command executed'
+      function addCommands() {
+        return {
+          addSlowNode: () =>
+            ({
+              commands
+            }) => {
+              console.log("custom insertcontent");
+              return commands.insertContent({
+                type: "slowhandNode",
+                attrs: {
+                  shid: "hallo-ok-bin-custom",
+                },
+              });
+            },
+        };
+      }
+
+      function extendNodeSchema() {
+        return {
+          slowhandId: {
+            default: null,
+          },
+        };
+      }
+      return {
+        name: "customExtension",
+        onCreate,
+        onUpdate,
+        addCommands,
+        // Your code goes here.
+      };
+    });
+
+    let ed = new Editor({
+      element: document.querySelector(".editor"),
+      extensions: [StarterKit, CustomNode, CustomExtension],
+      content: "<p>Hello from CDN!</p>",
+    });
+
+    let bold = document.querySelector("button.bold");
+    bold.addEventListener("click", () => {
+      ed.chain().focus().toggleBold().run();
+      if (ed.isActive("bold")) {
+        bold.setAttribute("active", "");
+      } else {
+        bold.removeAttribute("active");
+      }
+    });
+    _cblock.addEventListener("click", () => {
+      ed.chain().focus().addSlowNode().run();
+    });
+    _save.addEventListener("click", () => {
+      let j = ed.getJSON();
+      console.log("save", j);
+      _code.innerHTML = JSON.stringify(j);
+    });
+
+    ed.on("selectionUpdate", ({
+      editor
+    }) => {
+      // The selection has changed.
+      console.log("check active", editor.getAttributes("bold"));
+      if (editor.isActive("bold")) {
+        bold.setAttribute("active", "");
+      } else {
+        bold.removeAttribute("active");
+      }
+    });
+    console.log("$ editor", ed);
+  </script>
+</body>
+
 </html>

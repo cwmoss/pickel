@@ -11,9 +11,9 @@
   "dependencies": {
     "@floating-ui/dom": "^1.6.13",
     "@shoelace-style/shoelace": "^2.15.1",
-    "@tiptap/core": "^2.4.0",
-    "@tiptap/pm": "^2.4.0",
-    "@tiptap/starter-kit": "^2.4.0",
+    "@tiptap/core": "^2.27.2",
+    "@tiptap/pm": "^2.27.2",
+    "@tiptap/starter-kit": "^2.27.2",
     "composed-offset-position": "^0.0.6",
     "fecha": "^4.2.3",
     "sortablejs": "^1.15.2",

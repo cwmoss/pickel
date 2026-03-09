@@ -111,7 +111,7 @@ export default class ObjectPreview extends LitElement {
         let detail = this.subtitle;
         let media = "";
         if (this.media) media = html`<img src="${this.media}" />`;
-        else if (this.icon) media = html`<sl-icon name="${this.icon}"></sl-icon>`;
+        else if (this.icon) media = html`<wa-icon name="${this.icon}"></wa-icon>`;
         return html`<div class="flx" @click=${this.open}>
       <div class="media">${media}</div>
       <div>

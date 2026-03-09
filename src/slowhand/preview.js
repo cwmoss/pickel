@@ -119,7 +119,7 @@ export default class Preview extends LitElement {
         if (!icon) icon = this.icon;
         if (this.media) media = html`<img src="${this.media}" />`;
         else if (icon)
-            media = html`<sl-icon name="${icon}" style="font-size:20px;"></sl-icon>`;
+            media = html`<wa-icon name="${icon}" style="font-size:20px;"></wa-icon>`;
         return html`<div class="flx" @click=${this.open}>
       <div class="media">${media}</div>
       <div>

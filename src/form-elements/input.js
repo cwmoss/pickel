@@ -47,11 +47,11 @@ export default class Input extends Face {
                 : ""}
         ${this.render_input()}
         ${this.decostart
-                ? html`<sl-icon
+                ? html`<wa-icon
               name=${this.decostart}
               decostart
               style="font-size: 18px;"
-            ></sl-icon>`
+            ></wa-icon>`
                 : ""}
         ${this.suffix
                 ? html` <span class="input-group-text">${this.suffix}</span> `
