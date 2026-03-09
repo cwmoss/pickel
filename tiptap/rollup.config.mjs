@@ -16,6 +16,14 @@ export default [{
     format: "esm",
   },
   plugins: [nodeResolve(), terser()]
+},
+{
+  input: "floating.js", // "index.js",
+  output: {
+    file: "floating-ui-bundle.js", // "tiptap-bundle.js"
+    format: "esm",
+  },
+  plugins: [nodeResolve(), terser()]
 }
 ];
 

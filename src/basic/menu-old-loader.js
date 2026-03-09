@@ -1,10 +1,10 @@
 /*
 https://codesandbox.io/p/sandbox/floating-ui-dom-composed-offset-position-iscontainingblock-repro-case-qgfhnx?file=%2Fsrc%2Findex.js%3A96%2C37-96%2C60
 */
-// import loaded from "./floating-ui/loader.js";
-// import { offsetParent } from "./floating-ui/composed-offset-position.js";
+import loaded from "./floating-ui/loader.js";
+
 import { LitElement, css, html } from "../../vendor/lit-core.min.js";
-import { computePosition, flip, shift } from "../../vendor/floating-ui-bundle.js";
+import { offsetParent } from "./floating-ui/composed-offset-position.js";
 
 export default class Menu extends LitElement {
     static properties = {
@@ -125,10 +125,10 @@ export default class Menu extends LitElement {
         let menu = this.shadowRoot.querySelector("#menu");
         // menu.style.display = "block";
         menu.showPopover();
-        computePosition(t, menu, {
+        window.FloatingUIDOM.computePosition(t, menu, {
             middleware: [
-                flip(),
-                shift({
+                window.FloatingUIDOM.flip(),
+                window.FloatingUIDOM.shift({
                     padding: 5,
                 }),
             ],
