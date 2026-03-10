@@ -1,6 +1,8 @@
 import { Editor, Extension, Node } from "https://esm.sh/@tiptap/core";
 import StarterKit from "https://esm.sh/@tiptap/starter-kit";
 
+import BubbleMenu from "./bubble-menu.js";
+
 // import { Editor, Extension, Node } from '@tiptap/core'
 // import StarterKit from '@tiptap/starter-kit'
 
@@ -149,7 +151,10 @@ _save.addEventListener("click", () => {
     console.log("save", j, JSON.stringify(j));
     _code.innerHTML = JSON.stringify(j);
 });
-
+let menu = document.querySelector("bubble-menu");
+_bubble.addEventListener("click", (e) => {
+    menu.show(e.target);
+});
 ed.on("selectionUpdate", ({ editor }) => {
     // The selection has changed.
     console.log("check active", editor.getAttributes("bold"));
