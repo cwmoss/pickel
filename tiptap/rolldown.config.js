@@ -1,5 +1,11 @@
 import { defineConfig } from "rolldown";
-
+/*
+    rm -rf /usr/local/bin/node /usr/local/bin/npm /usr/local/lib/node_modules
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+    nvm install --lts
+    nvm use --lts
+    npm i rolldown@latest
+*/
 export default defineConfig([
     {
         input: "lib.js", // "index.js",
