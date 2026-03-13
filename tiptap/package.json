@@ -2,9 +2,11 @@
   "name": "pi-tiptap",
   "version": "1.0.0",
   "browser": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup --config"
+    "build": "rollup --config",
+    "bundle": "rolldown -c"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
+    "rolldown": "^1.0.0-rc.9",
     "rollup": "^4.59.0"
   }
 }
