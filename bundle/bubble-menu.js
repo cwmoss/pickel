@@ -53,7 +53,7 @@ export default class BubbleMenu extends LitElement {
                         var(--shadow-halbschatten-color),
                     0 0.3125rem 1.375rem 0.25rem var(--shadow-umgebung-color);
             }
-            #xxxxmenu:popover-open {
+            #menu:popover-open {
                 width: max-content;
                 /* height: 200px; */
                 position: absolute;
@@ -113,7 +113,6 @@ export default class BubbleMenu extends LitElement {
     connectedCallback() {
         this.init_items();
         super.connectedCallback();
-        console.log("bubble menu loaded!");
     }
 
     init_items() {
@@ -145,11 +144,7 @@ export default class BubbleMenu extends LitElement {
         let popover = e.target.querySelector("[popover]");
         if (popover) popover.hidePopover();
     }
-    show() {
-        let menu = this.renderRoot.querySelector("#menu");
-        // menu.showPopover();
-    }
-    xshow(trigger) {
+    show(trigger) {
         let menu = this.renderRoot.querySelector("#menu");
         console.log("++ show ++", trigger, trigger.getBoundingClientRect());
         //menu.showPopover();
@@ -192,16 +187,16 @@ export default class BubbleMenu extends LitElement {
         });
     }
     active = false;
-    toggle() { }
+    toggle() {}
     xxxcreateRenderRoot() {
         return this;
     }
     render() {
         console.log("render function");
-        return html`<div id="menu" @click=${this.select}>
+        return html`<div id="menu" popover @click=${this.select}>
                 <nav class="listcontainer">
                     ${this.items.map((it) => {
-            return html`<button
+                        return html`<button
                             xxid=${it.command}
                             popovertarget="${it.command}-info"
                             @click=${this.exec}
@@ -219,7 +214,7 @@ export default class BubbleMenu extends LitElement {
                                 tooltip for ${it.command}
                             </div>
                         </button>`;
-        })}
+                    })}
                 </nav>
             </div>
             <style>

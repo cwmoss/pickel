@@ -78,16 +78,6 @@
       white-space: pre-wrap;
       word-wrap: break-word;
     }
-
-    editor-top-menu {
-      z-index: 50;
-      width: 100%;
-      display: block;
-      position: sticky;
-      background-color: white;
-      top: 0;
-      overflow-x: auto;
-    }
   </style>
 
 </head>
@@ -102,7 +92,14 @@
   </div>
 
   <div class="container">
-    <slow-editor></slow-editor>
+    <h3>test block editor</h3>
+    <button id="_save">Save</button>
+    <button class="bold">Bold</button>
+    <button id="_cblock">Custom Block</button>
+    <button id="_bubble">menu</button>
+
+    <div class="editor"></div>
+    <pre><code id="_code"></code></pre>
   </div>
 
   <div class="container">
@@ -120,7 +117,7 @@
 
     In der Beschwerde kritisiert CISPE vor allem die kumulative Kostensteigerung für europäische Cloud-Dienstleister (CSPs) um nach eigener Darstellung mehr als 1.000 Prozent. Diese ergäben sich aus Preiserhöhungen, erzwungener Bündelung von Produkten, Vorauszahlungspflichten und Mindestabnahmen, die sich am Potenzial statt an der tatsächlichen Nutzung orientierten. Bereits im Mai 2025 hatte ein Bericht europäischer Cloud-Communities Preissteigerungen von 800 bis 1.500 Prozent dokumentiert. CISPE unterstützt nach eigenen Angaben zudem die Beschwerde des deutschen IT-Anwenderverbands Voice e.V. vom Mai 2025, der ebenfalls Preiserhöhungen von mehreren hundert Prozent und Druck auf Kunden mit auslaufenden Verträgen anprangert.
   </div>
-  <script type="module" src="slow-editor.js"></script>
+  <script type="module" src="index.js"></script>
 </body>
 
 </html>

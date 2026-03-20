@@ -1,6 +1,10 @@
+/// <reference types="bun" />
+
 await Bun.build({
-  entrypoints: ['./lib.js'],
-  outdir: './out',
+  entrypoints: ['./tiptap-bundle.js', './floating-ui-bundle.js'],
+  outdir: './dist',
   format: "esm",
   minify: true,
 })
+
+export {}
