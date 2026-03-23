@@ -1,21 +1,31 @@
 // import { Editor, Extension, Node } from "https://esm.sh/@tiptap/core";
 // import StarterKit from "https://esm.sh/@tiptap/starter-kit";
 
-import { Editor, Extension, Node, StarterKit, BubbleMenu } from './dist/tiptap-bundle.js'
-import { CustomExtension } from './custom-extension.js';
-import { CustomNode } from './custom-nodes.js';
+import {
+    Editor,
+    Extension,
+    Node,
+    StarterKit,
+    BubbleMenu,
+    Markdown,
+} from "./dist/tiptap-bundle.js";
+import { CustomExtension } from "./custom-extension.js";
+import { CustomNode } from "./custom-nodes.js";
+import { Toolbar } from "./toolbar.js";
 
 import UnusedBubbleMenu from "./bubble-menu.js";
-import EditorTopMenu from './editor-top-menu.js';
+import EditorTopMenu from "./editor-top-menu.js";
 
 let jcontent = `
 {"type":"doc","content":[{"type":"heading","attrs":{"level":1},"content":[{"type":"text","text":"Bericht: KI-Coding-Tools verursachten Ausfälle bei Amazon"}]},{"type":"paragraph","content":[{"type":"text","text":"Nach Ausfällen im März führt Amazon strengere Kontrollen für KI-generierten Code ein. Interne Berichte sehen mangelnde Sicherheitsmechanismen als Ursache."}]},{"type":"paragraph","content":[{"type":"text","marks":[{"type":"link","attrs":{"href":"https://app-eu.readspeaker.com/cgi-bin/rsent?customerid=4407&lang=de_de&readid=meldung&url=https%3A%2F%2Fwww.heise.de%2Fnews%2FBericht-KI-Coding-Tools-verursachten-Ausfaelle-bei-Amazon-11205724.html%3Fseite%3Dall","target":"_blank","rel":"nofollow noopener noreferrer","class":"a-article-action          js-article-header__readspeaker","title":"Beitrag vorlesen und MP3-Download"}}],"text":"vorlesen "},{"type":"text","marks":[{"type":"link","attrs":{"href":"https://www.heise.de/news/Bericht-KI-Coding-Tools-verursachten-Ausfaelle-bei-Amazon-11205724.html?view=print","target":"_blank","rel":"nofollow","class":"\\n    link\\n    a-article-action a-u-show-from-tablet\\n  ","title":"Druckansicht"}}],"text":"Druckansicht "},{"type":"text","marks":[{"type":"link","attrs":{"href":"https://www.heise.de/forum/heise-online/Kommentare/Bericht-KI-Coding-Tools-verursachten-Ausfaelle-bei-Amazon/forum-578975/comment/","target":"_blank","rel":"noopener noreferrer nofollow","class":"a-article-action","title":"Kommentar lesen"}}],"text":"56 Kommentare lesen"}]},{"type":"paragraph","content":[{"type":"text","text":"(Bild: JHVEPhoto / "},{"type":"text","marks":[{"type":"link","attrs":{"href":"http://Shutterstock.com","target":"_blank","rel":"noopener noreferrer nofollow","class":null,"title":null}}],"text":"Shutterstock.com"},{"type":"text","text":")"}]},{"type":"paragraph","content":[{"type":"text","text":"13:17 Uhr"}]},{"type":"paragraph","content":[{"type":"text","text":" Lesezeit: 2 Min."}]},{"type":"paragraph","content":[{"type":"text","text":" Von"}]},{"type":"bulletList","content":[{"type":"listItem","content":[{"type":"paragraph","content":[{"type":"text","marks":[{"type":"link","attrs":{"href":"https://www.heise.de/autor/Malte-Kirchner-3659878","target":"_blank","rel":"noopener noreferrer nofollow","class":"creator__link","title":null}}],"text":"Malte Kirchner"}]}]}]},{"type":"paragraph","content":[{"type":"text","text":"Der Gebrauch von KI-Coding-Tools soll bei Amazon zu Ausfällen seiner E-Commerce-Plattform geführt haben. Laut einem Bericht wurde deshalb ein bislang freiwilliges wöchentliches Meeting umgewidmet, an dem alle beteiligten Entwickler teilnehmen müssen. Ein erstes Ergebnis: Künftig sollen KI-assistierte Code-Änderungen nur noch nach Prüfung durch erfahrene Kräfte freigegeben werden."}]},{"type":"paragraph","content":[{"type":"text","text":"Anfang März soll es zu knapp sechsstündigen Ausfällen auf "},{"type":"text","marks":[{"type":"link","attrs":{"href":"http://Amazon.com","target":"_blank","rel":"noopener noreferrer nofollow","class":null,"title":null}}],"text":"Amazon.com"},{"type":"text","text":" und in der Shopping-App gekommen sein. Kunden konnten dem Bericht zufolge keine Käufe tätigen, ihre Daten oder Preise abrufen. Als Ursache wurde offiziell eine fehlerhafte Software-Aktualisierung genannt."}]}]}`;
 
 let tpl = `
 
-`
+`;
 
 export default class SlowEditor extends HTMLElement {
+    top_toolbar = null;
+    bubble_toolbar = null;
 
     connectedCallback() {
         this.init();
@@ -25,21 +35,46 @@ export default class SlowEditor extends HTMLElement {
 
     init() {
         this.top_menu = document.createElement("editor-top-menu");
-        this.bubble_menu = document.createElement("bubble-menu");
+        this.make_bubble();
         this.editor_el = document.createElement("div");
         this.debug_out = document.createElement("output");
         this.addEventListener("do-action", this.action);
-
+        this.addEventListener("menu-select", this.menu_action);
         this.bm = BubbleMenu.configure({
-            element: this.bubble_menu, options: {
+            element: this.bubble_menu,
+            options: {
+                strategy: "absolute",
+                placement: "top-start",
                 onShow: () => {
-                    console.log("showing bubble menu")
+                    console.log("showing bubble menu");
+                    this.update_bubble();
                     // this.bubble_menu.show()
-                }
-            }
-        })
+                },
+            },
+        });
     }
 
+    make_bubble() {
+        let bm = document.createElement("bubble-menu");
+        this.bubble_toolbar = new Toolbar("bubble");
+        this.bubble_toolbar
+            .add("toggleBold", "bold")
+            .add("toggleItalic", "italic");
+        bm.items = this.bubble_toolbar.items_for_menu();
+        this.bubble_menu = bm;
+        this.bubble_menu.disconnected_render();
+    }
+    update_bubble() {
+        this.bubble_toolbar.items.forEach((it) => {
+            if (this.ed.isActive(it.title)) {
+                it.active = true;
+            } else {
+                it.active = false;
+            }
+        });
+        this.bubble_menu.update_items(this.bubble_toolbar.items_for_menu());
+        console.log("update bubble", this.bubble_toolbar);
+    }
     render() {
         this.appendChild(this.top_menu);
         this.appendChild(this.editor_el);
@@ -49,19 +84,38 @@ export default class SlowEditor extends HTMLElement {
     start_editor() {
         this.ed = new Editor({
             element: this.editor_el,
-            extensions: [StarterKit, CustomNode, CustomExtension, this.bm],
+            extensions: [
+                StarterKit,
+                CustomNode,
+                CustomExtension,
+                this.bm,
+                Markdown,
+            ],
             content: JSON.parse(jcontent), // "<p>Hello from CDN!</p>",
         });
 
         console.log("$ slow editor", this.ed);
     }
 
+    menu_action(ev) {
+        console.log("toolbar event", ev);
+        if (ev.detail?.item?.command) {
+            this.ed.chain().focus()[ev.detail.item.command]().run();
+            this.update_bubble();
+        }
+    }
+
     action(ev) {
-        console.log("toobar event", ev);
+        console.log("toolbar event", ev);
         if (ev.detail.action == "save") {
             let j = this.ed.getJSON();
             console.log("save", j);
             this.debug_out.innerHTML = `<pre>${JSON.stringify(j)}</pre>`;
+        }
+        if (ev.detail.action == "save_md") {
+            let j = this.ed.getMarkdown();
+            console.log("save md", j);
+            this.debug_out.innerHTML = `<pre>${j}</pre>`;
         }
     }
 }

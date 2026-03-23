@@ -15,23 +15,32 @@ export default class EditorTopMenu extends LitElement {
 
     static styles = [
         // cssvars,
-        css``];
+        css``,
+    ];
 
     do_action(ev) {
         let detail = { action: ev.target.name };
-        this.dispatchEvent(new CustomEvent("do-action", { detail, bubbles: true, composed: true }));
+        this.dispatchEvent(
+            new CustomEvent("do-action", {
+                detail,
+                bubbles: true,
+                composed: true,
+            }),
+        );
     }
 
     render() {
         return html`
-        <h3>test block editor</h3>
-        <button name="save" @click=${this.do_action}>Save</button>
-        <button name="bold" @click=${this.do_action}>Bold</button>
-        <button name="_cblock" @click=${this.do_action}>Custom Block</button>
-        <button name="_bubble" @click=${this.do_action}>menu</button>
-    `
+            <h3>test block editor</h3>
+            <button name="save" @click=${this.do_action}>Save</button>
+            <button name="save_md" @click=${this.do_action}>Save MD</button>
+            <button name="bold" @click=${this.do_action}>Bold</button>
+            <button name="_cblock" @click=${this.do_action}>
+                Custom Block
+            </button>
+            <button name="_bubble" @click=${this.do_action}>menu</button>
+        `;
     }
-
 }
 
 customElements.define("editor-top-menu", EditorTopMenu);

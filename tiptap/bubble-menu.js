@@ -3,19 +3,14 @@ https://codesandbox.io/p/sandbox/floating-ui-dom-composed-offset-position-iscont
 */
 // import loaded from "./floating-ui/loader.js";
 // import { offsetParent } from "./floating-ui/composed-offset-position.js";
-import { LitElement, css, html } from "../vendor/lit-core.min.js";
+import { LitElement, css, html, render } from "../vendor/lit-core.min.js";
 import { computePosition, flip, shift } from "../vendor/floating-ui-bundle.js";
-
-function new_item(command, title) {
-    return {
-        command,
-        title,
-    };
-}
 
 export default class BubbleMenu extends LitElement {
     static properties = {
         items: { type: Array },
+        name: {},
+        active: { type: Array },
         trigger: { type: Object },
     };
 
@@ -23,8 +18,8 @@ export default class BubbleMenu extends LitElement {
         // cssvars,
         css`
             :host {
-                // display: block;
-                position: relative;
+                display: block;
+                /* position: relative; */
                 --menu-pos-top: 0;
                 --menu-pos-left: 0;
             }
@@ -62,12 +57,11 @@ export default class BubbleMenu extends LitElement {
                 left: var(--menu-pos-left);
                 margin: 0;
             }
-            .listcontainer,
-            .subcontainer {
-                //display: flex;
-                //flex-direction: row;
+            nav {
+                display: flex;
+                gap: 3px;
+                padding: 3px;
             }
-
             button {
                 flex: 1;
                 text-decoration: none;
@@ -79,7 +73,9 @@ export default class BubbleMenu extends LitElement {
                 background: #fff;
                 border: transparent;
             }
-
+            button[active] {
+                background-color: #eee;
+            }
             button:hover,
             button:focus {
                 background: var(--color-accent);
@@ -98,8 +94,12 @@ export default class BubbleMenu extends LitElement {
 
             .tooltip {
                 position-area: top center;
+                bottom: 0.5rem;
                 width: max-content;
                 margin: 0;
+                padding: 4px;
+                border-radius: 6px;
+                border: 0;
                 //left: calc(anchor(right) + 12px);
                 //bottom: anchor(top);
                 // transform: translateY(-50%);
@@ -110,22 +110,35 @@ export default class BubbleMenu extends LitElement {
         `,
     ];
 
-    connectedCallback() {
+    xxxconnectedCallback() {
         this.init_items();
         super.connectedCallback();
         console.log("bubble menu loaded!");
     }
 
-    init_items() {
+    // floating ui needs the full rendered element to correctly calculate
+    // the position
+    disconnected_render() {
+        // render(this.render(), this);
+        document.body.appendChild(this);
+        document.querySelector("body>bubble-menu").remove();
+    }
+    xxxinit_items() {
         if (!this.items) this.items = [];
-        this.items.push(new_item("setBold", "bold"));
-        this.items.push(new_item("setItalic", "italic"));
+        // this.items.push(new_item("setBold", "bold"));
+        // this.items.push(new_item("setItalic", "italic"));
+        this.requestUpdate();
+    }
+
+    update_items(items) {
+        this.items = items;
+        this.requestUpdate();
     }
 
     select(e) {
         e.preventDefault();
         console.log("++++ selected", e.target);
-        this.renderRoot.getElementById("menu").hidePopover();
+        // this.renderRoot.getElementById("menu").hidePopover();
         let evt = new CustomEvent("menu-select", {
             detail: { item: e.target.getAttribute("href") },
             bubbles: true,
@@ -134,7 +147,18 @@ export default class BubbleMenu extends LitElement {
         this.dispatchEvent(evt);
     }
     exec(e) {
-        console.log("++exit", e.target);
+        console.log("++exec", e.target.name);
+        if (e.target.name) {
+            let item = this.items.find((it) => it.command == e.target.name);
+            if (item) {
+                let evt = new CustomEvent("menu-select", {
+                    detail: { item: item, name: this.name },
+                    bubbles: true,
+                    composed: true,
+                });
+                this.dispatchEvent(evt);
+            }
+        }
     }
     enter(e) {
         let popover = e.target.querySelector("[popover]");
@@ -192,39 +216,38 @@ export default class BubbleMenu extends LitElement {
         });
     }
     active = false;
-    toggle() { }
+    toggle() {}
     xxxcreateRenderRoot() {
         return this;
     }
     render() {
-        console.log("render function");
-        return html`<div id="menu" @click=${this.select}>
-                <nav class="listcontainer">
-                    ${this.items.map((it) => {
-            return html`<button
-                            xxid=${it.command}
-                            popovertarget="${it.command}-info"
-                            @click=${this.exec}
-                            @mouseenter=${this.enter}
-                            @mouseleave=${this.leave}
+        console.log("render BUBBLE-MENU", this.items);
+        // @click=${this.select}
+        return html`<div id="menu">
+            <nav class="listcontainer">
+                ${this.items.map((it) => {
+                    return html`<button
+                        name=${it.command}
+                        popovertarget="${it.command}-info"
+                        @click=${this.exec}
+                        ?active=${it.active}
+                        @mouseenter=${this.enter}
+                        @mouseleave=${this.leave}
+                    >
+                        ${it.title}
+                        <div
+                            xxrole="tooltip"
+                            id="${it.command}-info"
+                            popover
+                            xxanchor="${it.command}"
+                            class="tooltip"
                         >
-                            ${it.title}
-                            <div
-                                xxrole="tooltip"
-                                id="${it.command}-info"
-                                popover
-                                xxanchor="${it.command}"
-                                class="tooltip"
-                            >
-                                tooltip for ${it.command}
-                            </div>
-                        </button>`;
-        })}
-                </nav>
-            </div>
-            <style>
-                ${BubbleMenu.styles[0]}
-            </style> `;
+                            tooltip for ${it.command}
+                        </div>
+                    </button>`;
+                })}
+            </nav>
+        </div>`;
     }
 }
 

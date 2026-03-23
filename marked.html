@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>marked test</title>
+    <style>
+      span {
+        background-color: #eee;
+      }
+    </style>
   </head>
   <body>
     <div id="content"></div>
@@ -80,7 +85,8 @@
         name: "youtube",
         level: "inline",
         start(src) {
-          return src.match(/!youtube/)?.index;
+          // return src.match(/^!youtube/)?.index;
+          return src.indexOf("!youtube");
         },
         tokenizer(src, tokens) {
           console.log("check yt", src);
