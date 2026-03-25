@@ -84,8 +84,8 @@
       const youtube = {
         name: "youtube",
         level: "inline",
-        start(src) {
-          // return src.match(/^!youtube/)?.index;
+        startInline(src) {
+          return src.match(/^!youtube/)?.index;
           return src.indexOf("!youtube");
         },
         tokenizer(src, tokens) {
@@ -115,22 +115,22 @@
         }
       }
       marked.use({
-        extensions: [descriptionList, description, youtube],
+        extensions: [youtube],
         walkTokens,
       });
-      marked.use({ renderer });
+      // marked.use({ renderer });
 
-      console.log(
+      /*console.log(
         marked.parse(
           "A Description List:\n" +
             ":   Topic 1   :  Description 1\n" +
             ": **Topic 2** : *Description 2*",
         ),
-      );
+      );*/
 
       document.getElementById("content").innerHTML = marked.parse(
         `
-# Marked % in the browser
+# Marked % in _the_ browser
 
 Rendered !youtube[a cat](nsdfasdly) _by_ **marked**.
       `,
