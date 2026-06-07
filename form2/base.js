@@ -1,4 +1,4 @@
-import { LitElement, css, unsafeCSS, html } from "./../vendor/lit-core.min.js";
+import { LitElement, css, unsafeCSS, html } from "./lit-core.min.js";
 // import cssvars from "./variables.css.js";
 // import { bootstrapform } from "./bs-only-form.css.js";
 // import FieldValidator from "../st.bernard/field-validator.js";
@@ -15,6 +15,8 @@ export default class Base extends LitElement {
 
     static properties = {
         value: { state: true },
+        // set values from the outside
+        val: {},
         name: { reflect: true },
         label: {},
         noLabel: { type: Boolean, attribute: "no-label" },
@@ -107,9 +109,16 @@ export default class Base extends LitElement {
     }
 
     updated(changedProperties) {
+        if (changedProperties.has("val")) {
+            console.log("+++ upd EXTERNAL VALUE", this.val);
+            this.value = this.val;
+        }
         if (changedProperties.has("value")) {
             this.internals.setFormValue(this.value);
         }
+    }
+    reset(val) {
+        this.value = val ?? this.empty_value;
     }
     input_event(e) {
         console.log("static fresh", this.constructor.validate_on_input);
