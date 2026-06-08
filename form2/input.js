@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "./lit-core.min.js";
+import { LitElement, css, html, live } from "./lit-all.min.js";
 import Base from "./base.js";
 
 export default class FInput extends Base {

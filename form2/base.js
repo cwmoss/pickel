@@ -16,7 +16,7 @@ export default class Base extends LitElement {
     static properties = {
         value: { state: true },
         // set values from the outside
-        val: {},
+        // val: {},
         name: { reflect: true },
         label: {},
         noLabel: { type: Boolean, attribute: "no-label" },
@@ -96,6 +96,10 @@ export default class Base extends LitElement {
     }
     */
 
+    set val(val) {
+        console.log("VAL SET default value", val);
+        this.value = val ?? this.empty_value;
+    }
     set_value(val) {
         console.log("$$FACE set value", this.name, val);
         if (!val) val = this.get_default_value();
@@ -108,7 +112,11 @@ export default class Base extends LitElement {
         return this.value;
     }
 
+    willUpdate(props) {
+        console.log("++ Will update?", props, this.value);
+    }
     updated(changedProperties) {
+        console.log("++ UPDATED propupdate", changedProperties, this.value);
         if (changedProperties.has("val")) {
             console.log("+++ upd EXTERNAL VALUE", this.val);
             this.value = this.val;

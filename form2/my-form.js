@@ -1,4 +1,4 @@
-import { LitElement, css, html } from "./lit-core.min.js";
+import { LitElement, css, html, live } from "./lit-all.min.js";
 import FInput from "./input.js";
 import { form } from "./form.js";
 
@@ -37,8 +37,9 @@ export default class MyForm extends LitElement {
         let inp = this.shadowRoot.querySelector("f-input");
         let inp2 = this.shadowRoot.querySelector("wa-input");
         console.log("finput", inp);
-        inp.reset();
-        inp2.value = "";
+        // inp.val = "hugo";
+        // inp.reset();
+        // inp2.value = "";
         this.requestUpdate();
     }
     render() {
@@ -52,7 +53,7 @@ export default class MyForm extends LitElement {
                 <f-input
                     type="text"
                     name="thename"
-                    .val=${this.form.get_value("thename")}
+                    .val=${live(this.form.get_value("thename"))}
                     label="Name"
                 ></f-input>
                 <wa-input
