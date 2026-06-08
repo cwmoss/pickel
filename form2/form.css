@@ -1,4 +1,11 @@
 /* Forms */
+a b,
+a strong,
+button {
+  background-color: var(--color);
+  border: 2px solid var(--color);
+  color: var(--color-bg);
+}
 button:disabled,
 input:disabled {
   background: var(--color-bg-secondary);

@@ -8,6 +8,8 @@ let css_c = await res.text();
 let formglobal = unsafeCSS`
     ${css_c}
 `;*/
+import { formcss } from "./form.css.js";
+
 export default class Base extends LitElement {
     static formAssociated = true;
 
@@ -35,17 +37,10 @@ export default class Base extends LitElement {
     };
 
     static styles = [
+        formcss,
         // cssvars,
         // formglobal,
-        css`
-            input,
-            select,
-            textarea {
-                border: 1px solid var(--color-bg-secondary);
-                border-radius: var(--border-radius);
-                padding: 0.4rem 0.8rem;
-            }
-        `,
+        css``,
     ];
 
     constructor() {

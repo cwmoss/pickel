@@ -3,6 +3,9 @@ import FInput from "./input.js";
 import { form } from "./form.js";
 
 export default class MyForm extends LitElement {
+    createRenderRoot() {
+        return this;
+    }
     static properties = {
         form: { type: Object },
         error_message: {},
