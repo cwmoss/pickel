@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Mentions</h1>
+    <main>
+        <div id="editor"></div>
+    </main>
+    <script type="module">
+        import {
+            Editor,
+            Mention,
+            StarterKit
+        } from './dist/tiptap-bundle.js'
+
+        new Editor({
+            element: document.querySelector('#editor'),
+            extensions: [
+                StarterKit,
+                Mention.configure({
+                    HTMLAttributes: {
+                        class: 'mention',
+                    },
+                    suggestion: {
+                        char: '@',
+                        items: ({
+                            query
+                        }) => {
+                            return ['Alice', 'Bob', 'Carol'].filter((name) =>
+                                name.toLowerCase().includes(query.toLowerCase())
+                            )
+                        },
+                        render: () => {
+                            let popup
+
+                            return {
+                                onStart: (props) => {
+                                    popup = document.createElement('div')
+                                    popup.classList.add('suggestion-popup')
+                                    props.items.forEach((item) => {
+                                        const button = document.createElement('button')
+                                        button.textContent = item
+                                        button.addEventListener('click', () => props.command({
+                                            id: item
+                                        }))
+                                        popup.appendChild(button)
+                                    })
+                                    document.body.appendChild(popup)
+                                },
+                                onUpdate: (props) => {
+                                    popup.innerHTML = ''
+                                    props.items.forEach((item) => {
+                                        const button = document.createElement('button')
+                                        button.textContent = item
+                                        button.addEventListener('click', () => props.command({
+                                            id: item
+                                        }))
+                                        popup.appendChild(button)
+                                    })
+                                },
+                                onExit: () => {
+                                    popup?.remove()
+                                },
+                            }
+                        },
+                    },
+                }),
+            ],
+            content: '<p>Type @ to mention someone.</p>',
+        })
+    </script>
+</body>
+
+</html>

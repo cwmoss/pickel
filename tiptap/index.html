@@ -88,6 +88,54 @@
       top: 0;
       overflow-x: auto;
     }
+
+    .mention {
+      padding: 2px 5px;
+      background-color: #ddd;
+    }
+
+    suggestion-decorator {
+      background-color: yellow;
+      padding: 2px 5px;
+      anchor-name: --suggest;
+    }
+
+    [popover] {
+      border: 0;
+      /* Removes default border */
+      margin: 0;
+      /* Resets placement */
+      position: absolute;
+      /* Required */
+      position-anchor: --suggest;
+      top: anchor(bottom);
+      left: anchor(left);
+    }
+
+    #menu {
+      inline-size: max-content;
+      // display: none;
+      border: none;
+      background-color: white;
+      --shadow-linie-color: rgba(114, 120, 146, 0.3);
+      --shadow-schatten-color: rgba(114, 120, 146, 0.1);
+      --shadow-halbschatten-color: rgba(114, 120, 146, 0.07);
+      --shadow-umgebung-color: rgba(114, 120, 146, 0.06);
+      border-radius: 0.75rem;
+      box-shadow:
+        0 0 0 0.03125rem var(--shadow-linie-color),
+        0 0.4375rem 0.5rem -0.25rem var(--shadow-schatten-color),
+        0 0.75rem 1.0625rem 0.125rem var(--shadow-halbschatten-color),
+        0 0.3125rem 1.375rem 0.25rem var(--shadow-umgebung-color);
+    }
+
+    #menu>div {
+      padding: 0.5rem 1rem;
+
+      &:hover {
+        background: yellow;
+      }
+    }
   </style>
 
 </head>
