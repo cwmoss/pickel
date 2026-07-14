@@ -2,3 +2,5 @@
 node_modules
 yarn.lock
 trash/
+vendor/
+composer.lock

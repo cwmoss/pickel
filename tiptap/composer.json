@@ -1,0 +1,5 @@
+{
+    "require": {
+        "ueberdosis/tiptap-php": "^2.1"
+    }
+}
