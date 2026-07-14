@@ -15,7 +15,30 @@ export default class EditorTopMenu extends LitElement {
 
     static styles = [
         // cssvars,
-        css``,
+        css`
+        section {
+            display: flex;
+            background-color: #f4f4f5;
+            gap: 0.2rem;
+            border-radius:4px;
+            padding:.4rem;
+        }
+        button {
+            background-color: transparent;
+            border:none;
+            padding:0.5rem;
+            border-radius:0.75rem;
+            &:hover{
+                background-color:#eaeaea;
+            }
+        }
+        .separator{
+            width: 1px;
+            height: 2rem;
+            background-color:rgba(37, 39, 45, 0.2);
+            flex-shrink:0;
+        }
+        `,
     ];
 
     do_action(ev) {
@@ -32,13 +55,17 @@ export default class EditorTopMenu extends LitElement {
     render() {
         return html`
             <h3>test block editor</h3>
+            <section>
             <button name="save" @click=${this.do_action}>Save</button>
             <button name="save_md" @click=${this.do_action}>Save MD</button>
+            <div class="separator"></div>
             <button name="bold" @click=${this.do_action}>Bold</button>
             <button name="_cblock" @click=${this.do_action}>
                 Custom Block
             </button>
+            <div class="separator"></div>
             <button name="_bubble" @click=${this.do_action}>menu</button>
+            </section>
         `;
     }
 }
