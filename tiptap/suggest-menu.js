@@ -1,10 +1,11 @@
 let html = `
-<div id="menu"></div>
+<div id="menu"><nav></nav></div>
 `
 
 export default class SuggestMenu extends HTMLElement {
 
     cb = null
+    selectedIndex = 0
 
     constructor() {
         super()
@@ -19,33 +20,103 @@ export default class SuggestMenu extends HTMLElement {
         console.log("suggest-node connected!");
         this.setAttribute("popover", "manual");
         this.innerHTML = html
-        this.popup = this.querySelector("#menu");
+        this.popup = this.querySelector("#menu nav");
         this.render()
         this.addEventListener("click", this);
+        window.addEventListener("keydown", this);
         // this.popup.showPopover()
+    }
+
+    disconnectedCallback() {
+        window.removeEventListener("keydown", this);
     }
 
     handleEvent(ev) {
         console.log("evt", ev);
         let el = ev.target // ev.composedPath()[0];
+        if (ev.type == "keydown") {
+            console.log("item keydown", ev.key, el);
+            return this.onKeyDown(ev);
+        }
         if (el.matches(".item")) {
             console.log("item clicked", el.innerHTML);
             this.cb(el.innerHTML);
             // this.sprops.command({ id: el.innerHTML })
+
             this.dispatchEvent(new CustomEvent("s-select", { detail: el.innerHTML }))
         }
     }
+
+    onKeyDown(event) {
+        if (event.key === 'ArrowUp') {
+            this.upHandler()
+            event.preventDefault();
+            return true
+        }
+
+        if (event.key === 'ArrowDown') {
+            this.downHandler()
+            event.preventDefault();
+            // event.stopPropagation()
+            // return false;
+            return true
+        }
+
+        if (event.key === 'Enter') {
+            this.enterHandler()
+            event.preventDefault();
+            return true
+        }
+
+        return false
+    }
+
+    upHandler() {
+        this.selectedIndex = (this.selectedIndex + this.items.length - 1) % this.items.length
+        this.update_selected()
+    }
+
+    downHandler() {
+        this.selectedIndex = (this.selectedIndex + 1) % this.items.length
+        this.update_selected()
+    }
+
+    enterHandler() {
+        this.selectItem(this.selectedIndex)
+    }
+
+    selectItem(index) {
+        const item = this.items[index]
+
+        if (item) {
+            // this.command({ id: item })
+            console.log("selected via ENTER", item);
+            this.dispatchEvent(new CustomEvent("s-select", { detail: item.id }))
+        }
+    }
+
     _items = [];
     set items(items) {
         console.log("set sugggest items", items)
         this._items = items;
+        this.selectedIndex = 0
         if (this.popup) this.render()
     }
 
+    get items() {
+        return this._items;
+    }
+
+    update_selected() {
+        let sel = this.popup.querySelector(".selected");
+        if (sel) sel.classList.remove("selected");
+        sel = this.popup.querySelector(`button:nth-child(${this.selectedIndex + 1})`);
+        if (sel) sel.classList.add("selected");
+    }
     render() {
         this.popup.innerHTML = "";
-        this._items.forEach((it) => {
-            let ihtml = `<div class="item">${it}</div>`
+        this._items.forEach((it, key) => {
+            let ihtml = `<button class="item ${this.selectedIndex == key ? "selected" : ""}">${it.id}</button>`
             this.popup.insertAdjacentHTML("beforeend", ihtml)
         })
 

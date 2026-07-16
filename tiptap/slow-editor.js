@@ -26,13 +26,17 @@ let jcontent = `
 let tpl = `
 
 `;
-
+let placeholder = [
+    { id: "kun_anrede", "label": "Anrede", "ex": "Herr Dr. Müller" },
+    { id: "kun_nr", "label": "Kundennummer", "ex": "030143850" },
+    { id: "son_heute", "label": "Tagesdatum", "ex": "14.7.2026" },
+]
 let suggest = {
     decorationTag: 'suggestion-decorator',
     char: '$',
     items: ({ query }) => {
-        return ['Alice', 'Bob', 'Carol', "Klaus $Peter"].filter((name) =>
-            name.toLowerCase().includes(query.toLowerCase())
+        return placeholder.filter((it) =>
+            it.id.toLowerCase().includes(query.toLowerCase()) || it.label.toLowerCase().includes(query.toLowerCase())
         )
     },
     render: () => {
@@ -59,7 +63,7 @@ let suggest = {
                     button.addEventListener('click', () => props.command({ id: item }))
                     popup.appendChild(button)
                 })*/
-                popup.addEventListener("s-select", (ev) => props.command({ id: ev.detail }))
+                popup.addEventListener("s-select", (ev) => props.command({ id: ev.detail, label: "huhuh", process: "as_date", ex: "Herr Dr. Müller" }))
                 // popup.cb = (it) => props.command({ id: it })
                 document.body.appendChild(popup)
                 // props.decorationNode.popoverTargetElement = popup
@@ -88,15 +92,43 @@ let suggest = {
     },
 }
 
+const PlaceholderMentionNode = Mention.extend({
+    addAttributes() {
+        return {
+            ...this.parent?.(),
+            process: {
+                default: null,
+                parseHTML: (element) => {
+                    return {
+                        uuid: element.getAttribute("data-mention-process")
+                    };
+                },
+                renderHTML: (attributes) => {
+                    if (!attributes.process) {
+                        return {};
+                    }
+
+                    return {
+                        "data-mention-process": attributes.process
+                    };
+                }
+            },
+            ex: {
+                default: null,
+            }
+        }
+    },
+})
+
 console.log("!!!! suggest", suggest);
 
-let mentions = Mention.configure({
+let mentions = PlaceholderMentionNode.configure({
 
     HTMLAttributes: {
         class: 'mention',
     },
     suggestion: suggest,
-    renderHTML: ({ options, node }) => ['placeholder-mention', { 'data-type': 'mention', 'mention': `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}` }, `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`]
+    renderHTML: ({ options, node }) => ['placeholder-mention', { 'data-type': 'mention', 'mention': `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`, 'title': `ex. ${node.attrs.ex}` }, `${options.suggestion.char}${node.attrs.label ?? node.attrs.id}`]
 })
 
 export default class SlowEditor extends HTMLElement {
