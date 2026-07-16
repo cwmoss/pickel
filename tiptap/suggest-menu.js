@@ -39,11 +39,13 @@ export default class SuggestMenu extends HTMLElement {
             return this.onKeyDown(ev);
         }
         if (el.matches(".item")) {
-            console.log("item clicked", el.innerHTML);
-            this.cb(el.innerHTML);
+            this.selectedIndex = el.dataset.id
+            let item = this._items[this.selectedIndex]
+            console.log("item clicked", item, el.innerHTML);
+            // this.cb(el.innerHTML);
             // this.sprops.command({ id: el.innerHTML })
 
-            this.dispatchEvent(new CustomEvent("s-select", { detail: el.innerHTML }))
+            this.dispatchEvent(new CustomEvent("s-select", { detail: item }))
         }
     }
 
@@ -91,7 +93,7 @@ export default class SuggestMenu extends HTMLElement {
         if (item) {
             // this.command({ id: item })
             console.log("selected via ENTER", item);
-            this.dispatchEvent(new CustomEvent("s-select", { detail: item.id }))
+            this.dispatchEvent(new CustomEvent("s-select", { detail: item }))
         }
     }
 
@@ -111,12 +113,15 @@ export default class SuggestMenu extends HTMLElement {
         let sel = this.popup.querySelector(".selected");
         if (sel) sel.classList.remove("selected");
         sel = this.popup.querySelector(`button:nth-child(${this.selectedIndex + 1})`);
-        if (sel) sel.classList.add("selected");
+        if (sel) {
+            sel.classList.add("selected");
+            sel.focus()
+        }
     }
     render() {
         this.popup.innerHTML = "";
         this._items.forEach((it, key) => {
-            let ihtml = `<button class="item ${this.selectedIndex == key ? "selected" : ""}">${it.id}</button>`
+            let ihtml = `<button data-id="${key}" class="item ${this.selectedIndex == key ? "selected" : ""}">${it.id}</button>`
             this.popup.insertAdjacentHTML("beforeend", ihtml)
         })
 

@@ -49,7 +49,7 @@ let suggest = {
                 // props.decorationNode.items = props.items;
 
                 popup = document.createElement('suggest-menu')
-                popup.cb = props.command;
+                // popup.cb = props.command;
 
                 console.log("popup created");
                 // popup.sprops = props
@@ -63,7 +63,7 @@ let suggest = {
                     button.addEventListener('click', () => props.command({ id: item }))
                     popup.appendChild(button)
                 })*/
-                popup.addEventListener("s-select", (ev) => props.command({ id: ev.detail, label: "huhuh", process: "as_date", ex: "Herr Dr. Müller" }))
+                popup.addEventListener("s-select", (ev) => props.command({ id: ev.detail.id, label: ev.detail.id, process: "as_date", ex: ev.detail.ex }))
                 // popup.cb = (it) => props.command({ id: it })
                 document.body.appendChild(popup)
                 // props.decorationNode.popoverTargetElement = popup
