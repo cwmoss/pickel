@@ -17,10 +17,11 @@ export default class MyForm extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         this.form = new form();
+        this.form.update_value("thename", "initial name")
     }
 
     current_value(ev) {
-        let hf = this.shadowRoot.querySelector("form");
+        let hf = this.querySelector("form");
         let fd = new FormData(hf);
         console.log("native date", fd);
         this.dbg = JSON.stringify(this.form.values);
@@ -28,21 +29,31 @@ export default class MyForm extends LitElement {
     update_input(ev) {
         console.log("upd", ev.detail);
         this.form.update_value(ev.detail.name, ev.detail.value);
+        this.requestUpdate();
     }
     update_inputwa(ev) {
         console.log("upd", ev.detail);
         this.form.update_value("fname", ev.target.value);
     }
+    set_otto() {
+        this.form.update_value("thename", "otto");
+        // this.dbg = JSON.stringify(this.form.values);
+        this.requestUpdate();
+    }
     reset() {
         this.form.update_value("thename", "");
         this.form.update_value("fname", "");
+        // this.dbg = JSON.stringify(this.form.values);
         console.log("++ form", this.form, this.form.get_value("thename"));
-        let inp = this.shadowRoot.querySelector("f-input");
-        let inp2 = this.shadowRoot.querySelector("wa-input");
+        let inp = this.querySelector("f-input");
+        let inp2 = this.querySelector("wa-input");
         console.log("finput", inp);
-        // inp.val = "hugo";
-        // inp.reset();
-        // inp2.value = "";
+        if (inp) {
+            //  inp.val = "";
+        }
+        if (inp2) {
+            //  inp2.value = "";
+        }
         this.requestUpdate();
     }
     render() {
@@ -53,10 +64,11 @@ export default class MyForm extends LitElement {
                     state
                 </button>
                 <button type="button" @click=${this.reset}>reset</button>
+                <button type="button" @click=${this.set_otto}>set to otto</button>
                 <f-input
                     type="text"
                     name="thename"
-                    .val=${live(this.form.get_value("thename"))}
+                    .val=${this.form.get_value("thename")}
                     label="Name"
                 ></f-input>
                 <wa-input

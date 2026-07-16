@@ -16,9 +16,9 @@ export default class Base extends LitElement {
     empty_value = "";
 
     static properties = {
+        val: { state: true },
         value: { state: true },
         // set values from the outside
-        // val: {},
         name: { reflect: true },
         label: {},
         noLabel: { type: Boolean, attribute: "no-label" },
@@ -91,14 +91,19 @@ export default class Base extends LitElement {
     }
     */
 
+    get val() {
+        return this.value;
+    }
     set val(val) {
-        console.log("VAL SET default value", val);
-        this.value = val ?? this.empty_value;
+        const nextValue = val ?? this.empty_value;
+        if (this.value !== nextValue) {
+            this.value = nextValue;
+        }
     }
     set_value(val) {
         console.log("$$FACE set value", this.name, val);
-        if (!val) val = this.get_default_value();
-        this.value = val;
+        const nextValue = val ?? this.get_default_value() ?? this.empty_value;
+        this.value = nextValue;
     }
     get_value() {
         console.log("$$FACE get value", this.name);
@@ -112,10 +117,6 @@ export default class Base extends LitElement {
     }
     updated(changedProperties) {
         console.log("++ UPDATED propupdate", changedProperties, this.value);
-        if (changedProperties.has("val")) {
-            console.log("+++ upd EXTERNAL VALUE", this.val);
-            this.value = this.val;
-        }
         if (changedProperties.has("value")) {
             this.internals.setFormValue(this.value);
         }
