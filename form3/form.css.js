@@ -125,4 +125,8 @@ input:user-invalid {
 
 .actions {
   margin-top: 2rem;
+}
+
+.actions-start {
+  margin-bottom: 2rem;
 }`

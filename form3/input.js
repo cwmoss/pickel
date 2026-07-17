@@ -24,6 +24,10 @@ export default class PiInput extends Base {
 customElements.define("pi-input", PiInput);
 
 /*
+
+https://github.com/whatwg/html/issues/9639
+
+
 ValidityState { valueMissing: true, typeMismatch: false, patternMismatch: false, tooLong: false, tooShort: false, rangeUnderflow: false, rangeOverflow: false, stepMismatch: false, badInput: false, customError: false }
 
 badInput: false
