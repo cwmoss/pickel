@@ -17,7 +17,8 @@ export default class MyForm extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         this.form = new form();
-        this.form.update_value("thename", "initial name")
+        this.form.update_value("fname", "Anna")
+        this.form.update_value("lname", "mustermann")
     }
 
     current_value(ev) {
@@ -31,12 +32,9 @@ export default class MyForm extends LitElement {
         this.form.update_value(ev.detail.name, ev.detail.value);
         this.requestUpdate();
     }
-    update_inputwa(ev) {
-        console.log("upd", ev.detail);
-        this.form.update_value("fname", ev.target.value);
-    }
+
     set_otto() {
-        this.form.update_value("thename", "otto");
+        this.form.update_value("fname", "otto");
         // this.dbg = JSON.stringify(this.form.values);
         this.requestUpdate();
     }
@@ -44,45 +42,33 @@ export default class MyForm extends LitElement {
         this.form.update_value("thename", "");
         this.form.update_value("fname", "");
         // this.dbg = JSON.stringify(this.form.values);
-        console.log("++ form", this.form, this.form.get_value("thename"));
-        let inp = this.querySelector("f-input");
-        let inp2 = this.querySelector("wa-input");
-        console.log("finput", inp);
-        if (inp) {
-            //  inp.val = "";
-        }
-        if (inp2) {
-            //  inp2.value = "";
-        }
         this.requestUpdate();
     }
     render() {
-        console.log("render FORM", this.form.get_value("thename"));
         return html`
-            <form @pi-input=${this.update_input}>
+            <form @pi-input=${this.update_input} id="fcustom">
+                <div class="actions-start">
                 <button type="button" @click=${this.current_value}>
                     state
                 </button>
                 <button type="button" @click=${this.reset}>reset</button>
                 <button type="button" @click=${this.set_otto}>set to otto</button>
-                <f-input
+                </div>
+                <pi-input
                     type="text"
-                    name="thename"
-                    .val=${this.form.get_value("thename")}
-                    label="Name"
-                ></f-input>
-                <f-input
-                    type="text"
-                    name="name2"
-                    val="anna"
-                    label="Name2"
-                ></f-input>
-                <wa-input
                     name="fname"
-                    label="What is your name?"
-                    @input=${this.update_inputwa}
                     .value=${this.form.get_value("fname")}
-                ></wa-input>
+                    label="First Name"
+                ></pi-input>
+                <pi-input
+                    type="text"
+                    name="lname"
+                    value="mustermann"
+                    label="Last Name"
+                ></pi-input>
+                <pi-date name="bday" label="Birthday"></pi-date>
+
+                
             </form>
             <code>${this.dbg}</code>
         `;

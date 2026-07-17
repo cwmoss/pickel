@@ -8,16 +8,39 @@ let css_c = await res.text();
 let formglobal = unsafeCSS`
     ${css_c}
 `;*/
+
+// https://master.dev/blog/form-associated-custom-elements-in-practice/#comment-72247
+
 import { formcss } from "./form.css.js";
+
+function syncInnerInputValidity(
+    internals,
+    inputEl,
+    msg
+) {
+    // return;
+    console.log("sync VALIDITY", inputEl?.name);
+    if (!inputEl) return;
+
+    if (!inputEl.validity.valid) {
+        // We pass the inputEl as the "anchor" so the browser
+        // knows where to point the validation bubble.
+        internals.setValidity(inputEl.validity, msg ? msg : inputEl.validationMessage, inputEl);
+    } else {
+        internals.setValidity({});
+    }
+}
 
 export default class Base extends LitElement {
     static formAssociated = true;
 
     empty_value = "";
 
+    xcreateRenderRoot() {
+        return this;
+    }
     static properties = {
-        val: { attribute: "val", state: true },
-        value: { state: true },
+        value: {},
         // set values from the outside
         name: { reflect: true },
         label: {},
@@ -28,9 +51,13 @@ export default class Base extends LitElement {
         placeholder: {},
         originalType: {},
         options: { type: Object, attribute: false, noAccessor: true },
-        initialValue: { noAccessor: true },
+        initialValue: {},
         is_fresh: { type: Boolean, state: true },
         is_valid: { type: Boolean, state: true },
+        required: { type: Boolean },
+        m_required: { attribute: "m-required" },
+        maxlength: {},
+        pattern: {},
         error_message: {},
         // rules: { type: Array },
         // opts: { attribute: false },
@@ -50,21 +77,12 @@ export default class Base extends LitElement {
         this.internals = this.attachInternals();
         this.value = this.empty_value;
         // this.internals.setFormValue(this.value);
+
     }
 
     connectedCallback() {
         super.connectedCallback();
         this.setup_once();
-        if (this.hasAttribute("val")) {
-            this.set_value(this.getAttribute("val"));
-        }
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-        super.attributeChangedCallback?.(name, oldValue, newValue);
-        if (name === "val" && oldValue !== newValue) {
-            this.set_value(newValue ?? this.empty_value);
-        }
     }
 
     _setup_run = false;
@@ -95,54 +113,31 @@ export default class Base extends LitElement {
     is_empty() {
         return !this.value || this.value == "";
     }
-    /*
-    set value(v) {
-      console.log("++FACE set value", v);
-      this.internals.setFormValue(v);
-    }
-    */
-
-    get val() {
-        return this.value;
-    }
-    set val(val) {
-        const nextValue = val ?? this.empty_value;
-        if (this.value !== nextValue) {
-            this.value = nextValue;
-        }
-    }
-    set_value(val) {
-        console.log("$$FACE set value", this.name, val);
-        const nextValue = val ?? this.get_default_value() ?? this.empty_value;
-        if (this.value !== nextValue) {
-            this.value = nextValue;
-        }
-    }
-    get_value() {
-        console.log("$$FACE get value", this.name);
-        // if (typeof this["get_updated_data"] === "function")
-        //    return this.get_updated_data();
-        return this.value;
-    }
 
     willUpdate(props) {
         console.log("++ Will update?", props, this.value);
     }
+
     updated(changedProperties) {
-        console.log("++ UPDATED propupdate", changedProperties, this.value);
-        if (changedProperties.has("value") || changedProperties.has("val")) {
-            this.internals.setFormValue(this.value);
+
+        if (changedProperties.has("value")) {
+            console.log("++ UPDATED VALUE", this.form.id, this.is_fresh, this.name, this.value);
+            this.internals.setFormValue(this.value ? this.value : null);
+            if (!this.is_fresh)
+                this._sync_validity()
         }
     }
+
     reset(val) {
         this.value = val ?? this.empty_value;
     }
+
     input_event(e) {
-        console.log("static fresh", this.constructor.validate_on_input);
+        console.log("INPUT EVENT static fresh", this.constructor.validate_on_input);
         this.is_fresh = false;
         this.value = this.get_input_value(e);
         if (this.constructor.validate_on_input) {
-            this.validate_event();
+            // this.validate_event();
         }
         //e.stopPropagation();
         const evt = new CustomEvent("pi-input", {
@@ -196,6 +191,58 @@ export default class Base extends LitElement {
         }
         return await this.validate();
     }
+
+    get form() {
+        return this.internals.form;
+    }
+    get validity() {
+        if (this.is_fresh) {
+            return true;
+        }
+        return this.internals.validity;
+    }
+    get validationMessage() {
+        return this.internals.validationMessage;
+    }
+    get willValidate() {
+        return this.internals.willValidate;
+    }
+
+    checkValidity() {
+        return this.internals.checkValidity();
+    }
+    reportValidity() {
+        return this.internals.reportValidity();
+    }
+
+    get native_el() {
+        return this.renderRoot?.querySelector('input') ?? null;
+    }
+
+    _first_rendered = false;
+    firstUpdated() {
+        // this.native_el.setCustomValidity("You gotta fill this out, yo!");
+        this._first_rendered = true
+    }
+
+    custom_message() {
+        if (this.m_required && this.native_el.validity.valueMissing) return this.m_required;
+        return "";
+    }
+
+    _sync_validity() {
+        // Our utility helper doesn't care if it's an input, textarea, select, or checkbox
+        syncInnerInputValidity(this.internals, this.native_el, this.custom_message(this.native_el));
+        this.error_message = this.validationMessage
+    }
+
+    formDisabledCallback(disabled) {
+        this.disabled = disabled;
+    }
+
+    formResetCallback() {
+        /* Subclasses override this */
+    }
     wrap(h, classn) {
         if (!classn) classn = "fgroup";
         return html`<div class=${classn}>${h}</div>`;
@@ -205,6 +252,10 @@ export default class Base extends LitElement {
         return !this.noLabel && !this.plain
             ? html`<label for="input" class="form-label">${this.label}</label>`
             : "";
+    }
+
+    render_feedback() {
+        return html`<label for="input" class="invalid-feedback">${this.error_message}</label>`
     }
 }
 
