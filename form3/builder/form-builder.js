@@ -87,7 +87,7 @@ export default class FormBuilder extends LitElement {
                 }
             }
         }
-        if (!this.document_type)
+        if (!this.document_type && this._schema)
             this.document_type = this._schema.get_schema_first_document();
         console.log("+schema", this._schema);
         this.build();
@@ -97,12 +97,19 @@ export default class FormBuilder extends LitElement {
             changedProperties.has("schema") ||
             changedProperties.has("yaml_schema")
         ) {
-            console.log("prop update");
+            console.log("_schema prop update");
             this.load_schema();
             //schema_build(this.schema);
             //this.document_type = this.schema.get_schema_first_document();
             //this.build();
             //this.requestUpdate();
+        }
+        if (changedProperties.has("value")) {
+            // if (this.container) this.container.value = this.value;
+            this.build();
+        }
+        if (changedProperties.has("document")) {
+            // this.load_schema();
         }
     }
 
@@ -137,12 +144,6 @@ export default class FormBuilder extends LitElement {
         // this.container.editmode = true;
         this.container.schemaid = this._id;
         // this.container.level = 0;
-    }
-
-    xxupdated(changedProperties) {
-        if (changedProperties.has("document")) {
-            this.load_schema();
-        }
     }
 
     save(e) {

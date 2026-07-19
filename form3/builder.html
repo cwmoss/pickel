@@ -47,12 +47,12 @@
         overflow-wrap: break-word;
       }
 
-      section > h1 {
-        margin-left: 1rem;
+      section {
+        padding-left: 1rem;
       }
 
       section > * {
-        width: 350px;
+        width: 250px;
       }
     </style>
   </head>
@@ -65,10 +65,12 @@
       </section>
       <section>
         <h1>Team</h1>
+        <pi-btn id="btn_team2">other team</pi-btn>
         <pi-form-builder id="fb2"></pi-form-builder>
       </section>
     </main>
     <script type="module">
+      import PiButton from "./elements/btn.js";
       let schema = `
 doc:
   matchresult:
@@ -94,7 +96,7 @@ doc:
   country:
     fields:
       name:
-       title: Name
+        title: Name
       position:
         title: Position
         type: number
@@ -104,11 +106,15 @@ doc:
   finale:
     fields:
       name:
-       title: Name
-`;
+        title: Name
+      `;
 
       fb2.value = { name: "Kap Verde", ingame: true, position: 3 };
       fb2.yaml_schema = schema2;
+      btn_team2.addEventListener(
+        "click",
+        () => (fb2.value = { name: "Germany", ingame: true, position: 1 }),
+      );
     </script>
   </body>
 </html>
