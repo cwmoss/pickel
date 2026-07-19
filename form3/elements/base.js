@@ -1,4 +1,4 @@
-import { LitElement, css, unsafeCSS, html } from "./lit-core.min.js";
+import { LitElement, css, unsafeCSS, html } from "../lit-core.min.js";
 // import cssvars from "./variables.css.js";
 // import { bootstrapform } from "./bs-only-form.css.js";
 // import FieldValidator from "../st.bernard/field-validator.js";
@@ -11,13 +11,9 @@ let formglobal = unsafeCSS`
 
 // https://master.dev/blog/form-associated-custom-elements-in-practice/#comment-72247
 
-import { formcss } from "./form.css.js";
+import { formcss } from "../form.css.js";
 
-function syncInnerInputValidity(
-    internals,
-    inputEl,
-    msg
-) {
+function syncInnerInputValidity(internals, inputEl, msg) {
     // return;
     console.log("sync VALIDITY", inputEl?.name);
     if (!inputEl) return;
@@ -25,7 +21,11 @@ function syncInnerInputValidity(
     if (!inputEl.validity.valid) {
         // We pass the inputEl as the "anchor" so the browser
         // knows where to point the validation bubble.
-        internals.setValidity(inputEl.validity, msg ? msg : inputEl.validationMessage, inputEl);
+        internals.setValidity(
+            inputEl.validity,
+            msg ? msg : inputEl.validationMessage,
+            inputEl,
+        );
     } else {
         internals.setValidity({});
     }
@@ -77,7 +77,6 @@ export default class Base extends LitElement {
         this.internals = this.attachInternals();
         this.value = this.empty_value;
         // this.internals.setFormValue(this.value);
-
     }
 
     connectedCallback() {
@@ -96,7 +95,8 @@ export default class Base extends LitElement {
         this.originalType = this.setup.originalType;
         this.options = this.setup.options || {};
         this.initialValue = this.setup.initialValue;
-        this.set_value(this.setup.value);
+        // this.set_value(this.setup.value);
+        this.value = this.setup.value;
         if (
             this.setup.validation &&
             typeof this["set_validation"] === "function"
@@ -119,12 +119,16 @@ export default class Base extends LitElement {
     }
 
     updated(changedProperties) {
-
         if (changedProperties.has("value")) {
-            console.log("++ UPDATED VALUE", this.form.id, this.is_fresh, this.name, this.value);
+            console.log(
+                "++ UPDATED VALUE",
+                this.form.id,
+                this.is_fresh,
+                this.name,
+                this.value,
+            );
             this.internals.setFormValue(this.value ? this.value : null);
-            if (!this.is_fresh)
-                this._sync_validity()
+            if (!this.is_fresh) this._sync_validity();
         }
     }
 
@@ -133,7 +137,10 @@ export default class Base extends LitElement {
     }
 
     input_event(e) {
-        console.log("INPUT EVENT static fresh", this.constructor.validate_on_input);
+        console.log(
+            "INPUT EVENT static fresh",
+            this.constructor.validate_on_input,
+        );
         this.is_fresh = false;
         this.value = this.get_input_value(e);
         if (this.constructor.validate_on_input) {
@@ -216,24 +223,29 @@ export default class Base extends LitElement {
     }
 
     get native_el() {
-        return this.renderRoot?.querySelector('input') ?? null;
+        return this.renderRoot?.querySelector("input") ?? null;
     }
 
     _first_rendered = false;
     firstUpdated() {
         // this.native_el.setCustomValidity("You gotta fill this out, yo!");
-        this._first_rendered = true
+        this._first_rendered = true;
     }
 
     custom_message() {
-        if (this.m_required && this.native_el.validity.valueMissing) return this.m_required;
+        if (this.m_required && this.native_el.validity.valueMissing)
+            return this.m_required;
         return "";
     }
 
     _sync_validity() {
         // Our utility helper doesn't care if it's an input, textarea, select, or checkbox
-        syncInnerInputValidity(this.internals, this.native_el, this.custom_message(this.native_el));
-        this.error_message = this.validationMessage
+        syncInnerInputValidity(
+            this.internals,
+            this.native_el,
+            this.custom_message(this.native_el),
+        );
+        this.error_message = this.validationMessage;
     }
 
     formDisabledCallback(disabled) {
@@ -255,7 +267,9 @@ export default class Base extends LitElement {
     }
 
     render_feedback() {
-        return html`<label for="input" class="invalid-feedback">${this.error_message}</label>`
+        return html`<label for="input" class="invalid-feedback"
+            >${this.error_message}</label
+        >`;
     }
 }
 

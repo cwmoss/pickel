@@ -50,8 +50,8 @@ input[type="radio"] {
   display: inline-block;
 }
 
-input[type="checkbox"]+label,
-input[type="radio"]+label {
+input[type="checkbox"] + label,
+input[type="radio"] + label {
   display: inline-block;
   font-weight: normal;
   position: relative;
@@ -86,12 +86,12 @@ label {
   margin-bottom: 0.5rem;
 }
 
-label~label {
+label ~ label {
   margin-top: 1rem;
 }
 
 /* implicit labeled elements */
-label>input {
+label > input {
   margin-top: 0.5rem;
 }
 
@@ -101,6 +101,46 @@ input:focus {
   border-color: #86b7fe;
   outline: 0;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+input:where([type="checkbox"][role="switch"]) {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  position: relative;
+  color: inherit;
+  font-size: inherit;
+  width: 2em;
+  height: 1em;
+  box-sizing: content-box;
+  border: 1px solid;
+  border-radius: 1em;
+  vertical-align: text-bottom;
+  margin: auto;
+  padding: 0;
+}
+
+input:where([type="checkbox"][role="switch"])::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+  box-sizing: border-box;
+  width: 0.7em;
+  height: 0.7em;
+  margin: 0 0.15em;
+  border: 1px solid;
+  border-radius: 50%;
+  background: currentcolor;
+}
+
+input:where([type="checkbox"][role="switch"]):checked::before {
+  left: 1em;
+}
+
+input:where([type="checkbox"][role="switch"]):disabled {
+  opacity: 0.4;
 }
 
 .valid-feedback,

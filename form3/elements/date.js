@@ -1,13 +1,13 @@
-import { LitElement, css, html, live } from "./lit-all.min.js";
+import { LitElement, css, html, live } from "../lit-all.min.js";
 import Base from "./base.js";
 
-export default class PiNumber extends Base {
+export default class PiDate extends Base {
     render() {
-        console.log("render input", this.name);
+        console.log("render input");
         return html`
             ${this.render_label()}
             <input
-                type="number"
+                type="date"
                 id="input"
                 name=${this.name}
                 .value=${this.value ?? ""}
@@ -19,4 +19,4 @@ export default class PiNumber extends Base {
     }
 }
 
-customElements.define("pi-number", PiNumber);
+customElements.define("pi-date", PiDate);

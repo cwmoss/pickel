@@ -1,5 +1,5 @@
 import { LitElement, css, html, live } from "./lit-all.min.js";
-import FInput from "./input.js";
+import { PiInput } from "./elements/_index.js";
 import { form } from "./form.js";
 
 export default class MyForm extends LitElement {
@@ -17,8 +17,8 @@ export default class MyForm extends LitElement {
     connectedCallback() {
         super.connectedCallback();
         this.form = new form();
-        this.form.update_value("fname", "Anna")
-        this.form.update_value("lname", "mustermann")
+        this.form.update_value("fname", "Anna");
+        this.form.update_value("lname", "mustermann");
     }
 
     current_value(ev) {
@@ -48,11 +48,13 @@ export default class MyForm extends LitElement {
         return html`
             <form @pi-input=${this.update_input} id="fcustom">
                 <div class="actions-start">
-                <button type="button" @click=${this.current_value}>
-                    state
-                </button>
-                <button type="button" @click=${this.reset}>reset</button>
-                <button type="button" @click=${this.set_otto}>set to otto</button>
+                    <button type="button" @click=${this.current_value}>
+                        state
+                    </button>
+                    <button type="button" @click=${this.reset}>reset</button>
+                    <button type="button" @click=${this.set_otto}>
+                        set to otto
+                    </button>
                 </div>
                 <pi-input
                     type="text"
@@ -67,8 +69,6 @@ export default class MyForm extends LitElement {
                     label="Last Name"
                 ></pi-input>
                 <pi-date name="bday" label="Birthday"></pi-date>
-
-                
             </form>
             <code>${this.dbg}</code>
         `;

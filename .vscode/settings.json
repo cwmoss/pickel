@@ -1,0 +1,18 @@
+{
+    "emeraldwalk.runonsave": {
+
+        "commands": [
+               {
+                   "match": "\\.css$",
+                   "cmd": "make"
+               }
+        ]
+    },
+
+    "html.format.wrapAttributes": "preserve-aligned",
+    "extensions.closeExtensionDetailsOnViewChange": true,
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client",
+    "intelephense.format.braces": "k&r",
+    "liveServer.settings.root": "frontend/"
+}
