@@ -15,9 +15,7 @@
     <link rel="stylesheet" href="form.css" />
     <script type="module" src="elements/_index.js"></script>
     <script type="module" src="my-form.js"></script>
-    <script type="module">
-      import "https://ka-f.webawesome.com/webawesome@3.8.0/components/input/input.js";
-    </script>
+
     <style>
       body {
         font-family:
@@ -78,14 +76,43 @@
             required
             m-required="we need your name"
           ></pi-input>
+          <pi-password
+            name="passwd"
+            label="Password"
+            required
+            m-required="please fill in a password"
+          ></pi-password>
+
+          <pi-select
+            name="team_farbe"
+            label="Team"
+            items=",rot,grün,blau"
+            required
+            xxxvalue="blau"
+          ></pi-select>
+
+          <pi-radios
+            horizontal
+            name="team_farbe2"
+            label="Team2"
+            items='[{"value":"rot","title":"Rot"},{"value":"grün","title":"Grün"},{"value":"blau","title":"Blau"}]'
+            required
+            m-required="bitte eins!"
+          ></pi-radios>
+
           <pi-number
             name="no_siblings"
             label="Number of Siblings"
             value="3"
             required
           ></pi-number>
+
+          <pi-string id="delegate1"></pi-string>
+
+          <label for="lname">Last Name (native inp)</label>
+          <input id="lname" name="lname" required />
           <div class="actions">
-            <button>Send</button>
+            <button name="submit">Send</button>
           </div>
           <div><code></code></div>
         </form>
@@ -126,11 +153,25 @@
     </main>
     <script type="module">
       f1.addEventListener("submit", (e) => {
+        console.log("submit F1");
         e.preventDefault();
+        // Iterate over the form controls
+        for (const input of f1.elements) {
+          console.log("form.elements", input.name, input.localName, input.type);
+          input.checkValidity();
+        }
         const data = Object.fromEntries(new FormData(e.target).entries());
-        console.log("classic", data);
+        console.log("classic", f1.checkValidity(), data);
         e.target.querySelector("code").innerText = JSON.stringify(data);
       });
+      delegate1.setup_options = {
+        name: "team3",
+        label: "Team3",
+        options: {
+          list: ["yellow", "pink", "gray"],
+          layout: "radio",
+        },
+      };
     </script>
   </body>
 </html>

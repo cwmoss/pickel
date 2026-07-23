@@ -1,4 +1,4 @@
-import { LitElement, css, html, nothing } from "../lit-all.min.js";
+import { LitElement, css, html, nothing } from "lit";
 import Base from "./base.js";
 
 export default class PiInput extends Base {

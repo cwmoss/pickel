@@ -94,6 +94,9 @@ export default class Base extends LitElement {
         this.id = this.setup.id;
         this.originalType = this.setup.originalType;
         this.options = this.setup.options || {};
+        if (this.options.list) {
+            this.items = this.options.list;
+        }
         this.initialValue = this.setup.initialValue;
         // this.set_value(this.setup.value);
         this.value = this.setup.value;
@@ -203,22 +206,30 @@ export default class Base extends LitElement {
         return this.internals.form;
     }
     get validity() {
+        console.log("ASK validity", this.name);
         if (this.is_fresh) {
-            return true;
+            // return true;
         }
         return this.internals.validity;
     }
     get validationMessage() {
+        console.log("ASK validationMessage", this.name);
         return this.internals.validationMessage;
     }
     get willValidate() {
+        console.log("ASK willValidate", this.name);
+        // return true;
         return this.internals.willValidate;
     }
 
     checkValidity() {
+        console.log("ASK checkValidity", this.name);
+        this._sync_validity();
         return this.internals.checkValidity();
     }
     reportValidity() {
+        return false;
+        console.log("ASK reportValidity", this.name);
         return this.internals.reportValidity();
     }
 
@@ -267,7 +278,10 @@ export default class Base extends LitElement {
     }
 
     render_feedback() {
-        return html`<label for="input" class="invalid-feedback"
+        return html`<label
+            for="input"
+            class="invalid-feedback"
+            aria-live="polite"
             >${this.error_message}</label
         >`;
     }

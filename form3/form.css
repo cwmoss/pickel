@@ -82,7 +82,8 @@ textarea[readonly] {
   background-color: var(--color-bg-secondary);
 }
 
-label {
+label,
+.form-label {
   margin-bottom: 0.5rem;
 }
 
@@ -95,7 +96,8 @@ label > input {
   margin-top: 0.5rem;
 }
 
-input:focus {
+input:focus,
+select:focus {
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);
   border-color: #86b7fe;
@@ -174,4 +176,22 @@ input:user-invalid {
 
 .actions-start {
   margin-bottom: 2rem;
+}
+.form-check-inline {
+  display: inline-block;
+  margin-right: 1rem;
+}
+div.input-button-wrap {
+  position: relative;
+  /* input {
+    padding-right: 40px;
+  }*/
+  button {
+    border: 0;
+    background-color: transparent;
+    position: absolute;
+    right: 8px;
+    top: 4px;
+    fill-color: #ccc;
+  }
 }

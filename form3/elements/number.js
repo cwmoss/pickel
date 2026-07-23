@@ -1,4 +1,4 @@
-import { LitElement, css, html, live } from "../lit-all.min.js";
+import { LitElement, css, html, nothing } from "../lit-all.min.js";
 import Base from "./base.js";
 
 export default class PiNumber extends Base {
@@ -10,7 +10,8 @@ export default class PiNumber extends Base {
                 type="number"
                 id="input"
                 name=${this.name}
-                .value=${this.value ?? ""}
+                value=${this._first_rendered ? nothing : (this.value ?? "")}
+                .value=${!this._first_rendered ? nothing : (this.value ?? "")}
                 @input=${this.input_event}
                 ?required=${this.required}
             />
