@@ -70,35 +70,41 @@ export default class PiRadios extends Base {
         return is_object(item) ? item.value : item;
     }
 
+    render_item(item) {
+        let val = item;
+        let title = item;
+        if (is_object(item)) {
+            val = item.value;
+            title = item.title;
+        }
+        return html`
+            <div
+                class="form-check ${this.options?.direction == "horizontal" ||
+                this.horizontal
+                    ? "form-check-inline"
+                    : ""}"
+            >
+                <input
+                    type="radio"
+                    name="radio"
+                    class="form-check-input"
+                    @change=${this.input_event}
+                    ?checked="${this.is_checked(item)}"
+                    .value=${val}
+                    id="${slugify_simple(val)}"
+                    ?required=${this.required}
+                />
+                <label class="form-check-label" for="${slugify_simple(val)}"
+                    >${title}</label
+                >
+            </div>
+        `;
+    }
     render() {
         console.log("RADIOS", this.items, this.required);
         let outp = html`${this.render_label()}
             ${this.items
-                ? this.items.map(
-                      (item) =>
-                          html`<div
-                              class="form-check ${this.options?.direction ==
-                                  "horizontal" || this.horizontal
-                                  ? "form-check-inline"
-                                  : ""}"
-                          >
-                              <input
-                                  type="radio"
-                                  name="radio"
-                                  class="form-check-input"
-                                  @change=${this.input_event}
-                                  ?checked="${this.is_checked(item)}"
-                                  .value=${this.item_value(item)}
-                                  id="${slugify_simple(this.item_value(item))}"
-                                  ?required=${this.required}
-                              />
-                              <label
-                                  class="form-check-label"
-                                  for="${slugify_simple(this.item_value(item))}"
-                                  >${this.item_label(item)}</label
-                              >
-                          </div> `,
-                  )
+                ? this.items.map((item) => this.render_item(item))
                 : this.slotitems}
             ${this.render_feedback()} <slot></slot>`;
 
