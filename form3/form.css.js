@@ -197,4 +197,10 @@ div.input-button-wrap {
     fill-color: #ccc;
   }
 }
+
+/*
+input[name="state"]:not(:focus):invalid {
+ border-color: red;
+}
+*/
 `
