@@ -2,6 +2,7 @@
   --active-brightness: 0.85;
   --border-radius: 0.15rem;
   --color: dodgerblue;
+  --color-darken: color-mix(in oklab, var(--color), black 20%);
   /* --box-shadow: 2px 2px 10px; */
   --color-accent: yellow; /* #118bee15; */
   --color-bg: #fff;

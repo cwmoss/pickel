@@ -7,6 +7,17 @@ button {
   color: var(--color-bg);
   border-radius: var(--border-radius);
   padding: 4px 8px;
+
+  transition:
+    color 0.15s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+
+  &:hover {
+    background-color: var(--color-darken);
+    border-color: var(--color-darken);
+  }
 }
 
 button:disabled,

@@ -7,5 +7,17 @@ import PiPassword from "./password.js";
 import PiSelect from "./select.js";
 import PiRadios from "./radios.js";
 import PiString from "./string.js";
+import PiDatetime from "./datetime.js";
+import PiTextarea from "./textarea.js";
 
-export { PiDate, PiInput, PiNumber, PiButton, PiPassword, PiSelect, PiRadios };
+export {
+    PiDate,
+    PiInput,
+    PiNumber,
+    PiButton,
+    PiPassword,
+    PiSelect,
+    PiRadios,
+    PiDatetime,
+    PiTextarea,
+};
