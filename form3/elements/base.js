@@ -125,7 +125,7 @@ export default class Base extends LitElement {
         if (changedProperties.has("value")) {
             console.log(
                 "++ UPDATED VALUE",
-                this.form.id,
+                this.form?.id,
                 this.is_fresh,
                 this.name,
                 this.value,

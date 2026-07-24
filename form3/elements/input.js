@@ -17,6 +17,7 @@ export default class PiInput extends Base {
                 maxlength=${this.maxlength || nothing}
             />
             ${this.render_feedback()}
+            <slot></slot>
         `;
     }
 }

@@ -210,10 +210,22 @@ div.input-button-wrap {
     padding: 4px 8px;
     right: 8px;
     top: 2px;
-    fill-color: #ccc;
+    /* fill-color: #ccc; */
   }
 }
 
+div.input-group {
+  display: flex;
+  input {
+    border-right: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}
 /*
 input[name="state"]:not(:focus):invalid {
  border-color: red;

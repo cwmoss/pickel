@@ -10,6 +10,7 @@ import PiString from "./string.js";
 import PiDatetime from "./datetime.js";
 import PiTextarea from "./textarea.js";
 import PiTags from "./tags.js";
+import PiSlug from "./slug.js";
 export {
     PiDate,
     PiInput,
@@ -21,4 +22,5 @@ export {
     PiDatetime,
     PiTextarea,
     PiTags,
+    PiSlug,
 };
