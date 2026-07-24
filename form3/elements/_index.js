@@ -9,7 +9,7 @@ import PiRadios from "./radios.js";
 import PiString from "./string.js";
 import PiDatetime from "./datetime.js";
 import PiTextarea from "./textarea.js";
-
+import PiTags from "./tags.js";
 export {
     PiDate,
     PiInput,
@@ -20,4 +20,5 @@ export {
     PiRadios,
     PiDatetime,
     PiTextarea,
+    PiTags,
 };

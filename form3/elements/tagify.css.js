@@ -1,4 +1,4 @@
-import { css } from "lit";
+import { css } from "./../../vendor/lit-core.min.js";
 export const tagstyles = css`
     :root {
         --tagify-dd-color-primary: rgb(53, 149, 246);
@@ -36,7 +36,7 @@ export const tagstyles = css`
         display: inline-flex;
         align-items: flex-start;
         flex-wrap: wrap;
-        border: 1px solid var(--tags-border-color);
+        /* border: 1px solid var(--tags-border-color); */
         padding: 0;
         line-height: 0;
         outline: 0;

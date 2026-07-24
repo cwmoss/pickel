@@ -8,7 +8,7 @@ button {
   border: 2px solid var(--color);
   color: var(--color-bg);
   border-radius: var(--border-radius);
-  padding: 4px 8px;
+  padding: 0.375rem 0.75rem;
 
   transition:
     color 0.15s ease-in-out,
@@ -207,8 +207,9 @@ div.input-button-wrap {
     border: 0;
     background-color: transparent;
     position: absolute;
+    padding: 4px 8px;
     right: 8px;
-    top: 4px;
+    top: 2px;
     fill-color: #ccc;
   }
 }

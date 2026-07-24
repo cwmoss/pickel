@@ -21,7 +21,6 @@ export default class PiPassword extends Base {
                     type=${this.show_as}
                     id="input"
                     name=${this.name}
-                    .value=${this.value ?? ""}
                     @input=${this.input_event}
                     ?required=${this.required}
                     maxlength=${this.maxlength || nothing}

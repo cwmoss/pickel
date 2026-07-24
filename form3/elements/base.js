@@ -271,9 +271,12 @@ export default class Base extends LitElement {
         return html`<div class=${classn}>${h}</div>`;
     }
 
-    render_label() {
+    render_label(labelid) {
+        if (!labelid) labelid = "input";
         return !this.noLabel && !this.plain
-            ? html`<label for="input" class="form-label">${this.label}</label>`
+            ? html`<label for="${labelid}" class="form-label"
+                  >${this.label}</label
+              >`
             : "";
     }
 
