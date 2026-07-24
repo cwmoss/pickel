@@ -7,6 +7,8 @@ button {
   background-color: var(--color);
   border: 2px solid var(--color);
   color: var(--color-bg);
+  border-radius: var(--border-radius);
+  padding: 4px 8px;
 }
 
 button:disabled,
@@ -71,7 +73,9 @@ textarea {
   border-radius: var(--border-radius);
   padding: 0.4rem 0.8rem;
 }
-
+select {
+  background-color: var(--color-bg);
+}
 input[type="text"],
 input[type="password"],
 input[type="email"],
